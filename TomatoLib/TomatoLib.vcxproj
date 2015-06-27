@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TomatoLib\Async\Async.cpp" />
+    <ClCompile Include="TomatoLib\Game\Game.cpp" />
+    <ClCompile Include="TomatoLib\Graphics\Font.cpp" />
+    <ClCompile Include="TomatoLib\MapFormats\Bsp.cpp" />
+    <ClCompile Include="TomatoLib\Networking\Connection.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIContextMenu.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIFrameBorderless.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIManager.cpp" />
+    <ClCompile Include="TomatoLib\Game\Window.cpp" />
+    <ClCompile Include="TomatoLib\Game\Camera.cpp" />
+    <ClCompile Include="TomatoLib\Graphics\Color.cpp" />
+    <ClCompile Include="TomatoLib\Networking\EzSock.cpp" />
+    <ClCompile Include="TomatoLib\UI\UITexture.cpp" />
+    <ClCompile Include="TomatoLib\Utilities\HTTP.cpp" />
+    <ClCompile Include="TomatoLib\Math\AABB.cpp" />
+    <ClCompile Include="TomatoLib\Math\Matrix.cpp" />
+    <ClCompile Include="TomatoLib\Math\Vector2.cpp" />
+    <ClCompile Include="TomatoLib\Math\Vector3.cpp" />
+    <ClCompile Include="TomatoLib\Networking\Packet.cpp" />
+    <ClCompile Include="TomatoLib\Graphics\Render.cpp" />
+    <ClCompile Include="TomatoLib\Graphics\Shader.cpp" />
+    <ClCompile Include="TomatoLib\Graphics\Texture.cpp" />
+    <ClCompile Include="TomatoLib\UI\Menus\UIConsole.cpp" />
+    <ClCompile Include="TomatoLib\UI\Menus\UIGraph.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIAdvancedTextEntry.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIBase.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIButton.cpp" />
+    <ClCompile Include="TomatoLib\UI\UICheckBox.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIDropDown.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIFrame.cpp" />
+    <ClCompile Include="TomatoLib\UI\UILabel.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIPanel.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIProgressBar.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIScrollPanel.cpp" />
+    <ClCompile Include="TomatoLib\UI\UISlider.cpp" />
+    <ClCompile Include="TomatoLib\UI\UITextEntry.cpp" />
+    <ClCompile Include="TomatoLib\Libaries\LodePNG\lodepng.cpp" />
+    <ClCompile Include="TomatoLib\Libaries\LodePNG\lodepng_util.cpp" />
+    <ClCompile Include="TomatoLib\Utilities\Utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TomatoLib\Async\Async.h" />
+    <ClInclude Include="TomatoLib\Defines.h" />
+    <ClInclude Include="TomatoLib\Game\Game.h" />
+    <ClInclude Include="TomatoLib\Graphics\Font.h" />
+    <ClInclude Include="TomatoLib\MapFormats\Bsp.h" />
+    <ClInclude Include="TomatoLib\Networking\Connection.h" />
+    <ClInclude Include="TomatoLib\UI\UIContextMenu.h" />
+    <ClInclude Include="TomatoLib\UI\UIFrameBorderless.h" />
+    <ClInclude Include="TomatoLib\UI\UIManager.h" />
+    <ClInclude Include="TomatoLib\Game\Window.h" />
+    <ClInclude Include="TomatoLib\Game\Camera.h" />
+    <ClInclude Include="TomatoLib\Graphics\Color.h" />
+    <ClInclude Include="TomatoLib\UI\UITexture.h" />
+    <ClInclude Include="TomatoLib\Utilities\Dictonary.h" />
+    <ClInclude Include="TomatoLib\Networking\EzSock.h" />
+    <ClInclude Include="TomatoLib\Utilities\HTTP.h" />
+    <ClInclude Include="TomatoLib\Utilities\List.h" />
+    <ClInclude Include="TomatoLib\Math\AABB.h" />
+    <ClInclude Include="TomatoLib\Math\Matrix.h" />
+    <ClInclude Include="TomatoLib\Math\Vector2.h" />
+    <ClInclude Include="TomatoLib\Math\Vector3.h" />
+    <ClInclude Include="TomatoLib\Networking\Packet.h" />
+    <ClInclude Include="TomatoLib\Graphics\Render.h" />
+    <ClInclude Include="TomatoLib\Graphics\Shader.h" />
+    <ClInclude Include="TomatoLib\Graphics\Texture.h" />
+    <ClInclude Include="TomatoLib\UI\Menus\UIConsole.h" />
+    <ClInclude Include="TomatoLib\UI\Menus\UIGraph.h" />
+    <ClInclude Include="TomatoLib\UI\UIAdvancedTextEntry.h" />
+    <ClInclude Include="TomatoLib\UI\UIBase.h" />
+    <ClInclude Include="TomatoLib\UI\UIButton.h" />
+    <ClInclude Include="TomatoLib\UI\UICheckBox.h" />
+    <ClInclude Include="TomatoLib\UI\UIDropDown.h" />
+    <ClInclude Include="TomatoLib\UI\UIFrame.h" />
+    <ClInclude Include="TomatoLib\UI\UILabel.h" />
+    <ClInclude Include="TomatoLib\UI\UIPanel.h" />
+    <ClInclude Include="TomatoLib\UI\UIProgressBar.h" />
+    <ClInclude Include="TomatoLib\UI\UIScrollPanel.h" />
+    <ClInclude Include="TomatoLib\UI\UISlider.h" />
+    <ClInclude Include="TomatoLib\UI\UITextEntry.h" />
+    <ClInclude Include="TomatoLib\Libaries\LodePNG\lodepng.h" />
+    <ClInclude Include="TomatoLib\Libaries\LodePNG\lodepng_util.h" />
+    <ClInclude Include="TomatoLib\Utilities\Utilities.h" />
+    <ClInclude Include="TomatoLib\Utilities\zip_uncompressed.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F7F38EB5-77D0-49C8-8298-77535554D4E8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TomatoLib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
