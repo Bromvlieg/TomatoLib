@@ -4,6 +4,7 @@
 #include "EzSock.h"
 #include "../Math/Vector2.h"
 #include "../Math/Vector3.h"
+#include "../Defines.h"
 
 #ifndef null
 #define null 0
