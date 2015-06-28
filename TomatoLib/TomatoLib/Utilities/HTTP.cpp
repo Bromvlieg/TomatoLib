@@ -8,12 +8,38 @@
 #include <algorithm>
 
 namespace TomatoLib {
-	void HTTP::Request(std::string url, std::string method, std::function<void(bool, Dictonary<std::string, std::string>&, unsigned char*, unsigned int)> callback) {
+	Dictonary<std::string, std::string> HTTP::ParseAsUrlEncoded(const std::string& str) {
+		Dictonary<std::string, std::string> ret;
+
+		int len = str.length();
+		int start = 0;
+		std::string key;
+
+		// password=$H$9cp9kyysOK4sbip8U8c4ckhE74ytb7.&username=bromvlieg
+		for (int i = 0; i < len; i++) {
+			if (str[i] == '=') {
+				key = str.substr(start, i - start);
+				start = ++i;
+			}else if (str[i] == '&') {
+				ret[key] = str.substr(start, i - start);
+				key = "";
+				start = ++i;
+			}
+		}
+
+		if (start != len) {
+			ret[key] = str.substr(start);
+		}
+
+		return ret;
+	}
+
+	void HTTP::Request(std::string url, std::string method, const std::string& body, const std::string& bodytype, std::function<void(bool, Dictonary<std::string, std::string>&, unsigned char*, unsigned int)> callback) {
 		if (url.find("http://") == 0) {
 			url = url.substr(7);
 		}
 
-		new std::thread([url, method, callback]() {
+		new std::thread([url, method, callback, body, bodytype]() {
 			Dictonary<std::string, std::string > headers;
 			std::string host;
 			std::string path;
@@ -38,7 +64,10 @@ namespace TomatoLib {
 
 			p.WriteLine((method + " " + path + " HTTP/1.1").c_str());
 			p.WriteLine((std::string("Host: ") + host).c_str());
+			p.WriteLine((std::string("Content-Length: ") + std::to_string(body.length())).c_str());
+			if (bodytype.length() > 0) p.WriteLine((std::string("Content-Type: ") + bodytype).c_str());
 			p.WriteLine("");
+			p.WriteBytes((byte*)body.c_str(), body.length(), false);
 
 			sock.SendRaw(p.OutBuffer, p.OutPos);
 			p.Clear();
