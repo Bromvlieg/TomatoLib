@@ -5,6 +5,7 @@
 namespace TomatoLib {
 	UIButton::UIButton(UIBase* parent) : UIBase(parent) {
 		this->BorderSize = 1;
+		this->TextColor = Color::White;
 		this->BorderColor = Color::Black;
 		this->BackColor = Color(80, 80, 80, 255);
 		this->DisabledColor = Color(40, 40, 40, 255);

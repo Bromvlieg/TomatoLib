@@ -364,7 +364,9 @@ namespace TomatoLib {
 			this->Parent->RemoveChild(this);
 		} else if(this->UIMan != null) {
 			this->UIMan->RemoveChild(this);
-
+		}
+		
+		if (this->UIMan != null) {
 			if (this->UIMan->HoldPanel == this) {
 				this->UIMan->HoldPanel = null;
 			}

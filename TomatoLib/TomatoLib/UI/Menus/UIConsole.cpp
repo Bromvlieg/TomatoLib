@@ -219,7 +219,7 @@ namespace TomatoLib {
 
 		};
 
-		this->RegisterConsoleVar("console_lines", "15");
+		this->RegisterConsoleVar("console_lines", "20");
 	}
 
 	void UIConsole::Draw(Render& p) {

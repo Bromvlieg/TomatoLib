@@ -207,10 +207,10 @@ namespace TomatoLib {
 		this->Text = text;
 		this->Caret = text.size();
 		this->WideScroll = 0;
+		this->Recalc();
+
 		if (this->OnTextChange != null) this->OnTextChange();
 		this->MarkForFullRedraw();
-
-		this->Recalc();
 	}
 
 	void UITextEntry::Clear() {
