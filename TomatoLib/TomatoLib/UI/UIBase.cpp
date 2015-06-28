@@ -182,8 +182,10 @@ namespace TomatoLib {
 		drawer.SetDrawingOffset((int)pos.X, (int)pos.Y);
 		drawer.EnableClipping((int)pos.X, (int)pos.Y, this->W, this->H);
 
+		bool recorderstarted = false;
 		if (this->ShouldRedraw) {
 			drawer.RecorderStart();
+			recorderstarted = true;
 		}
 		
 		if (!this->Frozen && (this->ShouldRedraw || this->AlwaysRedraw)) {
@@ -192,7 +194,7 @@ namespace TomatoLib {
 			drawer.Buffer(this->Buffer);
 		}
 
-		if (this->ShouldRedraw) {
+		if (recorderstarted) {
 			if (this->Buffer != null) delete this->Buffer;
 			this->Buffer = drawer.RecorderStop();
 			this->ShouldRedraw = false;

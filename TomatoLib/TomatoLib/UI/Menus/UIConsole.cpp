@@ -304,6 +304,11 @@ namespace TomatoLib {
 	}
 
 	void UIConsole::Print(std::string line, bool enablecolors) {
+		int len = (int)line.length();
+		for (int i = 0; i < len; i++) {
+			if (line[i] == '\n') line[i] = '\r';
+		}
+
 		UIConsoleLineData ld;
 		ld.Colors.push_back(Color::White); // set default color to white
 

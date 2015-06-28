@@ -7,6 +7,7 @@
 namespace TomatoLib {
 	class UITextEntry : public UIBase {
 		std::string Text;
+		int prevtime;
 
 	public:
 		UITextEntry(UIBase* parent);

@@ -146,10 +146,10 @@ namespace TomatoLib {
 			unsigned int i = 0;
 			while (true) {
 				Vector2 tsize = this->UIMan->Drawer.GetTextSize(str);
-				if (x - this->X < xoffset + tsize.X) {
+				if (x < xoffset + tsize.X) {
 					if (i > 0) {
 						Vector2 lettersize = this->UIMan->Drawer.GetTextSize(str[i - 1]);
-						if (x - this->X < xoffset + tsize.X - lettersize.X / 2) {
+						if (x < xoffset + tsize.X - lettersize.X / 2) {
 							this->Caret = i - 1;
 						} else {
 							this->Caret = i;
@@ -190,10 +190,8 @@ namespace TomatoLib {
 
 			this->Text.insert(this->Caret, std::string("") + c);
 
-			Vector2 Size = this->UIMan->Drawer.GetTextSize(c);
-
 			this->Recalc();
-			this->Caret += 1;
+			this->Caret++;
 			if (this->OnTextChange != null) this->OnTextChange();
 			this->MarkForFullRedraw();
 		};
@@ -205,9 +203,10 @@ namespace TomatoLib {
 
 	void UITextEntry::SetText(std::string text) {
 		this->Text = text;
-		this->Caret = text.size();
 		this->WideScroll = 0;
+		this->Caret = 0;
 		this->Recalc();
+		this->Caret = (int)text.size();
 
 		if (this->OnTextChange != null) this->OnTextChange();
 		this->MarkForFullRedraw();
@@ -259,9 +258,6 @@ namespace TomatoLib {
 		p.Box(0, 0, this->W, this->H, this->BorderColor);
 		p.Box(1, 1, this->W - 2, this->H - 2, this->BackgroundColor);
 
-		int time = (int)(glfwGetTime() * 2);
-		time = time % 2;
-
 		this->Recalc();
 		
 		Vector2 Offset = p.GetDrawingOffset();
@@ -269,7 +265,7 @@ namespace TomatoLib {
 		float y = this->H / 2.0f - this->Font->FontHandle->height / 2;
 
 		p.EnableClipping((int)Offset.X + 1, (int)Offset.Y + 1, this->W - 2, this->H - 2);
-		if (time == 1 && this->UIMan->FocusPanel == this) p.Box(this->CaretX + 2, this->H / 2.0f - this->Font->FontHandle->height / 3, 2.0f, this->Font->FontHandle->height / 3 * 2, this->CaretColor);
+		if (this->prevtime == 1 && this->UIMan->FocusPanel == this) p.Box(this->CaretX + 2, this->H / 2.0f - this->Font->FontHandle->height / 3, 2.0f, this->Font->FontHandle->height / 3 * 2, this->CaretColor);
 
 		if (this->MaskChar != 0) {
 			char* str = new char[this->Text.size() + 1];
@@ -286,13 +282,12 @@ namespace TomatoLib {
 
 	}
 
-	int prevtime = 0;
 	void UITextEntry::Update() {
 		int time = (int)(glfwGetTime() * 2);
 		time = time % 2;
 
-		if (prevtime != time) {
-			prevtime = time;
+		if (this->prevtime != time) {
+			this->prevtime = time;
 			this->MarkForFullRedraw();
 		}
 	}
