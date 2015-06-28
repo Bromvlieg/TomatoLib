@@ -11,7 +11,14 @@
 #include <functional>
 
 namespace TomatoLib {
+	class Connection;
+
 	typedef void(*IncommingPacketCallback)(Packet& p);
+	typedef void(*ReceiveNewDataCallback)(Connection* con);
+
+	enum class ConnectionPacketIDType {
+		Byte, Short, Int
+	};
 
 	class Connection {
 		static void _ReceiveThread(Connection* obj);
@@ -22,6 +29,7 @@ namespace TomatoLib {
 		bool Connected;
 
 		double LastReceivedPacket;
+		ConnectionPacketIDType PIDType;
 
 		Connection();
 		~Connection();
@@ -29,6 +37,9 @@ namespace TomatoLib {
 		EzSock Sock;
 		std::mutex LockObject;
 		List<byte*> ReceivedPackets;
+		ReceiveNewDataCallback ReceiveFunction;
+
+		void AddReceivedPacket(int size, byte* data);
 
 		bool IsConnected();
 		bool Connect(std::string ip, int port);

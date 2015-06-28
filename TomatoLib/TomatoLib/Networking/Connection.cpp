@@ -2,6 +2,7 @@
 #include "EzSock.h"
 #include "../Defines.h"
 #include "../Graphics/Color.h"
+#include "../Utilities/Utilities.h"
 
 #include <thread>
 #include <math.h>
@@ -18,6 +19,7 @@ namespace TomatoLib {
 	Connection::Connection() {
 		this->LastReceivedPacket = TL_GET_TIME_MS;
 		this->Connected = false;
+		this->PIDType = ConnectionPacketIDType::Byte;
 	}
 
 	Connection::~Connection() {
@@ -36,47 +38,25 @@ namespace TomatoLib {
 		man->ThreadRunning = true;
 
 		while (!man->CloseThread) {
-			if (!man->IsConnected()) {
+			if (!man->IsConnected() || man->ReceiveFunction == null) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				continue;
 			}
-
-			byte plenbytes[4];
-			int recamount = 0;
-			while (recamount != 4) {
-				int currec = man->Sock.Receive(plenbytes, 4 - recamount, recamount);
-
-				if (currec == -1 || currec == 0) {
-					break;
-				}
-
-				recamount += currec;
-			}
-			if (recamount != 4) break;
-
-			int psize = (plenbytes[0] + (plenbytes[1] << 8)) ^ (plenbytes[2] + (plenbytes[3] << 8));
-
-			byte* buffer = new byte[psize + 4];
-			memcpy(buffer, &psize, 4);
-
-			recamount = 0;
-			while (recamount != psize) {
-				int currec = man->Sock.Receive(buffer, psize - recamount, recamount + 4);
-
-				if (currec == -1 || currec == 0) {
-					break;
-				}
-
-				recamount += currec;
-			}
-			if (recamount != psize) break;
-
-			man->LockObject.lock();
-			man->ReceivedPackets.Add(buffer);
-			man->LockObject.unlock();
+			
+			man->ReceiveFunction(man);
 		}
 
 		man->ThreadRunning = false;
+	}
+	
+	void Connection::AddReceivedPacket(int len, byte* data) {
+		byte* buffer = new byte[len + 4];
+		memcpy(buffer, &len, 4);
+		memcpy(buffer + 4, data, len);
+
+		this->LockObject.lock();
+		this->ReceivedPackets.Add(buffer);
+		this->LockObject.unlock();
 	}
 
 	void Connection::ConnectThreaded(std::string ip, int port, std::function<void(bool)> callback) {
@@ -131,15 +111,20 @@ namespace TomatoLib {
 			p.InBuffer = data + 4;
 			p.InSize = *(int*)data;
 
-			short pid = p.ReadShort();
+			int pid;
+			switch (this->PIDType) {
+				case ConnectionPacketIDType::Byte: pid = p.ReadByte(); break;
+				case ConnectionPacketIDType::Short: pid = p.ReadShort(); break;
+				case ConnectionPacketIDType::Int: pid = p.ReadInt(); break;
+			}
 
 			if (this->Callbacks.ContainsKey(pid)) {
 				this->Callbacks[pid](p);
 				if (p.InPos != p.InSize) {
-					printf("[col=%s]WARNING: Packet '%.4X' was only read till %d, while the size is %d", Color::Orange.ToString().c_str(), pid, p.InPos, p.InSize);
+					Utilities::Print("[col=%s]WARNING: Packet 0x%.2X(%d) was only read till %d, while the size is %d", Color::Orange.ToString().c_str(), pid, pid, p.InPos, p.InSize);
 				}
 			} else {
-				printf("[col=%s]Unknown packet: %.4X, size %d", Color::Red.ToString().c_str(), pid, p.InSize);
+				Utilities::Print("[col=%s]Unknown packet: 0x%.2X(%d), size %d", Color::Red.ToString().c_str(), pid,  pid, p.InSize);
 			}
 
 			this->LastReceivedPacket = TL_GET_TIME_MS;
