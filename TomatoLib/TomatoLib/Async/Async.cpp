@@ -66,8 +66,8 @@ namespace TomatoLib {
 			Async::ShouldShutdown = true;
 		}
 
-		void RunOnMainThread(std::function<void()> func, bool isblocking) {
-			if (Async::IsMainThread() && isblocking) {
+		void RunOnMainThread(std::function<void()> func, bool isblocking, bool forcequeue) {
+			if (Async::IsMainThread() && isblocking && !forcequeue) {
 				func();
 				return;
 			}
@@ -148,9 +148,9 @@ namespace TomatoLib {
 			}
 			ThreadasyncCallsLock.unlock();
 		}
-
-		void RunOnAsyncThread(std::function<void()> func, bool isblocking) {
-			if (Async::IsAsyncThread() && isblocking) {
+		
+		void RunOnAsyncThread(std::function<void()> func, bool isblocking, bool forcequeue) {
+			if (Async::IsAsyncThread() && isblocking && !forcequeue) {
 				func();
 				return;
 			}

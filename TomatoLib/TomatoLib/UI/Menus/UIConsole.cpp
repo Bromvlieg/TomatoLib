@@ -138,6 +138,8 @@ namespace TomatoLib {
 
 		std::function<void(int, int)> oldinput = this->TextEntry->OnInput;
 		this->TextEntry->OnInput = [this, oldinput](int key, int mods) {
+			this->ScrollPanel->Back->MarkForFullRedraw(); // auto complete
+
 			if (key == GLFW_KEY_UP) {
 				if (this->InputHistory.Count == 0) return;
 				this->InputHistoryIndex -= this->InputHistoryIndex == 0 ? 0 : 1;
@@ -360,6 +362,6 @@ namespace TomatoLib {
 		this->PrintLock.unlock();
 
 		this->InvalidateLayout();
-		this->ScrollPanel->Scroll((int)-this->Font->FontHandle->height);
+		this->ScrollPanel->Scroll(-(int)ceil(this->Font->FontHandle->height));
 	}
 }

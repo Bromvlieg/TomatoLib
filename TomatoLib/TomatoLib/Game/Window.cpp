@@ -15,9 +15,6 @@ namespace TomatoLib {
 	void Window::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		if (key < 0 || key > GLFW_KEY_LAST) return; // filter out hardware that wants to be special and has special keys.
 
-		if (key == GLFW_KEY_ESCAPE && action != GLFW_RELEASE) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
 		bool ret = CurrentWindow->UIMan != null && CurrentWindow->UIMan->HandleKeyboardInteraction(key, action, mods);
 
 		if (action == GLFW_REPEAT) return;

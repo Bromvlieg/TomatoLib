@@ -6,6 +6,8 @@
 using std::string;
 
 namespace TomatoLib {
+	bool Packet::InsertOutlenIntOnSend = true;
+
 	Packet::Packet() {
 		this->Valid = false;
 
@@ -521,13 +523,18 @@ namespace TomatoLib {
 	}
 
 	void Packet::Send() {
-		byte* packet = new byte[this->OutPos + 4];
-		*(int*)packet = this->OutPos;
+		if (this->InsertOutlenIntOnSend) {
+			byte* packet = new byte[this->OutPos + 4];
+			*(int*)packet = this->OutPos;
 
-		memcpy(packet + 4, this->OutBuffer, this->OutPos);
-		this->Sock->SendRaw(packet, this->OutPos + 4);
+			memcpy(packet + 4, this->OutBuffer, this->OutPos);
+			this->Sock->SendRaw(packet, this->OutPos + 4);
 
-		delete[] packet;
+			delete[] packet;
+		} else {
+			this->Sock->SendRaw(this->OutBuffer, this->OutPos);
+		}
+
 		delete[] this->OutBuffer;
 
 		this->OutBuffer = null;

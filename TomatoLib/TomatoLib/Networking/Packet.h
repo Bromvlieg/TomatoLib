@@ -13,6 +13,8 @@
 namespace TomatoLib {
 	class Packet {
 	public:
+		static bool InsertOutlenIntOnSend;
+
 		static void DecryptBuffer(byte* buffer, int len);
 		static byte ror(byte val, int num);
 		static byte rol(byte val, int num);

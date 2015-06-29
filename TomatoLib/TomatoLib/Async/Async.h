@@ -14,8 +14,8 @@ namespace TomatoLib {
 		extern std::vector<std::function<void()>> CallsToDoOnMainThread;
 		extern std::vector<std::function<void()>> CallsToDoOnAsyncThread;
 
-		void RunOnMainThread(std::function<void()> func, bool isblocking);
-		void RunOnAsyncThread(std::function<void()> func, bool isblocking);
+		void RunOnMainThread(std::function<void()> func, bool isblocking = false, bool forcequeue = false);
+		void RunOnAsyncThread(std::function<void()> func, bool isblocking = false, bool forcequeue = false);
 		void ClearAsyncThreadCalls();
 		void RunMainThreadCalls();
 		void RunAsyncThreadCalls();
