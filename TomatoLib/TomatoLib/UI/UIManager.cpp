@@ -66,7 +66,7 @@ namespace TomatoLib {
 			if (child->PassTrough) continue;
 
 			if (child->X <= x && child->Y <= y && (child->X + child->W) > x && (child->Y + child->H) > y) {
-				if (!child->CanClick) break;
+				if (!child->CanClick) continue;
 				this->_CheckClick(child, x - child->X, y - child->Y);
 			}
 		}
@@ -88,7 +88,7 @@ namespace TomatoLib {
 					if (Pan->PassTrough) continue;
 
 					if (Pan->X <= x && Pan->Y <= y && (Pan->X + Pan->W) > x && (Pan->Y + Pan->H) > y) {
-						if (!Pan->CanClick) break;
+						if (!Pan->CanClick) continue;
 						this->_CheckClick(Pan, x - Pan->X, y - Pan->Y);
 					}
 				}
@@ -153,7 +153,6 @@ namespace TomatoLib {
 				if (this->FocusPanel != null) this->FocusPanel->OnInput(key, mods);
 				return true;
 			}
-
 
 			if (key == GLFW_KEY_GRAVE_ACCENT) {
 				if (this->Console != null) {

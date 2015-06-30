@@ -202,11 +202,11 @@ namespace TomatoLib {
 
 		this->RegisterConsoleFunc("help", [this](std::string args) {
 			for (int i = 0; i < this->RegisteredFunctions.Count; i++) {
-				this->Print(std::string("Function: ") + this->RegisteredFunctions.Keys[i].c_str());
+				this->Print(std::string("Function: ") + this->RegisteredFunctions.Keys[i].c_str() + " : useage: " + this->RegisteredFunctionsDesc.Values[i].c_str());
 			}
 
 			for (int i = 0; i < this->RegisteredVariables.Count; i++) {
-				this->Print(std::string("Var: ") + this->RegisteredVariables.Keys[i].c_str() + " = " + this->RegisteredVariables.Values[i].c_str());
+				this->Print(std::string("Var: ") + this->RegisteredVariables.Keys[i].c_str() + " = " + this->RegisteredVariables.Values[i].c_str() + " : useage: " + this->RegisteredVariablesDesc.Values[i].c_str());
 			}
 
 			return "Done printing";
@@ -216,6 +216,9 @@ namespace TomatoLib {
 		this->ConsolePanel->OnScroll = [this](int x, int y) { this->ScrollPanel->Scroll(y); };
 		this->TextEntry->OnScroll = [this](int x, int y) { this->ScrollPanel->Scroll(y); };
 		this->MainPanel->OnScroll = [this](int x, int y) { this->ScrollPanel->Scroll(y); };
+
+		this->ConsolePanel->CanClick = true;
+		this->ConsolePanel->OnRelease = [this](int x, int y, int button) { this->TextEntry->SetFocus(); };
 
 		this->OnShow = [this]() {
 
@@ -295,14 +298,16 @@ namespace TomatoLib {
 	}
 
 
-	void UIConsole::RegisterConsoleVar(std::string name, std::string defaultvalue) {
+	void UIConsole::RegisterConsoleVar(std::string name, std::string defaultvalue, std::string description) {
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 		this->RegisteredVariables[name] = defaultvalue;
+		this->RegisteredVariablesDesc[name] = description;
 	}
 
-	void UIConsole::RegisterConsoleFunc(std::string name, std::function<std::string(std::string)> func) {
+	void UIConsole::RegisterConsoleFunc(std::string name, std::function<std::string(std::string)> func, std::string description) {
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 		this->RegisteredFunctions[name] = func;
+		this->RegisteredFunctionsDesc[name] = description;
 	}
 
 	void UIConsole::Print(std::string line, bool enablecolors) {

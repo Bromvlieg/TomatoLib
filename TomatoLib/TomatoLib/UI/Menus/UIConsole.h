@@ -23,7 +23,10 @@ namespace TomatoLib {
 
 	class UIConsole : public UIBase {
 		Dictonary<std::string, std::function<std::string(std::string)>> RegisteredFunctions;
+		Dictonary<std::string, std::string> RegisteredFunctionsDesc;
 		Dictonary<std::string, std::string> RegisteredVariables;
+		Dictonary<std::string, std::string> RegisteredVariablesDesc;
+
 		List<std::string> InputHistory;
 		int InputHistoryIndex;
 		size_t PrevCharCount;
@@ -51,8 +54,8 @@ namespace TomatoLib {
 		void Print(std::string line, bool enablecolors = true);
 		void HandleInput(std::string line);
 
-		void RegisterConsoleVar(std::string name, std::string defaultvalue);
-		void RegisterConsoleFunc(std::string name, std::function<std::string(std::string)> func);
+		void RegisterConsoleVar(std::string name, std::string defaultvalue, std::string description = "");
+		void RegisterConsoleFunc(std::string name, std::function<std::string(std::string)> func, std::string description = "");
 		std::string GetConsoleVar(std::string name);
 	};
 }

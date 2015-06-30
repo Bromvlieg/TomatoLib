@@ -22,7 +22,7 @@
 #endif
 
 namespace TomatoLib {
-	Game::Game() : ShouldShutdown(false) {}
+	Game::Game() : ShouldShutdown(false),currentFPS(0),currentFPSTime(0) {}
 	Game::~Game() {}
 
 	void Game::Init() {}
@@ -40,8 +40,6 @@ namespace TomatoLib {
 		std::vector<float> listtime;
 		for (int i = 0; i < 3; i++) listfps.push_back(0);
 		for (int i = 0; i < 120; i++) listtime.push_back(0);
-		int currentFPS = 0;
-		float currentFPSTime = 0;
 
 		float lasttick = TL_GET_TIME_MS;
 		float lastfpssecond = lasttick; // ms
@@ -51,7 +49,6 @@ namespace TomatoLib {
 
 			if (curtime - lasttick < msperfps) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
 				continue;
 			}
 
@@ -61,12 +58,14 @@ namespace TomatoLib {
 			lasttick += msperfps;
 
 			Async::RunMainThreadCalls();
+			if (this->ShouldShutdown) break;
 
-			checkGL;
 			this->Update();
+			if (this->ShouldShutdown) break;
 
+			//checkGL;
 			this->Draw(this->RenderObject);
-			checkGL;
+			//checkGL;
 
 			listfps[0]++;
 			if (curtime - lastfpssecond >= 1000) {

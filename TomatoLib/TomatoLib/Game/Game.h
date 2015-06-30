@@ -10,6 +10,9 @@ namespace TomatoLib {
 		bool ShouldShutdown;
 		Render RenderObject;
 
+		int currentFPS;
+		float currentFPSTime;
+
 		virtual void Init();
 		virtual void RegisterConsoleStuff();
 		virtual void Quit();
