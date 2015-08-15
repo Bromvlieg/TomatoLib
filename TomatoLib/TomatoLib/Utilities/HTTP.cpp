@@ -15,7 +15,6 @@ namespace TomatoLib {
 		int start = 0;
 		std::string key;
 
-		// password=$H$9cp9kyysOK4sbip8U8c4ckhE74ytb7.&username=bromvlieg
 		for (int i = 0; i < len; i++) {
 			if (str[i] == '=') {
 				key = str.substr(start, i - start);
