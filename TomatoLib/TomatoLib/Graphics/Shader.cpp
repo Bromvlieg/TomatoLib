@@ -21,32 +21,35 @@ namespace TomatoLib {
 	void Shader::Attach(std::string file, GLint mode) {
 		checkGL;
 
-		//Handle to the file to read from
-		FILE* filePointer;
-		filePointer = fopen(file.c_str(), "rb");
+		std::ifstream infile;
+		infile.open( file, std::ios::binary );
 
-		//Find file size
-		fseek(filePointer, 0L, SEEK_END);
-		long fileSize = ftell(filePointer);
-		rewind(filePointer);
+		if( !infile.is_open() )
+		{
+			std::cout << "Shader::Attach() failed! Could not open file named: " << file << std::endl;
+			infile.close();
+			return;
+		}
 
-		//Allocate space for file data
-		char* fileData = new char[fileSize + 1];
-		fread(fileData, 1, (size_t)fileSize, filePointer);
-		fileData[fileSize] = 0;
+		infile.seekg( 0, std::ios::end );
+		size_t file_size_in_byte = infile.tellg();
+
+		std::vector<char> data; // used to store text data
+		data.resize( file_size_in_byte );
+		infile.seekg( 0, std::ios::beg );
+
+		infile.read( &data[ 0 ], file_size_in_byte );
 
 		//Cast to a const char for the gl function
-		const char* fileDataConst = (const char*)fileData;
+		const char* fileDataConst = (const char*) &data[0];
 
 		//Create new shader, set the source, and compile it
 		GLuint handle = glCreateShader(mode);
 		glShaderSource(handle, 1, &fileDataConst, 0);
 		glCompileShader(handle);
 
-		fclose(filePointer);
-
-		delete[] fileData;
-
+		infile.close();
+		
 		//Check if compile is succesfull
 		GLint isSuccesfullyCompiled = 0;
 		glGetShaderiv(handle, GL_COMPILE_STATUS, &isSuccesfullyCompiled);
