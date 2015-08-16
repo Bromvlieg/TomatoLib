@@ -173,9 +173,14 @@ namespace TomatoLib {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_RESIZABLE, resizable);
+		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
 
 		GLFWmonitor* mon = glfwGetPrimaryMonitor();
+		if (mon == nullptr) {
+			printf("glfwGetPrimaryMonitor failed!\n");
+			return false;
+		}
+
 		const GLFWvidmode* mode = glfwGetVideoMode(mon);
 
 		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);

@@ -39,6 +39,7 @@ namespace TomatoLib {
 	void _filllist(FILE* fptr, List<Type>& lst, int size, bsp_lump_t& l) {
 		int c = l.filelen / size;
 		lst.Reserve(c);
+		lst.resize(lst.Count + c);
 		_readFromFile(fptr, (char*)lst.Buffer(), l.filelen, l.fileofs);
 		lst.Count = c;
 	}
