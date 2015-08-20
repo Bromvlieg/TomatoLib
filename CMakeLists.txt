@@ -54,9 +54,10 @@ add_definitions(-DLINUX -std=c++11)
 
 set(TOMATO_INCLUDES "" PARENT_SCOPE)
 list(APPEND TOMATO_INCLUDES ${GLEW_INCLUDE_DIRS})
-list(APPEND TOMATO_INCLUDES TomatoLib/TomatoLib/Libaries/glfw/include)
-list(APPEND TOMATO_INCLUDES TomatoLib/TomatoLib/Libaries/freetype-gl)
-list(APPEND TOMATO_INCLUDES TomatoLib/TomatoLib/Libaries/VTFLib/src)
+list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib)
+list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/glfw/include)
+list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/freetype-gl)
+list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
 list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
 
 set(TOMATO_LIBRARIES "" PARENT_SCOPE)
