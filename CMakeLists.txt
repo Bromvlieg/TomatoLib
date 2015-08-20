@@ -52,22 +52,25 @@ add_library(tomato
 
 add_definitions(-DLINUX -std=c++11)
 
-set(TOMATO_INCLUDES "" PARENT_SCOPE)
-list(APPEND TOMATO_INCLUDES ${GLEW_INCLUDE_DIRS})
-list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib)
-list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/glfw/include)
-list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/freetype-gl)
-list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
-list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
+set(tomato_INCLUDES "")
+list(APPEND tomato_INCLUDES ${GLEW_INCLUDE_DIRS})
+list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib)
+list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/glfw/include)
+list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/freetype-gl)
+list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
+list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
 
-set(TOMATO_LIBRARIES "" PARENT_SCOPE)
-list(APPEND TOMATO_LIBRARIES ${GLEW_LIBRARIES})
-list(APPEND TOMATO_LIBRARIES glfw)
-list(APPEND TOMATO_LIBRARIES ${GLFW_LIBRARIES})
-list(APPEND TOMATO_LIBRARIES VTFLib13)
+set(tomato_LIBRARIES "")
+list(APPEND tomato_LIBRARIES ${GLEW_LIBRARIES})
+list(APPEND tomato_LIBRARIES glfw)
+list(APPEND tomato_LIBRARIES ${GLFW_LIBRARIES})
+list(APPEND tomato_LIBRARIES VTFLib13)
 
-include_directories(${TOMATO_INCLUDES})
+include_directories(${tomato_INCLUDES})
 target_link_libraries(tomato
-	${TOMATO_LIBRARIES}
+	${tomato_LIBRARIES}
 	stdc++
 )
+
+set(TOMATO_INCLUDES ${tomato_INCLUDES} CACHE STRING "TomatoLib include directories")
+set(TOMATO_LIBRARIES ${tomato_LIBRARIES} CACHE STRING "TomatoLib dependencies")
