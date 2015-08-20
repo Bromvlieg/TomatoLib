@@ -52,18 +52,21 @@ add_library(tomato
 
 add_definitions(-DLINUX -std=c++11)
 
-include_directories(
-	${GLEW_INCLUDE_DIRS}
-	TomatoLib/TomatoLib/Libaries/glfw/include
-	TomatoLib/TomatoLib/Libaries/freetype-gl
-	TomatoLib/TomatoLib/Libaries/VTFLib/src
-	${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src
-)
+set(TOMATO_INCLUDES "" PARENT_SCOPE)
+list(APPEND TOMATO_INCLUDES ${GLEW_INCLUDE_DIRS})
+list(APPEND TOMATO_INCLUDES TomatoLib/TomatoLib/Libaries/glfw/include)
+list(APPEND TOMATO_INCLUDES TomatoLib/TomatoLib/Libaries/freetype-gl)
+list(APPEND TOMATO_INCLUDES TomatoLib/TomatoLib/Libaries/VTFLib/src)
+list(APPEND TOMATO_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
 
+set(TOMATO_LIBRARIES "" PARENT_SCOPE)
+list(APPEND TOMATO_LIBRARIES ${GLEW_LIBRARIES})
+list(APPEND TOMATO_LIBRARIES glfw)
+list(APPEND TOMATO_LIBRARIES ${GLFW_LIBRARIES})
+list(APPEND TOMATO_LIBRARIES VTFLib13)
+
+include_directories(${TOMATO_INCLUDES})
 target_link_libraries(tomato
-	${GLEW_LIBRARIES}
-	glfw
-	${GLFW_LIBRARIES}
-	VTFLib13
+	${TOMATO_LIBRARIES}
 	stdc++
 )
