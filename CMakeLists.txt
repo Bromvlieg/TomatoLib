@@ -52,8 +52,6 @@ add_library(tomato
 
 add_definitions(-DLINUX -std=c++11)
 
-message(COMMENT ${GLEW_INCLUDE_DIRS})
-
 include_directories(
 	${GLEW_INCLUDE_DIRS}
 	TomatoLib/TomatoLib/Libaries/glfw/include
