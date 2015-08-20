@@ -57,7 +57,7 @@ include_directories(
 	TomatoLib/TomatoLib/Libaries/glfw/include
 	TomatoLib/TomatoLib/Libaries/freetype-gl
 	TomatoLib/TomatoLib/Libaries/VTFLib/src
-	${CMAKE_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src
+	${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src
 )
 
 target_link_libraries(tomato
