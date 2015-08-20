@@ -10,7 +10,7 @@ namespace TomatoLib {
 		}
 
 		this->FontHandle = texture_font_new_from_file(Font::Atlas, size, file.c_str());
-		texture_font_load_glyphs(this->FontHandle, L"~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][îìí\n");
+		texture_font_load_glyphs(this->FontHandle, L"~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][‚Äù‚Äú‚Äô\n");
 	}
 
 	Font::~Font() {

@@ -5,6 +5,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <cstring>
+
 #define INDICE_PUSH(x) TL_ASSERT(this->IndiceDataCount != this->IndiceDataSize); this->IndiceData[this->IndiceDataCount++] = x
 #define VERTICE_PUSH(x) TL_ASSERT(this->VerticeDataCount != this->VerticeDataSize); this->VerticeData[this->VerticeDataCount++] = x
 
@@ -347,7 +349,7 @@ namespace TomatoLib {
 		}
 	}
 
-	void Render::Texture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color) {
+	void Render::PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color) {
 		if (color.A == 0) return;
 		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
 

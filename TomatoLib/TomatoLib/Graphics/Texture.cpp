@@ -2,7 +2,11 @@
 
 #include "../Libaries/LodePNG/lodepng.h"
 
-#include <gl\glew.h>
+#ifdef _MSC_VER
+#include <gl/glew.h>
+#else
+#include <glew.h>
+#endif
 #include <GLFW/glfw3.h>
 
 namespace TomatoLib {

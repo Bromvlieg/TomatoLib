@@ -178,7 +178,7 @@ namespace TomatoLib {
 
 	struct bsp_mesh_t {
 		int TextureID;
-		Texture Texture;
+		TomatoLib::Texture Texture;
 
 		List<bsp_mesh_vertex_t> Vertices;
 		List<GLushort> Indices;

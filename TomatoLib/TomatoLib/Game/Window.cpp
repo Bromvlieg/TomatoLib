@@ -7,6 +7,7 @@
 #include "../Defines.h"
 
 #include <mutex>
+#include <cstring>
 
 namespace TomatoLib {
 	Window* Window::CurrentWindow = null;

@@ -7,6 +7,8 @@
 #include <Windows.h>
 #endif
 
+#include <cstring>
+
 namespace TomatoLib {
 
 	bool CheckLet(int l, bool spc) {

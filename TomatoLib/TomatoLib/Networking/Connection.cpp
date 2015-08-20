@@ -10,6 +10,7 @@
 #include <functional> 
 #include <cctype>
 #include <locale>
+#include <cstring>
 
 #include <chrono>
 #include <thread>

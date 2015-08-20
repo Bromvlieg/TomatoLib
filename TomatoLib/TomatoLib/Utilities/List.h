@@ -32,7 +32,7 @@ public:
 	}
 
 	inline Type RemoveAt(int index) {
-		Type object = operator[](index);
+		Type object = this->operator[](index);
 
 		this->erase(this->begin() + index);
 		this->Count--;
@@ -40,9 +40,9 @@ public:
 		return object;
 	}
 
-	inline void Set(int index, Type object) { operator[](index) = object; }
-	inline Type& Get(int index) { return operator[](index); }
-	inline Type* Buffer() { return &operator[](0); }
+	inline void Set(int index, Type object) { this->operator[](index) = object; }
+	inline Type& Get(int index) { return this->operator[](index); }
+	inline Type* Buffer() { return &this->operator[](0); }
 	inline void Reserve(int num) { this->reserve(num); }
 };
 

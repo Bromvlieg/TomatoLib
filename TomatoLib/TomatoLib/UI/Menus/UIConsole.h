@@ -41,7 +41,7 @@ namespace TomatoLib {
 		UIPanel* ConsolePanel;
 		UIScrollPanel* ScrollPanel;
 		UITextEntry* TextEntry;
-		Font* Font;
+		TomatoLib::Font* Font;
 		std::vector<UIConsoleLineData> Lines;
 
 		int MaxHeight;

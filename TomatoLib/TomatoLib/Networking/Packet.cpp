@@ -5,6 +5,8 @@
 #include <string>
 using std::string;
 
+#include <cstring>
+
 namespace TomatoLib {
 	bool Packet::InsertOutlenIntOnSend = true;
 
@@ -251,7 +253,7 @@ namespace TomatoLib {
 		return buff;
 	}
 
-	const char* Packet::ReadUntil(char* seq) {
+	const char* Packet::ReadUntil(const char* seq) {
 		unsigned int startpos = this->InPos;
 		unsigned int seqsize = strlen(seq);
 
@@ -320,7 +322,7 @@ namespace TomatoLib {
 		return res;
 	}
 
-	bool Packet::CanRead(char* seq) {
+	bool Packet::CanRead(const char* seq) {
 		if (this->Sock == null)
 			return false;
 
