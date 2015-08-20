@@ -541,24 +541,6 @@ namespace TomatoLib {
 		this->Text(font, text, (float)x, (float)y, color);
 	}
 
-	bool randinited = false;
-	int rnd(int min, int max) {
-		if (!randinited) {
-			randinited = true;
-
-			srand(0);
-		}
-
-		int divisor = RAND_MAX / (max + 1);
-		int retval;
-
-		do {
-			retval = rand() / divisor;
-		} while (retval > max);
-
-		return retval + min;
-	}
-
 	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color) {
 		if (color.A == 0) return;
 		this->SetTexture(font->Atlas->id);
