@@ -93,6 +93,12 @@ namespace TomatoLib {
 		}
 	}
 
+	void Game::Run() {
+		this->Init();
+		this->RegisterConsoleStuff();
+		this->EnterGameLoop();
+	}
+
 	void Game::RegisterConsoleStuff() {
 
 	}

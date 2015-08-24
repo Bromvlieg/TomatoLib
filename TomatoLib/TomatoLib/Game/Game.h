@@ -21,6 +21,7 @@ namespace TomatoLib {
 		virtual void Draw(Render& r);
 
 		void EnterGameLoop();
+		void Run();
 
 		Game();
 		~Game();
