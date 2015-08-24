@@ -72,12 +72,12 @@ namespace TomatoLib {
 			this->DefaultTexture.BindGL();
 			this->DefaultTexture.Upload();
 
-			this->DefaultShaderText.AttachRaw("#version 130\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){outColor = output_color; outColor.a *= texture(tex, output_texpos).r;\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
-			this->DefaultShaderText.AttachRaw("#version 130\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
+			this->DefaultShaderText.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){outColor = output_color; outColor.a *= texture(tex, output_texpos).r;\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
+			this->DefaultShaderText.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
 			__shaderStuff(this->DefaultShaderText);
 
-			this->DefaultShaderTexture.AttachRaw("#version 130\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){\noutColor = texture(tex, output_texpos) * output_color;\n\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
-			this->DefaultShaderTexture.AttachRaw("#version 130\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
+			this->DefaultShaderTexture.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){\noutColor = texture(tex, output_texpos) * output_color;\n\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
+			this->DefaultShaderTexture.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
 			__shaderStuff(this->DefaultShaderTexture);
 		}
 
