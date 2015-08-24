@@ -1,12 +1,26 @@
 cmake_minimum_required(VERSION 3.0)
 project(TomatoLib)
 
+cmake_policy(VERSION 3.0)
+
+set(tomato_INCLUDES "")
+set(tomato_LIBRARIES "")
+
 add_subdirectory("TomatoLib/TomatoLib/Libaries")
+
+list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib)
 
 set(presrc "TomatoLib/TomatoLib")
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLEW REQUIRED glew)
+pkg_search_module(FT2 REQUIRED freetype2)
+
+list(APPEND tomato_INCLUDES ${FT2_INCLUDE_DIRS})
+list(APPEND tomato_INCLUDES ${GLEW_INCLUDE_DIRS})
+
+list(APPEND tomato_LIBRARIES ${GLEW_LIBRARIES})
+list(APPEND tomato_LIBRARIES ${FT2_LIBRARIES})
 
 add_library(tomato
 	${presrc}/MapFormats/Bsp.cpp
@@ -52,19 +66,7 @@ add_library(tomato
 
 add_definitions(-DLINUX -std=c++11)
 
-set(tomato_INCLUDES "")
-list(APPEND tomato_INCLUDES ${GLEW_INCLUDE_DIRS})
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib)
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/glfw/include)
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/freetype-gl)
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/TomatoLib/TomatoLib/Libaries/VTFLib/src)
-
-set(tomato_LIBRARIES "")
-list(APPEND tomato_LIBRARIES ${GLEW_LIBRARIES})
-list(APPEND tomato_LIBRARIES glfw)
-list(APPEND tomato_LIBRARIES ${GLFW_LIBRARIES})
-list(APPEND tomato_LIBRARIES VTFLib13)
+message(${tomato_INCLUDES})
 
 include_directories(${tomato_INCLUDES})
 target_link_libraries(tomato

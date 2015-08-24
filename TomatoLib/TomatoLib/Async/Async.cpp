@@ -10,8 +10,13 @@
 
 namespace TomatoLib {
 	namespace Async {
+#ifdef _MSC_VER
 		unsigned long MainThreadID;
 		unsigned long AsyncThreadID;
+#else
+		pthread_t MainThreadID;
+		pthread_t AsyncThreadID;
+#endif
 		bool Inited = false;
 		bool ShouldShutdown = false;
 
