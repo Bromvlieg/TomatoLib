@@ -11,27 +11,29 @@
 
 namespace TomatoLib {
 	Texture::Texture() {
+		this->RegisteredInGL = false;
+		this->GLHandle = 0;
 		this->Width = 0;
 		this->Height = 0;
-		this->RegisteredInGL = false;
 	}
 
 	Texture::Texture(unsigned int w, unsigned int h) {
 		this->RegisteredInGL = false;
-		this->PixelData = std::vector<unsigned char>(w * h * 4);
+		this->GLHandle = 0;
 		this->Width = w;
 		this->Height = h;
-		this->RegisteredInGL = false;
+		this->PixelData = std::vector<unsigned char>(w * h * 4);
 	}
 
 	Texture::Texture(const char* fileName) {
 		this->RegisteredInGL = false;
+		this->GLHandle = 0;
+
 		std::vector<unsigned char> image;
 		unsigned error = lodepng::decode(image, this->Width, this->Height, fileName);
 		if (error != 0) return;
 
 		this->PixelData = image;
-		this->GLHandle = 0;
 	}
 
 	Color Texture::GetPixel(int x, int y) {
@@ -40,7 +42,7 @@ namespace TomatoLib {
 			this->PixelData[(y * this->Width + x) * 4 + 1],
 			this->PixelData[(y * this->Width + x) * 4 + 2],
 			this->PixelData[(y * this->Width + x) * 4 + 3]
-			);
+		);
 	}
 
 	void Texture::SetPixel(int x, int y, Color col) {
