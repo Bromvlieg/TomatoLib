@@ -95,9 +95,9 @@ namespace TomatoLib {
 	}
 
 	Vector3& Vector3::operator*= (const float& other) {
-		X = X + other;
-		Y = Y + other;
-		Z = Z + other;
+		X = X * other;
+		Y = Y * other;
+		Z = Z * other;
 		return *this;
 	}
 

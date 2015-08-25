@@ -13,8 +13,11 @@ namespace TomatoLib {
 	public:
 		ftgl::texture_font_t* FontHandle;
 
-		Font(std::string file, float size);
+		Font(const std::string &file, float size);
+		Font();
 		~Font();
+
+		void Load(const std::string &file, float size);
 
 		static texture_atlas_t* Atlas;
 	};

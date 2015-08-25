@@ -66,8 +66,8 @@ namespace TomatoLib {
 	}
 
 	Vector2& Vector2::operator*= (const float& other) {
-		X = X + other;
-		Y = Y + other;
+		X = X * other;
+		Y = Y * other;
 		return *this;
 	}
 
