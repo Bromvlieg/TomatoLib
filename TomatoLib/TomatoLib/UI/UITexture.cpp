@@ -13,7 +13,7 @@ namespace TomatoLib {
 
 		if (this->TextureHandle == 0) return;
 		p.SetTexture(this->TextureHandle);
-		p.Texture(0, 0, (float)this->W, (float)this->H, this->TextureStart.X, this->TextureStart.Y, this->TextureEnd.X, this->TextureEnd.Y, this->DrawColor);
+		p.PutTexture(0, 0, (float)this->W, (float)this->H, this->TextureStart.X, this->TextureStart.Y, this->TextureEnd.X, this->TextureEnd.Y, this->DrawColor);
 	}
 
 	void UITexture::Update() {

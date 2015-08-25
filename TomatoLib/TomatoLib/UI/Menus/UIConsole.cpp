@@ -5,8 +5,9 @@
 #include <functional> 
 #include <cctype>
 #include <locale>
+#include <cstring>
 
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace TomatoLib {
 	// trim from start

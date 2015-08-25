@@ -64,14 +64,14 @@ namespace TomatoLib {
 		float ReadFloat();
 		double ReadDouble();
 		const char* ReadString(int len = -1);
-		const char* ReadUntil(char* seq);
+		const char* ReadUntil(const char* seq);
 		const char* ReadStringNT();
 		const char* ReadStringAll();
 		Vector2 ReadVector2();
 		Vector3 ReadVector3();
 
 		bool CanRead(int len);
-		bool CanRead(char* seq);
+		bool CanRead(const char* seq);
 		bool HasDataLeft();
 		int DataLeft();
 

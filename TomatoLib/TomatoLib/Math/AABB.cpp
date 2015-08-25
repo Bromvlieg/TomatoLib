@@ -33,8 +33,8 @@ namespace TomatoLib {
 		if (newclip.X > other.X + other.W) newclip = AABB(other.X, other.Y, 0.0f, 0.0f);
 		if (newclip.Y > other.Y + other.H) newclip = AABB(other.X, other.Y, 0.0f, 0.0f);
 
-		if (newclip.X < other.X) { newclip.W -= other.X - abs(newclip.X); newclip.X = other.X; }
-		if (newclip.Y < other.Y) { newclip.H -= other.Y - abs(newclip.Y); newclip.Y = other.Y; }
+		if (newclip.X < other.X) { newclip.W -= other.X - fabs(newclip.X); newclip.X = other.X; }
+		if (newclip.Y < other.Y) { newclip.H -= other.Y - fabs(newclip.Y); newclip.Y = other.Y; }
 
 		if (newclip.X + newclip.W > other.X + other.W) newclip.W = other.X + other.W - newclip.X;
 		if (newclip.Y + newclip.H > other.Y + other.H) newclip.H = other.Y + other.H - newclip.Y;

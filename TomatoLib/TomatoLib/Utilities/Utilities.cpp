@@ -5,6 +5,8 @@
 #include <chrono>
 #include <string>
 #include <sstream>
+#include <cstring>
+#include <cstdarg>
 
 namespace TomatoLib {
 	namespace Utilities {
@@ -73,8 +75,8 @@ namespace TomatoLib {
 
 		std::string GetDateFormated(int unixtimeraw, std::string format) {
 			time_t unixtime = (time_t)unixtimeraw;
-			tm ltime;
-			localtime_s(&ltime, &unixtime);
+			struct tm ltime;
+			ltime = *localtime(&unixtime);
 
 			char* str = new char[format.size() + 512];
 			strftime(str, (int)format.size() + 512, format.c_str(), &ltime);

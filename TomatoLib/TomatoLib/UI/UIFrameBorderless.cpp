@@ -1,6 +1,6 @@
 #include "UIFrameBorderless.h"
 #include "UIManager.h"
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 #include "../Game/Window.h"
 
 namespace TomatoLib {

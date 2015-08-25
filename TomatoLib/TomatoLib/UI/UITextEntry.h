@@ -12,7 +12,7 @@ namespace TomatoLib {
 	public:
 		UITextEntry(UIBase* parent);
 
-		Font* Font;
+		TomatoLib::Font* Font;
 		float WideScroll;
 		int Caret;
 		float CaretX;

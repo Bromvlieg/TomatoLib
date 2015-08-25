@@ -12,6 +12,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <cstring>
+
 //  3904856
 // 23250864
 
@@ -259,7 +261,7 @@ namespace TomatoLib {
 				// Set any xzip configuration
 				if (rec.commentLength) {
 					char commentString[128];
-					int commentLength = min(rec.commentLength, sizeof(commentString));
+					int commentLength = std::min((size_t)rec.commentLength, sizeof(commentString));
 					fread(commentString, 1, commentLength, fptr);
 
 					if (commentLength == sizeof(commentString))

@@ -24,7 +24,7 @@ namespace TomatoLib {
 
 		virtual void InvalidateLayout() override;
 
-		Font* Font;
+		TomatoLib::Font* Font;
 		Color TextColor;
 		TextAlign Align;
 		bool Underline;

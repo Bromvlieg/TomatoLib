@@ -1,0 +1,9 @@
+[submodule "TomatoLib/TomatoLib/Libaries/glfw"]
+	path = TomatoLib/TomatoLib/Libaries/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "TomatoLib/TomatoLib/Libaries/freetype-gl"]
+	path = TomatoLib/TomatoLib/Libaries/freetype-gl
+	url = https://github.com/AngeloG/freetype-gl.git
+[submodule "VTFLib"]
+	path = TomatoLib/TomatoLib/Libaries/VTFLib
+	url = https://github.com/AngeloG/VTFLib.git

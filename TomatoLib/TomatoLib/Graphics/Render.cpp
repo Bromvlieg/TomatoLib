@@ -5,6 +5,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <cstring>
+
 #define INDICE_PUSH(x) TL_ASSERT(this->IndiceDataCount != this->IndiceDataSize); this->IndiceData[this->IndiceDataCount++] = x
 #define VERTICE_PUSH(x) TL_ASSERT(this->VerticeDataCount != this->VerticeDataSize); this->VerticeData[this->VerticeDataCount++] = x
 
@@ -70,12 +72,12 @@ namespace TomatoLib {
 			this->DefaultTexture.BindGL();
 			this->DefaultTexture.Upload();
 
-			this->DefaultShaderText.AttachRaw("#version 130\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){outColor = output_color; outColor.a *= texture(tex, output_texpos).r;\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
-			this->DefaultShaderText.AttachRaw("#version 130\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
+			this->DefaultShaderText.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){outColor = output_color; outColor.a *= texture(tex, output_texpos).r;\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
+			this->DefaultShaderText.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
 			__shaderStuff(this->DefaultShaderText);
 
-			this->DefaultShaderTexture.AttachRaw("#version 130\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){\noutColor = texture(tex, output_texpos) * output_color;\n\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
-			this->DefaultShaderTexture.AttachRaw("#version 130\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
+			this->DefaultShaderTexture.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){\noutColor = texture(tex, output_texpos) * output_color;\n\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
+			this->DefaultShaderTexture.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
 			__shaderStuff(this->DefaultShaderTexture);
 		}
 
@@ -347,7 +349,7 @@ namespace TomatoLib {
 		}
 	}
 
-	void Render::Texture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color) {
+	void Render::PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color) {
 		if (color.A == 0) return;
 		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
 

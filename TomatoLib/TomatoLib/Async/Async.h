@@ -4,11 +4,17 @@
 
 #include <vector>
 #include <functional>
+#include <pthread.h>
 
 namespace TomatoLib {
 	namespace Async {
+#ifdef _MSC_VER
 		extern unsigned long MainThreadID;
 		extern unsigned long AsyncThreadID;
+#else
+		extern pthread_t MainThreadID;
+		extern pthread_t AsyncThreadID;
+#endif
 
 		extern unsigned int CallsToDoOnAsyncThreadIndex;
 		extern std::vector<std::function<void()>> CallsToDoOnMainThread;

@@ -1,6 +1,9 @@
 #include "Shader.h"
 #include "../Defines.h"
 
+#include <iostream>
+#include <fstream>
+
 namespace TomatoLib {
 	Shader::Shader() {
 		this->ProgramHandle = glCreateProgram();
@@ -22,7 +25,7 @@ namespace TomatoLib {
 		checkGL;
 
 		std::ifstream infile;
-		infile.open( file, std::ios::binary );
+		infile.open( file, std::ifstream::binary );
 
 		if( !infile.is_open() )
 		{
@@ -81,7 +84,7 @@ namespace TomatoLib {
 		//Create new shader, set the source, and compile it
 		GLuint handle = glCreateShader(mode);
 		const char* str = text.c_str();
-		glShaderSource(handle, 1, &(const GLchar*)str, 0);
+		glShaderSource(handle, 1, (const GLchar**)&str, 0);
 		glCompileShader(handle);
 
 		//Check if compile is succesfull

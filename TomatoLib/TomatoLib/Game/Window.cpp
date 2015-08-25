@@ -7,6 +7,7 @@
 #include "../Defines.h"
 
 #include <mutex>
+#include <cstring>
 
 namespace TomatoLib {
 	Window* Window::CurrentWindow = null;
@@ -65,7 +66,7 @@ namespace TomatoLib {
 	}
 
 	void error_callback(int error, const char* description) {
-		fputs(description, stderr);
+		printf("GLFW error %d: '%s'\n", error, description);
 	}
 
 	void Window::PollEvents() {
@@ -164,7 +165,6 @@ namespace TomatoLib {
 		glfwSetMouseButtonCallback(this->Handle, this->OnMouse);
 		glfwSetScrollCallback(this->Handle, this->OnScroll);
 		glfwSetCharCallback(this->Handle, this->OnChar);
-		glfwSetErrorCallback(error_callback);
 		glfwSetCursorPosCallback(this->Handle, this->OnMousePos);
 		glfwSetWindowFocusCallback(this->Handle, this->OnFocus);
 	}
@@ -173,7 +173,10 @@ namespace TomatoLib {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for Mac OS X
 		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
+
+		glfwSetErrorCallback(error_callback);
 
 		GLFWmonitor* mon = glfwGetPrimaryMonitor();
 		if (mon == nullptr) {
