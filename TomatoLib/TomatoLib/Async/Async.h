@@ -4,7 +4,10 @@
 
 #include <vector>
 #include <functional>
+
+#ifndef _MSC_VER
 #include <pthread.h>
+#endif
 
 namespace TomatoLib {
 	namespace Async {

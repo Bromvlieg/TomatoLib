@@ -35,7 +35,7 @@ namespace TomatoLib {
 		}
 
 		infile.seekg( 0, std::ios::end );
-		size_t file_size_in_byte = infile.tellg();
+		size_t file_size_in_byte = (size_t)infile.tellg();
 
 		std::vector<char> data; // used to store text data
 		data.resize( file_size_in_byte );

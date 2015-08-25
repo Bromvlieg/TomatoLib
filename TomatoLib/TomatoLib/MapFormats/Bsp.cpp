@@ -14,9 +14,6 @@
 
 #include <cstring>
 
-//  3904856
-// 23250864
-
 namespace TomatoLib {
 	void _readFromFile(FILE* f, char* dest, int len, int pos) {
 		fseek(f, pos, SEEK_SET);
@@ -261,7 +258,7 @@ namespace TomatoLib {
 				// Set any xzip configuration
 				if (rec.commentLength) {
 					char commentString[128];
-					int commentLength = std::min((size_t)rec.commentLength, sizeof(commentString));
+					int commentLength = rec.commentLength < sizeof(commentString) ? rec.commentLength : sizeof(commentString);
 					fread(commentString, 1, commentLength, fptr);
 
 					if (commentLength == sizeof(commentString))
