@@ -4,6 +4,7 @@
 
 #include <GL/glew.h>
 #include "../Math/Vector2.h"
+#include "../Math/Matrix.h"
 #include "Window.h"
 
 namespace TomatoLib {
@@ -16,6 +17,8 @@ namespace TomatoLib {
 		float farClippingPlane;
 
 		void UpdateLookat();
+
+		Matrix mat;
 
 	public:
 		float GetX() const;
@@ -42,8 +45,9 @@ namespace TomatoLib {
 
 		void ApplyProjMatrix();
 
-		void InsertViewMatrix(GLint location);
+		void InsertViewMatrix(GLint location) const;
 		void HandleRawInput(Window& w);
+		void SetMatrix(const Matrix& m);
 
 		Camera();
 	};

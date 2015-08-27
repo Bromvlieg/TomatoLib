@@ -10,6 +10,8 @@ namespace TomatoLib {
 		lookx = x + sin(pitch) * cos(yaw);
 		looky = y + sin(pitch) * sin(yaw);
 		lookz = z + cos(pitch);
+
+		this->mat = Matrix::CreateLookAt(Vector3(x, z, y), Vector3(lookx, lookz, looky), Vector3(0.0, 1.0, 0.0));
 	}
 
 	Camera::Camera() : x(0), y(4), z(0), pitch((float)M_PI_2), yaw((float)M_PI_2 + (float)M_PI) {
@@ -37,12 +39,12 @@ namespace TomatoLib {
 	void Camera::SetPitch(float pp) { pitch = pp; UpdateLookat(); }
 	void Camera::SetYaw(float yy) { yaw = yy; UpdateLookat(); }
 
-	void Camera::InsertViewMatrix(GLint location) {
-		Matrix lookAt = Matrix::CreateLookAt(Vector3(x, z, y), Vector3(lookx, lookz, looky), Vector3(0.0, 1.0, 0.0));
+	void Camera::InsertViewMatrix(GLint location) const {
+		glUniformMatrix4fv(location, 1, GL_FALSE, this->mat.values);
+	}
 
-		//	lookAt.DebugPrint();
-
-		glUniformMatrix4fv(location, 1, GL_FALSE, lookAt.values);
+	void Camera::SetMatrix(const Matrix& m) {
+		this->mat = m;
 	}
 
 	void Camera::HandleRawInput(Window& w) {
