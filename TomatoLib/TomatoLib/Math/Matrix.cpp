@@ -84,15 +84,23 @@ namespace TomatoLib {
 		return retVal;
 	}
 
-	Matrix Matrix::CreateTranslation(Vector3 pos) {
+	Matrix Matrix::CreateTranslation(const Vector3& pos) {
 		return CreateTranslation(pos.X, pos.Y, pos.Z);
+	}
+
+	Vector3 Matrix::GetTranslation() const {
+		return this->Translate(Vector3::Zero);
+	}
+
+	Vector3 Matrix::GetScale() const {
+		return Vector3(values[0], values[5], values[10]);
 	}
 
 	Matrix Matrix::CreateLookAt(float eyex, float eyey, float eyez, float targetx, float targety, float targetz, float upx, float upy, float upz) {
 		return CreateLookAt(Vector3(eyex, eyey, eyez), Vector3(targetx, targety, targetz), Vector3(upx, upy, upz));
 	}
 
-	Matrix Matrix::CreateLookAt(Vector3 eyePos, Vector3 targetPos, Vector3 upPos) {
+	Matrix Matrix::CreateLookAt(const Vector3& eyePos, const Vector3& targetPos, const Vector3& upPos) {
 		Vector3 zAxis = (eyePos - targetPos).Normalized();
 		Vector3 xAxis = upPos.Cross(zAxis).Normalized();
 		Vector3 yAxis = zAxis.Cross(xAxis).Normalized();

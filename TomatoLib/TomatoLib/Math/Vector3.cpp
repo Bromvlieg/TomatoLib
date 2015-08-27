@@ -34,6 +34,10 @@ namespace TomatoLib {
 		return (*this) / Length();
 	}
 
+	Vector3 Vector3::XZY() const {
+		return Vector3(this->X, this->Z, this->Y);
+	}
+
 	Vector3 Vector3::GetRotated(const Vector3 &ang, const Vector3 &orgin) const {
 		Matrix rotmat = Matrix::CreateRotationZ(ang.X) * Matrix::CreateRotationY(ang.Z) * Matrix::CreateRotationX(ang.Y) * Matrix::CreateTranslation(orgin);
 		return rotmat.Translate(*this);

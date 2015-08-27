@@ -12,9 +12,9 @@ namespace TomatoLib {
 		static Matrix CreateScale(float scale);
 		static Matrix CreateScale(float scaleX, float scaleY, float scaleZ);
 		static Matrix CreateTranslation(float x, float y, float z);
-		static Matrix CreateTranslation(Vector3 pos);
+		static Matrix CreateTranslation(const Vector3& pos);
 		static Matrix CreateLookAt(float eyex, float eyey, float eyez, float targetx, float targety, float targetz, float upx, float upy, float upz);
-		static Matrix CreateLookAt(Vector3 eyePos, Vector3 targetPos, Vector3 up);
+		static Matrix CreateLookAt(const Vector3& eyePos, const Vector3& targetPos, const Vector3& up);
 		static Matrix CreatePerspective(float fovy, float aspect, float zNear, float zFar);
 
 		~Matrix();
@@ -31,6 +31,9 @@ namespace TomatoLib {
 
 		Vector3 Translate(float x, float y, float z) const;
 		Vector3 Translate(const Vector3& input) const;
+
+		Vector3 GetTranslation() const;
+		Vector3 GetScale() const;
 
 		Matrix operator*(const Matrix& other) const;
 		void operator*=(const Matrix& other) { *this = *this * other; }

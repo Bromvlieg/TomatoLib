@@ -9,6 +9,7 @@ namespace TomatoLib {
 	class Texture {
 	public:
 		Texture();
+		Texture(const Texture& t);
 		Texture(unsigned int w, unsigned int h);
 		Texture(const char* fileName);
 		~Texture();
@@ -18,10 +19,25 @@ namespace TomatoLib {
 		unsigned int Width, Height;
 		std::vector<unsigned char> PixelData;
 
-		Color GetPixel(int x, int y);
-		void SetPixel(int x, int y, Color col);
+		std::string Filename;
 
-		void Copy(Texture* t);
+		Color GetPixel(int x, int y) {
+			return Color(
+				this->PixelData[(y * this->Width + x) * 4 + 0],
+				this->PixelData[(y * this->Width + x) * 4 + 1],
+				this->PixelData[(y * this->Width + x) * 4 + 2],
+				this->PixelData[(y * this->Width + x) * 4 + 3]
+				);
+		}
+
+		void SetPixel(int x, int y, Color col) {
+			this->PixelData[(y * this->Width + x) * 4 + 0] = col.R;
+			this->PixelData[(y * this->Width + x) * 4 + 1] = col.G;
+			this->PixelData[(y * this->Width + x) * 4 + 2] = col.B;
+			this->PixelData[(y * this->Width + x) * 4 + 3] = col.A;
+		}
+
+		void Copy(const Texture& t);
 		void BindGL();
 		void Upload();
 		void Use();

@@ -5,6 +5,7 @@
 #include "../Graphics/Render.h"
 #include "../Math/Vector3.h"
 #include "../Utilities/List.h"
+#include "../Utilities/Dictonary.h"
 #include "../Game/Camera.h"
 #include <string>
 
@@ -137,10 +138,65 @@ namespace TomatoLib {
 		Vector3		BasisNormal;
 	};
 
+	struct dentity_t {
+		std::string Type;
+		Dictonary<std::string, std::string> Settings;
+	};
+
 	struct dplane_t {
 		Vector3	normal;	// normal vector
 		float	dist;	// distance from origin
 		int	type;	// plane axis identifier
+	};
+
+	struct dDispTri {
+		unsigned short Tags;	// Displacement triangle tags.
+	};
+
+	struct CDispSubNeighbor {
+		unsigned short		m_iNeighbor;		// This indexes into ddispinfos.
+		// 0xFFFF if there is no neighbor here.
+
+		unsigned char		m_NeighborOrientation;		// (CCW) rotation of the neighbor wrt this displacement.
+
+		// These use the NeighborSpan type.
+		unsigned char		m_Span;						// Where the neighbor fits onto this side of our displacement.
+		unsigned char		m_NeighborSpan;				// Where we fit onto our neighbor.
+	};
+
+
+	struct CDispNeighbor {
+		// Note: if there is a neighbor that fills the whole side (CORNER_TO_CORNER),
+		//       then it will always be in CDispNeighbor::m_Neighbors[0]
+		CDispSubNeighbor	m_SubNeighbors[2];
+	};
+
+
+	struct CDispCornerNeighbors {
+		unsigned short	m_Neighbors[4];	// indices of neighbors.
+		unsigned char	m_nNeighbors;
+	};
+
+	struct dDispVert {
+		Vector3	vec;	// Vector field defining displacement volume.
+		float	dist;	// Displacement distances.
+		float	alpha;	// "per vertex" alpha values.
+	};
+
+	struct ddispinfo_t {
+		Vector3			startPosition;		// start position used for orientation
+		int			DispVertStart;		// Index into LUMP_DISP_VERTS.
+		int			DispTriStart;		// Index into LUMP_DISP_TRIS.
+		int			power;			// power - indicates size of surface (2^power	1)
+		int			minTess;		// minimum tesselation allowed
+		float			smoothingAngle;		// lighting smoothing angle
+		int			contents;		// surface contents
+		unsigned short		MapFace;		// Which map face this displacement comes from.
+		int			LightmapAlphaStart;	// Index into ddisplightmapalpha.
+		int			LightmapSamplePositionStart;	// Index into LUMP_DISP_LIGHTMAP_SAMPLE_POSITIONS.
+		CDispNeighbor		EdgeNeighbors[4];	// Indexed by NEIGHBOREDGE_ defines.
+		CDispCornerNeighbors	CornerNeighbors[4];	// Indexed by CORNER_ defines.
+		unsigned int		AllowedVerts[10];	// active verticies
 	};
 
 	struct bsp_lzma_header_t {
@@ -188,6 +244,12 @@ namespace TomatoLib {
 		GLuint ebo;
 	};
 
+	struct bsp_collision_plane {
+		Vector3 Normal;
+		float DistToOrgin;
+		int Type;
+	};
+
 	class Bsp {
 		FILE* FilePtr;
 
@@ -196,10 +258,15 @@ namespace TomatoLib {
 
 		bsp_header_t Header;
 		List<bsp_mesh_t*> Meshes;
+		List<dentity_t> Entities;
+		List<List<Vector3>> CollisionFaces;
+		List<bsp_collision_plane> CollisionPlanes;
 
+		Bsp();
 		Bsp(std::string file);
 		~Bsp();
 
+		bool FromFile(std::string file);
 		void Draw(Render& r, Camera& cam);
 		void DoGLStuff();
 	};

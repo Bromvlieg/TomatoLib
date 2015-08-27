@@ -33,6 +33,8 @@ namespace TomatoLib {
 		Vector3& operator/= (const Vector3& other);
 		Vector3& operator/= (const float& other);
 
+		Vector3 XZY() const;
+
 		bool operator== (const Vector3& other) const;
 		bool operator!= (const Vector3& other) const;
 

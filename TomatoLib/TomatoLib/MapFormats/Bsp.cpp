@@ -2,6 +2,7 @@
 
 #include "../Math/Matrix.h"
 #include "../Graphics/Shader.h"
+#include "../Utilities/Utilities.h"
 #include "../Utilities/Dictonary.h"
 #include "../Utilities/zip_uncompressed.h"
 #include "../Defines.h"
@@ -37,6 +38,8 @@ namespace TomatoLib {
 	template<class Type>
 	void _filllist(FILE* fptr, List<Type>& lst, int size, bsp_lump_t& l) {
 		int c = l.filelen / size;
+		if (c == 0) return;
+
 		lst.Reserve(c);
 		lst.resize(lst.Count + c);
 		_readFromFile(fptr, (char*)lst.Buffer(), l.filelen, l.fileofs);
@@ -173,31 +176,46 @@ namespace TomatoLib {
 	}
 
 	Bsp::Bsp(std::string file) {
+		this->FromFile(file);
+	}
+
+	Bsp::Bsp() {
+		
+	}
+
+	bool Bsp::FromFile(std::string file) {
 		FILE* fptr = fopen(file.c_str(), "rb");
+		if (fptr == nullptr) {
+			return false;
+		}
 		
 		fread(&this->Header, 1, sizeof(bsp_header_t), fptr);
 
 		if (this->Header.ident != IDBSPHEADER) {
-			throw "Invalid file";
+			return false;
 		}
 
 
 		List<Vector3> vertices;
 
-		bsp_lump_t l_texdatastrings = this->Header.lumps[MapFormats::Lumps::TexDataStringData];
-		bsp_lump_t l_texdatatable = this->Header.lumps[MapFormats::Lumps::TexDataStringTable];
-		bsp_lump_t l_texdata = this->Header.lumps[MapFormats::Lumps::TexData];
-		bsp_lump_t l_texinfo = this->Header.lumps[MapFormats::Lumps::TexInfo];
-		bsp_lump_t l_faces = this->Header.lumps[MapFormats::Lumps::Faces];
-		bsp_lump_t l_sedge = this->Header.lumps[MapFormats::Lumps::Surfedges];
-		bsp_lump_t l_edge = this->Header.lumps[MapFormats::Lumps::Edges];
-		bsp_lump_t l_brushes = this->Header.lumps[MapFormats::Lumps::Brushes];
-		bsp_lump_t l_brushsides = this->Header.lumps[MapFormats::Lumps::BrushSides];
-		bsp_lump_t l_verts = this->Header.lumps[MapFormats::Lumps::Vertices];
-		bsp_lump_t l_planes = this->Header.lumps[MapFormats::Lumps::Planes];
-		bsp_lump_t l_pak = this->Header.lumps[MapFormats::Lumps::PakFile];
-		bsp_lump_t l_overlays = this->Header.lumps[MapFormats::Lumps::Overlays];
+		bsp_lump_t& l_game = this->Header.lumps[MapFormats::Lumps::Game];
+		bsp_lump_t& l_entities = this->Header.lumps[MapFormats::Lumps::Entities];
+		bsp_lump_t& l_texdatastrings = this->Header.lumps[MapFormats::Lumps::TexDataStringData];
+		bsp_lump_t& l_texdatatable = this->Header.lumps[MapFormats::Lumps::TexDataStringTable];
+		bsp_lump_t& l_texdata = this->Header.lumps[MapFormats::Lumps::TexData];
+		bsp_lump_t& l_texinfo = this->Header.lumps[MapFormats::Lumps::TexInfo];
+		bsp_lump_t& l_faces = this->Header.lumps[MapFormats::Lumps::Faces];
+		bsp_lump_t& l_sedge = this->Header.lumps[MapFormats::Lumps::Surfedges];
+		bsp_lump_t& l_edge = this->Header.lumps[MapFormats::Lumps::Edges];
+		bsp_lump_t& l_brushes = this->Header.lumps[MapFormats::Lumps::Brushes];
+		bsp_lump_t& l_brushsides = this->Header.lumps[MapFormats::Lumps::BrushSides];
+		bsp_lump_t& l_verts = this->Header.lumps[MapFormats::Lumps::Vertices];
+		bsp_lump_t& l_planes = this->Header.lumps[MapFormats::Lumps::Planes];
+		bsp_lump_t& l_pak = this->Header.lumps[MapFormats::Lumps::PakFile];
+		bsp_lump_t& l_overlays = this->Header.lumps[MapFormats::Lumps::Overlays];
+		bsp_lump_t& l_models = this->Header.lumps[MapFormats::Lumps::Models];
 
+		List<dmodel_t> models;
 		List<doverlay_t> overlays;
 		List<dplane_t> planes;
 		List<dbrushside_t> brushsides;
@@ -220,7 +238,49 @@ namespace TomatoLib {
 		_filllist(fptr, texinto, sizeof(texinfo_t), l_texinfo);
 		_filllist(fptr, planes, sizeof(dplane_t), l_planes);
 		_filllist(fptr, overlays, sizeof(doverlay_t), l_overlays);
+		_filllist(fptr, models, sizeof(dmodel_t), l_models);
 		_filllist(fptr, texdataStringTable, sizeof(int), l_texdatatable);
+
+		char* entsbuffer = new char[l_entities.filelen];
+		_readFromFile(fptr, entsbuffer, l_entities.filelen, l_entities.fileofs);
+
+		std::string curbuff;
+		std::string key;
+		dentity_t curent;
+		bool inkey = true;
+		bool instring = false;
+		for (int i = 0; i < l_entities.filelen; i++) {
+			char l = entsbuffer[i];
+
+			switch (l) {
+				case '"': {
+					instring = !instring;
+					if (!instring) {
+						if (inkey) {
+							key = curbuff;
+							inkey = false;
+							curbuff = "";
+						} else {
+							curent.Settings.Add(key, curbuff);
+							inkey = true;
+							curbuff = "";
+						}
+					}
+				} break;
+
+				case '}':{ // entity end
+					if (curent.Settings.ContainsKey("classname")) curent.Type = curent.Settings["classname"];
+					Entities.Add(curent);
+					curent = dentity_t();
+				} break;
+
+				default: {
+					if (!instring) continue;
+					curbuff += l;
+				} break;
+			}
+		}
+		Entities[0].Settings["model"] = "*0"; // first entity is ALWAYS worldspawn, but does not have a default reference to the world model, so we do that here
 
 		for (int i = 0; i < texdataStringTable.Count; i++) {
 			char* buff = new char[128];
@@ -236,7 +296,11 @@ namespace TomatoLib {
 			texdataStrings.Add(buff);
 		}
 
+
+
 		for (int i = 0; i < vertices.Count; i++) {
+			vertices[i] /= 2;
+
 			vertices[i].X *= -1;
 			std::swap(vertices[i].Y, vertices[i].Z);
 		}
@@ -305,32 +369,69 @@ namespace TomatoLib {
 			fseek(fptr, curpos, SEEK_SET);
 		}
 
-		
+
+		for (int brushindex = 0; brushindex < brushes.Count; brushindex++) {
+			dbrush_t& b = brushes[brushindex];
+			if (b.contents != 0x1) continue; // not solid
+
+			for (int sideindex = 0; sideindex < b.numsides; sideindex++) {
+				dbrushside_t& bs = brushsides[sideindex + sideindex];
+				dplane_t& p = planes[bs.planenum];
+
+				bsp_collision_plane cp;
+				cp.Normal = p.normal;
+				cp.Type = p.type;
+				cp.DistToOrgin = p.dist;
+
+				this->CollisionPlanes.Add(cp);
+			}
+		}
+
 		for (int faceindex = 0; faceindex < faces.Count; faceindex++) {
 			dface_t& f = faces[faceindex];
-			if (f.texinfo == -1) continue; // no texture
+			List<Vector3> collisionplane;
 
-			texinfo_t& ti = texinto[f.texinfo];
-
-			char* texname = texdataStrings[ti.texdata];
-			if (startsWith(texname, "tools/")) continue;
-
-			if ((ti.flags & 0x2) > 0) continue; // sky2D
-			if ((ti.flags & 0x4) > 0) continue; // sky
-			if ((ti.flags & 0x40) > 0) continue; // trigger
-			if ((ti.flags & 0x80) > 0) continue; // nodraw
-			if ((ti.flags & 0x100) > 0) continue; // hint
-			if ((ti.flags & 0x200) > 0) continue; // skip
-
-			bsp_mesh_t& mesh = _getMesh(this->Meshes, ti.texdata, texname, pakkedfiles);
-
-			Vector2 tsize((float)mesh.Texture.Width, (float)mesh.Texture.Height);
 			GLint begin = surfedges[f.firstedge];
 			GLushort top = begin < 0 ? edges[-begin].end : edges[begin].start;
 			//skip first and last because when we have the 'top' of a polygon we only need to make triangles from there to every other, the lines from the top are implied by the others
 			for (int i = 1; i < f.numedges - 1; i++) {
 				dedge_t& e = edges[abs(surfedges[f.firstedge + i])];
-				_addIndice(mesh.Indices, _getVerticeIndex(vertices, mesh.Vertices, e.start, ti, tsize), _getVerticeIndex(vertices, mesh.Vertices, e.end, ti, tsize), _getVerticeIndex(vertices, mesh.Vertices, top, ti, tsize));
+
+				collisionplane.Add(vertices[e.start]);
+				collisionplane.Add(vertices[e.end]);
+				collisionplane.Add(vertices[top]);
+			}
+
+			this->CollisionFaces.Add(collisionplane);
+		}
+
+		for (int enti = 0; enti < Entities.Count; enti++) {
+			dentity_t& ent = Entities[enti];
+
+			if (ent.Type != "worldspawn" && !ent.Settings.ContainsKey("model")) continue;
+			std::string tex = ent.Settings["model"];
+			if (tex[0] != '*') continue;
+
+			int modelindex = atoi(tex.c_str() + 1);
+			dmodel_t& mdl = models[modelindex];
+
+			for (int facei = 0; facei < mdl.numfaces; facei++) {
+				dface_t& face = faces[mdl.firstface + facei];
+				if (face.texinfo == -1) continue; // no texture
+
+				texinfo_t& ti = texinto[face.texinfo];
+				char* texname = texdataStrings[ti.texdata];
+
+
+				bsp_mesh_t& mesh = _getMesh(this->Meshes, ti.texdata, texname, pakkedfiles);
+				Vector2 tsize((float)mesh.Texture.Width, (float)mesh.Texture.Height);
+				GLint begin = surfedges[face.firstedge];
+				GLushort top = begin < 0 ? edges[-begin].end : edges[begin].start;
+
+				for (int i = 1; i < face.numedges - 1; i++) {
+					dedge_t& e = edges[abs(surfedges[face.firstedge + i])];
+					_addIndice(mesh.Indices, _getVerticeIndex(vertices, mesh.Vertices, e.start, ti, tsize), _getVerticeIndex(vertices, mesh.Vertices, e.end, ti, tsize), _getVerticeIndex(vertices, mesh.Vertices, top, ti, tsize));
+				}
 			}
 		}
 
@@ -381,6 +482,8 @@ namespace TomatoLib {
 		}
 
 		fclose(fptr);
+
+		return true;
 	}
 
 	Bsp::~Bsp() {}

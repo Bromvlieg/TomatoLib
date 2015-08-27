@@ -1,6 +1,7 @@
 #include "Texture.h"
 
 #include "../Libaries/LodePNG/lodepng.h"
+#include "../Defines.h"
 
 #ifdef _MSC_VER
 #include <gl/glew.h>
@@ -12,14 +13,14 @@
 namespace TomatoLib {
 	Texture::Texture() {
 		this->RegisteredInGL = false;
-		this->GLHandle = 0;
+		this->GLHandle = -1;
 		this->Width = 0;
 		this->Height = 0;
 	}
 
 	Texture::Texture(unsigned int w, unsigned int h) {
 		this->RegisteredInGL = false;
-		this->GLHandle = 0;
+		this->GLHandle = -1;
 		this->Width = w;
 		this->Height = h;
 		this->PixelData = std::vector<unsigned char>(w * h * 4);
@@ -27,29 +28,15 @@ namespace TomatoLib {
 
 	Texture::Texture(const char* fileName) {
 		this->RegisteredInGL = false;
-		this->GLHandle = 0;
+		this->GLHandle = -1;
+		this->Filename = fileName;
 
 		std::vector<unsigned char> image;
 		unsigned error = lodepng::decode(image, this->Width, this->Height, fileName);
 		if (error != 0) return;
 
+		this->Filename = fileName;
 		this->PixelData = image;
-	}
-
-	Color Texture::GetPixel(int x, int y) {
-		return Color(
-			this->PixelData[(y * this->Width + x) * 4 + 0],
-			this->PixelData[(y * this->Width + x) * 4 + 1],
-			this->PixelData[(y * this->Width + x) * 4 + 2],
-			this->PixelData[(y * this->Width + x) * 4 + 3]
-		);
-	}
-
-	void Texture::SetPixel(int x, int y, Color col) {
-		this->PixelData[(y * this->Width + x) * 4 + 0] = col.R;
-		this->PixelData[(y * this->Width + x) * 4 + 1] = col.G;
-		this->PixelData[(y * this->Width + x) * 4 + 2] = col.B;
-		this->PixelData[(y * this->Width + x) * 4 + 3] = col.A;
 	}
 
 	Texture::~Texture() {
@@ -70,17 +57,27 @@ namespace TomatoLib {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
-	void Texture::Copy(Texture* o) {
-		this->Width = o->Width;
-		this->Height = o->Height;
-		this->PixelData = o->PixelData;
+	Texture::Texture(const Texture& o) {
+		this->Copy(o);
+	}
+
+	void Texture::Copy(const Texture& o) {
+		this->Width = o.Width;
+		this->Height = o.Height;
+		this->PixelData = o.PixelData;
+		this->Filename = o.Filename;
+		
+		this->RegisteredInGL = false;
+		this->GLHandle = -1;
 	}
 
 	void Texture::Upload() {
+		TL_ASSERT(this->RegisteredInGL);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->Width, this->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &this->PixelData[0]);
 	}
 
 	void Texture::Use() {
+		TL_ASSERT(this->RegisteredInGL);
 		glBindTexture(GL_TEXTURE_2D, this->GLHandle);
 	}
 
@@ -93,6 +90,6 @@ namespace TomatoLib {
 		this->PixelData.clear();
 		this->Width = 0;
 		this->Height = 0;
-		this->GLHandle = 0;
+		this->GLHandle = -1;
 	}
 }
