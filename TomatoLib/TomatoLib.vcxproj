@@ -14,7 +14,9 @@
     <ClCompile Include="TomatoLib\Async\Async.cpp" />
     <ClCompile Include="TomatoLib\Game\Game.cpp" />
     <ClCompile Include="TomatoLib\Graphics\Font.cpp" />
+    <ClCompile Include="TomatoLib\Graphics\Model.cpp" />
     <ClCompile Include="TomatoLib\MapFormats\Bsp.cpp" />
+    <ClCompile Include="TomatoLib\ModelFormats\Obj.cpp" />
     <ClCompile Include="TomatoLib\Networking\Connection.cpp" />
     <ClCompile Include="TomatoLib\UI\UIContextMenu.cpp" />
     <ClCompile Include="TomatoLib\UI\UIFrameBorderless.cpp" />
@@ -56,7 +58,9 @@
     <ClInclude Include="TomatoLib\Defines.h" />
     <ClInclude Include="TomatoLib\Game\Game.h" />
     <ClInclude Include="TomatoLib\Graphics\Font.h" />
+    <ClInclude Include="TomatoLib\Graphics\Model.h" />
     <ClInclude Include="TomatoLib\MapFormats\Bsp.h" />
+    <ClInclude Include="TomatoLib\ModelFormats\Obj.h" />
     <ClInclude Include="TomatoLib\Networking\Connection.h" />
     <ClInclude Include="TomatoLib\UI\UIContextMenu.h" />
     <ClInclude Include="TomatoLib\UI\UIFrameBorderless.h" />
@@ -135,6 +139,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

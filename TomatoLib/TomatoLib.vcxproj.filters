@@ -132,6 +132,12 @@
     <ClCompile Include="TomatoLib\UI\UITexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TomatoLib\ModelFormats\Obj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TomatoLib\Graphics\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TomatoLib\Async\Async.h">
@@ -261,6 +267,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TomatoLib\UI\UITexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TomatoLib\ModelFormats\Obj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TomatoLib\Graphics\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
