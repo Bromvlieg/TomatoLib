@@ -19,12 +19,15 @@ namespace TomatoLib {
 		texture_font_delete(this->FontHandle);
 	}
 
-	void Font::Load(const std::string &file, float size) {
+	bool Font::Load(const std::string &file, float size) {
 		if (Font::Atlas == null) {
 			Font::Atlas = texture_atlas_new(1024, 1024, 1);
 		}
 
 		this->FontHandle = texture_font_new_from_file(Font::Atlas, size, file.c_str());
+		if (this->FontHandle == nullptr) return false;
+
 		texture_font_load_glyphs(this->FontHandle, L"~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][”“’\n");
+		return true;
 	}
 }

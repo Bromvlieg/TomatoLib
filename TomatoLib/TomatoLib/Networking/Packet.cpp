@@ -13,18 +13,18 @@ namespace TomatoLib {
 	Packet::Packet() {
 		this->Valid = false;
 
-		this->Sock = null;
+		this->Sock = nullptr;
 		this->InPos = 0;
 		this->InSize = 0;
 
 		this->OutPos = 0;
 		this->OutSize = 0;
-		this->OutBuffer = null;
-		this->InBuffer = null;
+		this->OutBuffer = nullptr;
+		this->InBuffer = nullptr;
 	}
 
 	Packet::Packet(EzSock* sock) {
-		this->Valid = true;
+		this->Valid = sock != nullptr;
 
 		this->Sock = sock;
 		this->InPos = 0;
@@ -32,8 +32,8 @@ namespace TomatoLib {
 
 		this->OutPos = 0;
 		this->OutSize = 0;
-		this->OutBuffer = null;
-		this->InBuffer = null;
+		this->OutBuffer = nullptr;
+		this->InBuffer = nullptr;
 	}
 
 	Packet::~Packet() {
@@ -41,16 +41,16 @@ namespace TomatoLib {
 	}
 
 	void Packet::Clear() {
-		if (this->InBuffer != null) delete[] this->InBuffer;
-		if (this->OutBuffer != null) delete[] this->OutBuffer;
+		if (this->InBuffer != nullptr) delete[] this->InBuffer;
+		if (this->OutBuffer != nullptr) delete[] this->OutBuffer;
 
 		this->InPos = 0;
 		this->InSize = 0;
-		this->InBuffer = null;
+		this->InBuffer = nullptr;
 
 		this->OutPos = 0;
 		this->OutSize = 0;
-		this->OutBuffer = null;
+		this->OutBuffer = nullptr;
 	}
 
 	void Packet::CheckSpaceOut(int needed) {
@@ -63,7 +63,7 @@ namespace TomatoLib {
 		this->OutSize += addsize;
 		unsigned char* newbuff = new unsigned char[this->OutSize];
 
-		if (this->OutBuffer != null) {
+		if (this->OutBuffer != nullptr) {
 			memcpy(newbuff, this->OutBuffer, this->OutSize - addsize);
 			delete[] this->OutBuffer;
 		}
@@ -81,7 +81,7 @@ namespace TomatoLib {
 		this->InSize += addsize;
 		unsigned char* newbuff = new unsigned char[this->InSize];
 
-		if (this->InBuffer != null) {
+		if (this->InBuffer != nullptr) {
 			memcpy(newbuff, this->InBuffer, this->InSize - addsize);
 			delete[] this->InBuffer;
 		}
@@ -102,7 +102,7 @@ namespace TomatoLib {
 	}
 
 	unsigned char* Packet::ReadBytes(int len) {
-		if (!this->CanRead(len)) return null;
+		if (!this->CanRead(len)) return nullptr;
 
 		this->InPos += len;
 		return this->InBuffer + (this->InPos - len);
@@ -239,7 +239,7 @@ namespace TomatoLib {
 		while (this->CanRead(1)) {
 			this->InPos++;
 
-			if (this->InBuffer[this->InPos] == null) {
+			if (this->InBuffer[this->InPos] == 0) {
 				break;
 			}
 		}
@@ -296,7 +296,7 @@ namespace TomatoLib {
 	bool Packet::CanRead(int numofbytes) {
 		bool res = this->InSize - this->InPos >= (unsigned int)(numofbytes);
 
-		if (res == false && this->Sock != null) {
+		if (res == false && this->Sock != nullptr) {
 			unsigned char* tmp = new unsigned char[numofbytes];
 			int recamount = 0;
 			while (recamount != numofbytes) {
@@ -323,7 +323,7 @@ namespace TomatoLib {
 	}
 
 	bool Packet::CanRead(const char* seq) {
-		if (this->Sock == null)
+		if (this->Sock == nullptr)
 			return false;
 
 		char* buffer = new char[4096];
@@ -459,7 +459,7 @@ namespace TomatoLib {
 		for (int i = 0; i < size; i++)
 			this->OutBuffer[this->OutPos++] = str[i];
 
-		this->OutBuffer[this->OutPos++] = null;
+		this->OutBuffer[this->OutPos++] = 0;
 	}
 
 	void Packet::WriteStringRaw(const char* str) {
@@ -502,7 +502,7 @@ namespace TomatoLib {
 		fseek(f, 0, SEEK_END);
 		size_t size = ftell(f);
 
-		if (this->InBuffer != null) delete[] this->InBuffer;
+		if (this->InBuffer != nullptr) delete[] this->InBuffer;
 		this->InBuffer = new byte[size];
 		this->InPos = 0;
 		this->InSize = size;
@@ -539,7 +539,7 @@ namespace TomatoLib {
 
 		delete[] this->OutBuffer;
 
-		this->OutBuffer = null;
+		this->OutBuffer = nullptr;
 		this->OutPos = 0;
 		this->OutSize = 0;
 	}

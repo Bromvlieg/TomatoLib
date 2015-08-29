@@ -10,8 +10,6 @@ namespace TomatoLib {
 	class UIManager;
 
 	class Window {
-		Vector2 _Size;
-
 		void SetCallbacks();
 
 		static void OnChar(GLFWwindow* window, unsigned int ch);
@@ -34,6 +32,8 @@ namespace TomatoLib {
 		void SetTitle(std::string title);
 		Vector2 GetSize();
 		Vector2 GetMouse();
+		void SetMouse(int x, int y);
+		void SetMouse(const Vector2& pos);
 
 		bool Create(int w, int h, bool fullscreen = false, bool resizable = false);
 		void SwapBuffer();

@@ -131,6 +131,9 @@ namespace TomatoLib {
 	}
 
 	void Model::Draw(const Camera& cam) {
+		if (!this->m_Texture.RegisteredInGL) return;
+		if (this->m_IndiceCount == 0) return;
+
 		checkGL;
 		s_Shader->Use();
 		this->m_Texture.Use();
@@ -140,13 +143,6 @@ namespace TomatoLib {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 
 		cam.InsertViewMatrix(s_viewMatrixLocation);
-
-		/*
-		TomatoLib::Vector3 pos = this->m_Matrix.GetTranslation();
-		Matrix tmp = this->m_Matrix * TomatoLib::Matrix::CreateTranslation(-pos);
-		tmp *= TomatoLib::Matrix::CreateRotationY(M_PI_2);
-		tmp *= TomatoLib::Matrix::CreateTranslation(pos);
-		*/
 
 		glUniformMatrix4fv(s_worldMatrixLocation, 1, GL_TRUE, this->m_Matrix.values);
 

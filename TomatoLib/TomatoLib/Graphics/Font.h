@@ -17,7 +17,7 @@ namespace TomatoLib {
 		Font();
 		~Font();
 
-		void Load(const std::string &file, float size);
+		bool Load(const std::string &file, float size);
 
 		static texture_atlas_t* Atlas;
 	};

@@ -154,7 +154,11 @@ namespace TomatoLib {
 			}
 			va_end(vL);
 
-			TomatoLib::UIBase::DefaultUImanager->Console->Print(szBuffer);
+			if (TomatoLib::UIBase::DefaultUImanager != nullptr) {
+				if (TomatoLib::UIBase::DefaultUImanager->Console != nullptr) {
+					TomatoLib::UIBase::DefaultUImanager->Console->Print(szBuffer);
+				}
+			}
 
 			printf("%s\n", szBuffer);
 
