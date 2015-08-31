@@ -717,8 +717,8 @@ namespace TomatoLib {
 			if (newclip.X > this->_ClippingPos.X + this->_ClippingSize.X) newclip = AABB(this->_ClippingPos.X, this->_ClippingPos.Y, 0.0f, 0.0f);
 			if (newclip.Y > this->_ClippingPos.Y + this->_ClippingSize.Y) newclip = AABB(this->_ClippingPos.X, this->_ClippingPos.Y, 0.0f, 0.0f);
 
-			if (newclip.X < this->_ClippingPos.X) { newclip.W -= this->_ClippingPos.X - abs(newclip.X); newclip.X = this->_ClippingPos.X; }
-			if (newclip.Y < this->_ClippingPos.Y) { newclip.H -= this->_ClippingPos.Y - abs(newclip.Y); newclip.Y = this->_ClippingPos.Y; }
+			if (newclip.X < this->_ClippingPos.X) { newclip.W -= this->_ClippingPos.X - (float)fabs(newclip.X); newclip.X = this->_ClippingPos.X; }
+			if (newclip.Y < this->_ClippingPos.Y) { newclip.H -= this->_ClippingPos.Y - (float)fabs(newclip.Y); newclip.Y = this->_ClippingPos.Y; }
 
 			if (newclip.X + newclip.W > this->_ClippingPos.X + this->_ClippingSize.X) newclip.W = this->_ClippingPos.X + this->_ClippingSize.X - newclip.X;
 			if (newclip.Y + newclip.H > this->_ClippingPos.Y + this->_ClippingSize.Y) newclip.H = this->_ClippingPos.Y + this->_ClippingSize.Y - newclip.Y;
