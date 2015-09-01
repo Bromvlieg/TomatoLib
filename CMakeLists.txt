@@ -51,10 +51,12 @@ add_library(tomato
 	${presrc}/Graphics/Texture.cpp
 	${presrc}/Graphics/Render.cpp
 	${presrc}/Graphics/Font.cpp
+	${presrc}/Graphics/Model.cpp
 	${presrc}/Math/Matrix.cpp
 	${presrc}/Math/AABB.cpp
 	${presrc}/Math/Vector3.cpp
 	${presrc}/Math/Vector2.cpp
+	${presrc}/ModelFormats/Obj.cpp
 	${presrc}/Utilities/Utilities.cpp
 	${presrc}/Utilities/HTTP.cpp
 	${presrc}/Game/Game.cpp
