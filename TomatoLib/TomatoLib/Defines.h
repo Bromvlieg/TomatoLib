@@ -15,6 +15,21 @@ typedef unsigned char byte;
 #define TL_KEYS_HOLD 2
 #define TL_KEYS_RELEASED 0
 
+#define MATH_PI (3.14159265358f)
+#define MATH_PI_2 (MATH_PI/2)
+
+template<typename T>
+inline T mthToRadians(T deg)
+{
+  return deg * T(MATH_PI / 180);
+}
+
+template<typename T>
+inline T mthToDegrees(T rad)
+{
+  return rad * T(180 / MATH_PI);
+}
+
 #ifdef _DEBUG
 #define TL_ASSERT(test) {if(!(test)) { printf("Assertion failed in file %s, on line %i\n", __FILE__, __LINE__); asmBreak; }}
 

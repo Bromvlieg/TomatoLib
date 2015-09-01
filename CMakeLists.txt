@@ -54,6 +54,7 @@ add_library(tomato
 	${presrc}/Graphics/Model.cpp
 	${presrc}/Math/Matrix.cpp
 	${presrc}/Math/AABB.cpp
+	${presrc}/Math/Rectangle.cpp
 	${presrc}/Math/Vector3.cpp
 	${presrc}/Math/Vector2.cpp
 	${presrc}/ModelFormats/Obj.cpp
