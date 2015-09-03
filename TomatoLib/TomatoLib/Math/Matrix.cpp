@@ -31,6 +31,16 @@ namespace TomatoLib {
 		other.values = nullptr;
 	}
 
+	Matrix Matrix::Lerp(const Matrix& o, float timestep) {
+		Matrix ret;
+
+		for (int i = 0; i < 16; i++) {
+			ret.values[i] = this->values[i] + (o.values[i] - this->values[i]) * timestep;
+		}
+
+		return ret;
+	}
+
 	Matrix& Matrix::operator= (const Matrix& rhs) {
 		if (&rhs == this) { return *this; }
 		std::copy(rhs.values, &rhs.values[16], values);

@@ -40,6 +40,8 @@ namespace TomatoLib {
 		Vector3 GetTranslation() const;
 		Vector3 GetScale() const;
 
+		Matrix Lerp(const Matrix& other, float timestep);
+
 		Matrix operator*(const Matrix& other) const;
 		void operator*=(const Matrix& other) { *this = *this * other; }
 

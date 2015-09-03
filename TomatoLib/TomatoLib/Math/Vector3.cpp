@@ -1,10 +1,13 @@
 #include "Vector3.h"
 #include "Matrix.h"
 #include <math.h>
+#include <float.h>
 
 namespace TomatoLib {
 	const Vector3 Vector3::Zero = Vector3();
 	const Vector3 Vector3::One = Vector3(1, 1, 1);
+	const Vector3 Vector3::Min = Vector3(FLT_MIN, FLT_MIN, FLT_MIN);
+	const Vector3 Vector3::Max = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
 
 	Vector3::Vector3() {
 		X = 0.0f;

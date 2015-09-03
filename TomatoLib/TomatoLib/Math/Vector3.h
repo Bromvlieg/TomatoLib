@@ -40,6 +40,8 @@ namespace TomatoLib {
 
 		const static Vector3 Zero;
 		const static Vector3 One;
+		const static Vector3 Min;
+		const static Vector3 Max;
 	};
 	const Vector3 operator*(const Vector3& lhs, const Vector3& rhs);
 }
