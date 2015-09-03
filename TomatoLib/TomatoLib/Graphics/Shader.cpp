@@ -16,7 +16,6 @@ namespace TomatoLib {
 			checkGL;
 		}
 
-		checkGL;
 		glDeleteProgram(this->ProgramHandle);
 		checkGL;
 	}
@@ -38,16 +37,18 @@ namespace TomatoLib {
 		size_t file_size_in_byte = (size_t)infile.tellg();
 
 		std::vector<char> data; // used to store text data
-		data.resize( file_size_in_byte );
+		data.resize( file_size_in_byte + 1 );
 		infile.seekg( 0, std::ios::beg );
 
 		infile.read( &data[ 0 ], file_size_in_byte );
+		data[file_size_in_byte] = 0;
 
 		//Cast to a const char for the gl function
 		const char* fileDataConst = (const char*) &data[0];
 
 		//Create new shader, set the source, and compile it
 		GLuint handle = glCreateShader(mode);
+
 		glShaderSource(handle, 1, &fileDataConst, 0);
 		glCompileShader(handle);
 
@@ -61,12 +62,16 @@ namespace TomatoLib {
 			GLint maxLength = 0;
 			glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &maxLength);
 
+			char* buff = new char[maxLength + 1];
+			buff[maxLength] = 0;
+
 			//Allocate data for log
-			std::string log;
-			log.reserve(maxLength);
-			glGetShaderInfoLog(handle, maxLength, &maxLength, (GLchar*)log.c_str());
+			glGetShaderInfoLog(handle, maxLength, &maxLength, (GLchar*)buff);
 
 			glDeleteShader(handle);
+			
+			std::string log = buff;
+			delete[] buff;
 
 			throw log;
 		}

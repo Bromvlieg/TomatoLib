@@ -18,12 +18,14 @@ namespace TomatoLib {
 				srand((unsigned int)time(NULL));
 			}
 
-			int divisor = RAND_MAX / (max + 1);
+			int absmin = abs(min);
+
+			int divisor = RAND_MAX / (max + absmin + 1);
 			int retval;
 
 			do {
 				retval = rand() / divisor;
-			} while (retval > max);
+			} while (retval > max + absmin);
 
 			return retval + min;
 		}

@@ -77,7 +77,6 @@ namespace TomatoLib {
 		GLuint vbo;
 		GLuint ebo;
 
-		GLuint CurrentShader;
 		RenderBuffer* CaptureBuffer;
 
 	public:
@@ -87,6 +86,8 @@ namespace TomatoLib {
 		Vector2 ScreenSize;
 
 		GLuint CurrentTexture;
+		GLuint CurrentShader;
+
 		static Texture DefaultTexture;
 		static Font* DefaultFont;
 
@@ -118,7 +119,9 @@ namespace TomatoLib {
 		void PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color);
 
 		void SetTexture(GLint handle);
+		void SetTexture(Texture& tex);
 		void SetShader(GLuint handle);
+		void SetShader(const Shader& shader);
 
 		Vector2 GetTextSize(char text);
 		Vector2 GetTextSize(const std::string& text);

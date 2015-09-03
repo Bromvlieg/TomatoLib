@@ -240,6 +240,11 @@ namespace TomatoLib {
 		c.Color = color;
 		d.Color = color;
 
+		a.TextureLocation = Vector2(0, 0);
+		b.TextureLocation = Vector2(1, 0);
+		c.TextureLocation = Vector2(0, 1);
+		d.TextureLocation = Vector2(1, 1);
+
 		unsigned int curVertices = this->VerticeDataCount;
 		this->CheckSpace(4, 6); // per square, 4 vertices and 6 indices
 
@@ -494,7 +499,7 @@ namespace TomatoLib {
 		for (unsigned long i = 0; i < len; i++) {
 			char l = text[i];
 
-			texture_glyph_t* glyph = texture_font_get_glyph(this->DefaultFont->FontHandle, (wchar_t)text[i]);
+			texture_glyph_t* glyph = texture_font_get_glyph(font.FontHandle, (wchar_t)text[i]);
 			if (glyph == null) {
 				TL_ASSERT(false);
 				return Vector2::Zero;
@@ -534,9 +539,24 @@ namespace TomatoLib {
 		this->CurrentTexture = handle;
 	}
 
+	void Render::SetTexture(Texture& tex) {
+		if (!tex.RegisteredInGL) {
+			tex.BindGL();
+			tex.Upload();
+		}
+
+		if (this->CurrentTexture != tex.GLHandle) this->DrawOnScreen();
+		this->CurrentTexture = tex.GLHandle;
+	}
+
 	void Render::SetShader(GLuint handle) {
 		if (this->CurrentShader != handle) this->DrawOnScreen();
 		this->CurrentShader = handle;
+	}
+
+	void Render::SetShader(const Shader& shader) {
+		if (this->CurrentShader != shader.ProgramHandle) this->DrawOnScreen();
+		this->CurrentShader = shader.ProgramHandle;
 	}
 
 	void Render::Text(Font* font, const std::string& text, int x, int y, const Color& color) {

@@ -60,10 +60,11 @@ namespace TomatoLib {
 			checkGL;
 		}
 
+		this->m_ShaderHandle = s_Shader->ProgramHandle;
 		s_Shader->Use();
 
 		// TODO: fix this projection thingy
-		Matrix proj = Matrix::CreatePerspective(float(M_PI_2), 1920.0f / 1080.0f, 0.001f, 10000.0f);
+		Matrix proj = Matrix::CreatePerspective(float(M_PI_2), 1920.0f / 1080.0f, 0.001f, 100000.0f);
 
 		// Create Vertex Array Object
 		glGenVertexArrays(1, &this->vao);
@@ -100,10 +101,17 @@ namespace TomatoLib {
 		checkGL;
 	}
 
-	void Model::SetTexture(const Texture& tex) {
-		this->m_Texture = tex;
-		this->m_Texture.BindGL();
-		this->m_Texture.Upload();
+	void Model::SetTexture(Texture& tex) {
+		if (!tex.RegisteredInGL) {
+			tex.BindGL();
+			tex.Upload();
+		}
+
+		this->m_TextureHandle = tex.GLHandle;
+	}
+
+	void Model::SetShader(Shader& s) {
+		this->m_ShaderHandle = s.ProgramHandle;
 	}
 
 	void Model::SetVertices(vertex_t* verts, int count) {
@@ -131,20 +139,21 @@ namespace TomatoLib {
 	}
 
 	void Model::Draw(const Camera& cam) {
-		if (!this->m_Texture.RegisteredInGL) return;
 		if (this->m_IndiceCount == 0) return;
 
 		checkGL;
 		s_Shader->Use();
-		this->m_Texture.Use();
 
 		glBindVertexArray(this->vao);
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 
-		cam.InsertViewMatrix(s_viewMatrixLocation);
+		if (this->m_ShaderHandle == s_Shader->ProgramHandle) {
+			glBindTexture(GL_TEXTURE_2D, this->m_TextureHandle);
 
-		glUniformMatrix4fv(s_worldMatrixLocation, 1, GL_TRUE, this->m_Matrix.values);
+			cam.InsertViewMatrix(s_viewMatrixLocation);
+			glUniformMatrix4fv(s_worldMatrixLocation, 1, GL_TRUE, this->m_Matrix.values);
+		}
 
 		glDrawElements(GL_TRIANGLES, this->m_IndiceCount, GL_UNSIGNED_SHORT, 0);
 		checkGL;

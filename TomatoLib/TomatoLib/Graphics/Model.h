@@ -31,7 +31,8 @@ namespace TomatoLib {
 
 	class Model {
 		Matrix m_Matrix;
-		Texture m_Texture;
+		GLuint m_TextureHandle;
+		GLint m_ShaderHandle;
 
 		GLuint vao;
 		GLuint vbo;
@@ -49,7 +50,8 @@ namespace TomatoLib {
 		void SetMatrix(const Matrix& m);
 		Matrix GetMatrix();
 
-		void SetTexture(const Texture& tex);
+		void SetShader(Shader& s);
+		void SetTexture(Texture& tex);
 
 		void SetVertices(vertex_t* verts, int count);
 		void SetIndices(GLushort* inds, int count);
