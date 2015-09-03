@@ -28,4 +28,22 @@ namespace TomatoLib {
 	bool Color::operator!= (const Color& other) const {
 		return !operator==(other);
 	}
+
+	Color Color::operator* (const Color& other) const {
+		return Color(this->R * other.R, this->G * other.G, this->B * other.B, this->A * other.A);
+	}
+
+	Color Color::operator* (int mult) const {
+		int r = this->R * mult;
+		int g = this->G * mult;
+		int b = this->B * mult;
+		int a = this->A * mult;
+
+		if (r > 255) r = 255;
+		if (g > 255) g = 255;
+		if (b > 255) b = 255;
+		if (a > 255) a = 255;
+
+		return Color(r, g, b, a);
+	}
 }

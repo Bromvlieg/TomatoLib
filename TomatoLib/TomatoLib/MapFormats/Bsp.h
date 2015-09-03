@@ -267,7 +267,7 @@ namespace TomatoLib {
 		~Bsp();
 
 		bool FromFile(std::string file);
-		void Draw(Render& r, Camera& cam);
+		void Draw(Camera& cam);
 		void DoGLStuff();
 	};
 }

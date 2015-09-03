@@ -21,7 +21,7 @@ namespace TomatoLib {
 
 		std::string Filename;
 
-		Color GetPixel(int x, int y) {
+		inline Color GetPixel(int x, int y) {
 			return Color(
 				this->PixelData[(y * this->Width + x) * 4 + 0],
 				this->PixelData[(y * this->Width + x) * 4 + 1],
@@ -30,7 +30,7 @@ namespace TomatoLib {
 				);
 		}
 
-		void SetPixel(int x, int y, Color col) {
+		inline void SetPixel(int x, int y, const Color& col) {
 			this->PixelData[(y * this->Width + x) * 4 + 0] = col.R;
 			this->PixelData[(y * this->Width + x) * 4 + 1] = col.G;
 			this->PixelData[(y * this->Width + x) * 4 + 2] = col.B;

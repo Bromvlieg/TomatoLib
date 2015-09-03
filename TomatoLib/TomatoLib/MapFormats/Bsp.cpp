@@ -486,7 +486,11 @@ namespace TomatoLib {
 		return true;
 	}
 
-	Bsp::~Bsp() {}
+	Bsp::~Bsp() {
+		for (auto* mesh : this->Meshes) {
+			delete mesh;
+		}
+	}
 
 	GLint viewMatrixLocation;
 	GLint projMatrixLocation;
@@ -565,7 +569,7 @@ namespace TomatoLib {
 		}
 	}
 
-	void Bsp::Draw(Render& r, Camera& cam) {
+	void Bsp::Draw(Camera& cam) {
 		checkGL;
 		shader.Use();
 		glActiveTexture(GL_TEXTURE0);
