@@ -150,6 +150,17 @@ namespace TomatoLib {
 		return Translate(input.X, input.Y, input.Z);
 	}
 
+	Vector2 Matrix::Translate(float x, float y) const {
+		Vector2 retVal;
+		retVal.X = values[0] * x + values[1] * y + values[2];
+		retVal.Y = values[4] * x + values[5] * y + values[6];
+		return retVal;
+	}
+
+	Vector2 Matrix::Translate(const Vector2& input) const {
+		return Translate(input.X, input.Y);
+	}
+
 	Matrix Matrix::operator*(const Matrix& other) const {
 		Matrix retVal;
 

@@ -1,7 +1,9 @@
 #pragma once
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
+
 #include "Vector3.h"
+#include "Vector2.h"
 
 namespace TomatoLib {
 	class Matrix {
@@ -31,6 +33,9 @@ namespace TomatoLib {
 
 		Vector3 Translate(float x, float y, float z) const;
 		Vector3 Translate(const Vector3& input) const;
+
+		Vector2 Translate(float x, float y) const;
+		Vector2 Translate(const Vector2& input) const;
 
 		Vector3 GetTranslation() const;
 		Vector3 GetScale() const;
