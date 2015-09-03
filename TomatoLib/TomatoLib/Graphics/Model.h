@@ -55,6 +55,8 @@ namespace TomatoLib {
 		void SetIndices(GLushort* inds, int count);
 
 		void Draw(const Camera& cam);
+
+		static Model* FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d);
 	};
 }
 

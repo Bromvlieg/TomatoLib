@@ -149,4 +149,25 @@ namespace TomatoLib {
 		glDrawElements(GL_TRIANGLES, this->m_IndiceCount, GL_UNSIGNED_SHORT, 0);
 		checkGL;
 	}
+
+	Model* Model::FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d) {
+		vertex_t buff[4];
+		buff[0].Pos = a;
+		buff[1].Pos = b;
+		buff[2].Pos = c;
+		buff[3].Pos = d;
+
+		buff[0].UV = Vector2::Zero;
+		buff[1].UV = Vector2(1, 0);
+		buff[2].UV = Vector2(0, 1);
+		buff[3].UV = Vector2::One;
+
+		const static GLushort inds[6] = {0, 1, 2, 1, 2, 3};
+
+		Model* mdl = new Model();
+		mdl->SetVertices(buff, 4);
+		mdl->SetIndices(const_cast<GLushort*>(inds), 6);
+
+		return mdl;
+	}
 }
