@@ -2,22 +2,29 @@
 #ifndef __NWMAN_H__
 #define __NWMAN_H__
 
+#include "EzSock.h"
 #include "../Utilities/List.h"
 #include "../Utilities/Dictonary.h"
-#include "Packet.h"
 
 #include <string>
 #include <mutex>
 #include <functional>
 
+namespace std {
+	class thread;
+}
+
 namespace TomatoLib {
-	class Connection;
+	class Packet;
 
 	typedef void(*IncommingPacketCallback)(Packet& p);
-	typedef void(*ReceiveNewDataCallback)(Connection* con);
 
 	enum class ConnectionPacketIDType {
 		Byte, Short, Int
+	};
+
+	enum class ConnectionPacketDataLengthType {
+		Byte, Short, Int,
 	};
 
 	class Connection {
@@ -25,34 +32,43 @@ namespace TomatoLib {
 		bool CloseThread;
 		bool ThreadRunning;
 
-	public:
-		bool Connected;
+		int CallbacksSize;
+		IncommingPacketCallback* Callbacks;
 
-		double LastReceivedPacket;
+		List<unsigned char*> ToSend;
+		List<unsigned char*> ToRecv;
+
+		std::thread* SendThread;
+		std::thread* RecvThread;
+
+		std::mutex SendMutex;
+		std::mutex RecvMutex;
+
+		EzSock Sock;
+
+		void RecvThreadFunc();
+		void SendThreadFunc();
+
+		bool HitTheBrakes;
+
+	public:
+		float LastReceivedPacket;
 		ConnectionPacketIDType PIDType;
+		ConnectionPacketDataLengthType DataLengthType;
 
 		Connection();
 		~Connection();
 
-		EzSock Sock;
-		std::mutex LockObject;
-		List<byte*> ReceivedPackets;
-		ReceiveNewDataCallback ReceiveFunction;
-
-		void AddReceivedPacket(int size, byte* data);
-
 		bool IsConnected();
 		bool Connect(std::string ip, int port);
 		void ConnectThreaded(std::string ip, int port, std::function<void(bool)> callback);
-		void Login(std::string user, std::string pass, std::string pic);
 		void Update();
-		void RefreshReceiveIV();
-		void RefreshSendIV();
 		void Disconnect();
 
-		void SetCallback(byte pid, IncommingPacketCallback func);
+		void SetCallback(int pid, IncommingPacketCallback func);
 
-		Dictonary<int, IncommingPacketCallback> Callbacks;
+		void SendPacket(Packet* p) { this->SendPacket(*p); }
+		void SendPacket(Packet& p);
 	};
 }
 
