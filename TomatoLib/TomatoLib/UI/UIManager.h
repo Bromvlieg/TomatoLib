@@ -43,7 +43,6 @@ namespace TomatoLib {
 		UIBase* HoldPanel;
 		UIBase* FocusPanel;
 		UIConsole* Console;
-		UIGraph* Graph;
 		bool ShowCursor;
 		bool OverrideShowCursor;
 	};

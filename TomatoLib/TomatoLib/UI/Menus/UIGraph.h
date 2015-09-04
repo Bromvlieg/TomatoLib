@@ -14,6 +14,7 @@ namespace TomatoLib {
 		int Category;
 		float MS;
 	};
+
 	class UIGraph : public UIBase {
 	public:
 		UIGraph(UIBase* parent);
@@ -26,7 +27,7 @@ namespace TomatoLib {
 		int Offset;
 
 		void InsertData(int category, float ms);
-		void SetupCategory(int cat, std::string name);
+		void SetupCategory(int cat, const std::string& name, const Color& col);
 
 		virtual void Draw(Render& p) override;
 		virtual void Update() override;

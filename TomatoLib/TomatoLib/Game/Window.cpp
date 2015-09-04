@@ -15,9 +15,10 @@ namespace TomatoLib {
 
 	void Window::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		if (key < 0 || key > GLFW_KEY_LAST) return; // filter out hardware that wants to be special and has special keys.
-		if (CurrentWindow == nullptr) return; // should not happen
+		if (CurrentWindow == nullptr) return;
 
 		bool ret = CurrentWindow->UIMan != nullptr && CurrentWindow->UIMan->HandleKeyboardInteraction(key, action, mods);
+		if (CurrentWindow == nullptr) return;
 
 		if (action == GLFW_REPEAT) return;
 		CurrentWindow->KeysIn[key] = 0;
@@ -28,12 +29,13 @@ namespace TomatoLib {
 
 	void Window::OnMouse(GLFWwindow* window, int button, int action, int mods) {
 		if (button < 0 || button > GLFW_MOUSE_BUTTON_LAST) return; // filter out hardware that wants to be special and has special keys.
-		if (CurrentWindow == nullptr) return; // should not happen
+		if (CurrentWindow == nullptr) return;
 
 		double mouseX, mouseY;
 		glfwGetCursorPos(window, &mouseX, &mouseY);
 
 		bool ret = CurrentWindow->UIMan != nullptr && CurrentWindow->UIMan->HandleMouseInteraction((int)mouseX, (int)mouseY, button, action == GLFW_PRESS, mods);
+		if (CurrentWindow == nullptr) return;
 
 		CurrentWindow->MouseIn[button] = 0;
 		if (ret || button > 2) return;
@@ -41,13 +43,13 @@ namespace TomatoLib {
 	}
 
 	void Window::OnChar(GLFWwindow* window, unsigned int ch) {
-		if (CurrentWindow == nullptr) return; // should not happen
+		if (CurrentWindow == nullptr) return;
 		if (CurrentWindow->UIMan == nullptr) return;
 		CurrentWindow->UIMan->HandleCharInteraction(ch);
 	}
 
 	void Window::OnScroll(GLFWwindow* window, double sx, double sy) {
-		if (CurrentWindow == nullptr) return; // should not happen
+		if (CurrentWindow == nullptr) return;
 		int w, h;
 		double x, y;
 
@@ -61,13 +63,13 @@ namespace TomatoLib {
 	}
 
 	void Window::OnMousePos(GLFWwindow* window, double x, double y) {
-		if (CurrentWindow == nullptr) return; // should not happen
+		if (CurrentWindow == nullptr) return;
 		if (CurrentWindow->UIMan == nullptr) return;
 		CurrentWindow->UIMan->LastMousePosition = Vector2(x, y);
 	}
 
 	void Window::OnFocus(GLFWwindow* window, int focus) {
-		if (CurrentWindow == nullptr) return; // should not happen
+		if (CurrentWindow == nullptr) return;
 		CurrentWindow->HasFocus = focus == 1;
 	}
 
@@ -185,6 +187,11 @@ namespace TomatoLib {
 	}
 
 	bool Window::Create(int w, int h, bool fullscreen, bool resizable) {
+		if (glfwInit() != GL_TRUE) {
+			printf("glfwInit failed!\n");
+			return false;
+		}
+
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

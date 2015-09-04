@@ -4,40 +4,22 @@
 
 namespace TomatoLib {
 	UIGraph::UIGraph(UIBase* parent) : UIBase(parent) {
-		this->CatColors.push_back(Color(255, 0, 0));
-		this->CatColors.push_back(Color(0, 0, 255));
-		this->CatColors.push_back(Color(128, 0, 128));
-		this->CatColors.push_back(Color(0, 255, 0));
-		this->CatColors.push_back(Color(0, 255, 255));
-		this->CatColors.push_back(Color(0, 0, 255));
-		this->CatColors.push_back(Color(255, 0, 255));
-		this->CatColors.push_back(Color(255, 255, 255));
-
-		for (int i = 0; i < 8; i++) {
-			this->CatNames.push_back("");
-		}
-
-		for (int i = 0; i < 8; i++) {
-			UIGraphLineData empty;
-			empty.Category = i;
-			empty.MS = 0;
-			this->TempData.push_back(empty);
-		}
-
 		this->CanClick = false;
+		this->SetSize(450, 150);
 	}
 
 	void UIGraph::Draw(Render& p) {
-
 		p.Box(0, 0, this->W, this->H, Color(50, 50, 50, 220));
 		p.Box(70, 16, 310, this->H - 16, Color(20, 20, 20, 220));
 		p.Box(71, 17, 308, this->H - 18, Color(50, 100, 50, 220));
+
+		unsigned int cats = this->CatNames.size();
 
 		for (int i = 0; i < 17; i++) {
 			p.Box(71, 20 + 8 * i, 308, 1, i == 0 ? Color(255, 0, 0, 200) : i == 8 ? Color(255, 153, 0, 200) : Color(50, 50, 50, 220));
 		}
 
-		for (int i = 0; i < 8; i++) {
+		for (unsigned int i = 0; i < cats; i++) {
 			if (this->CatNames[i].size() == 0) continue;
 			p.Text(this->CatNames[i], 5, 20 + i * 16, this->CatColors[i]);
 		}
@@ -54,7 +36,7 @@ namespace TomatoLib {
 		}
 		this->Lines.push_back(this->TempData);
 
-		for (int i = 0; i < 8; i++) {
+		for (unsigned int i = 0; i < cats; i++) {
 			this->TempData[i].MS = 0;
 		}
 
@@ -83,8 +65,19 @@ namespace TomatoLib {
 		this->TempData[cat].MS += ms;
 	}
 
-	void UIGraph::SetupCategory(int cat, std::string name) {
+	void UIGraph::SetupCategory(int cat, const std::string& name, const Color& col) {
+		while ((int)this->CatNames.size() <= cat) {
+			UIGraphLineData empty;
+			empty.Category = (int)this->CatColors.size();
+			empty.MS = 0;
+
+			this->TempData.push_back(empty);
+			this->CatNames.push_back("");
+			this->CatColors.push_back(Color::Black);
+		}
+
 		this->CatNames[cat] = name;
+		this->CatColors[cat] = col;
 	}
 
 	void UIGraph::Update() {
