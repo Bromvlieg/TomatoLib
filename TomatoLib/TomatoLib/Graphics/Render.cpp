@@ -466,8 +466,21 @@ namespace TomatoLib {
 		// TODO: find a way to draw this with GL_TRIANGLES_STRIP, cus this ain't working for wierd ass poly things.
 		this->CheckSpace(3 * len, 3 * len); // per triangle, 3 vertices and 3 indices
 		for (int i = 0; i < len - 1; i++) {
-			this->Triangle(points[0] + this->_DrawOffset, points[i] + this->_DrawOffset, points[i + 1] + this->_DrawOffset, color);
+			this->Triangle(points[0], points[i], points[i + 1], color);
 		}
+	}
+
+	void Render::PolyOutlined(Vector2* points, int len, float w, const Color& color) {
+		if (color.A == 0) return;
+		this->SetTexture(this->DefaultTexture.GLHandle);
+		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
+
+		// TODO: find a way to draw this with GL_TRIANGLES_STRIP, cus this ain't working for wierd ass poly things.
+		this->CheckSpace(3 * len, 3 * len); // per triangle, 3 vertices and 3 indices
+		for (int i = 0; i < len - 1; i++) {
+			this->Line(points[i].X, points[i].Y, points[i + 1].X, points[i + 1].Y, w, color);
+		}
+		this->Line(points[0].X, points[0].Y, points[len - 1].X, points[len - 1].Y, w, color);
 	}
 
 	Vector2 Render::GetTextSize(char letter) {

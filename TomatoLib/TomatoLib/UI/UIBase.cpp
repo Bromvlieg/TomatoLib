@@ -3,17 +3,17 @@
 #include <GLFW/glfw3.h>
 
 namespace TomatoLib {
-	UIManager* UIBase::DefaultUImanager = null;
+	UIManager* UIBase::DefaultUImanager = nullptr;
 
 	UIBase::UIBase(UIBase* parent) {
 		this->DrawColor = Color::White;
-		this->Parent = null;
+		this->Parent = nullptr;
 		this->UIMan = UIBase::DefaultUImanager;
 		this->X = 0;
 		this->Y = 0;
 		this->W = 0;
 		this->H = 0;
-		this->ShouldRender = parent != null;
+		this->ShouldRender = parent != nullptr;
 		this->CanClick = true;
 		this->Dock = 0;
 		this->TabIndex = -1;
@@ -25,7 +25,7 @@ namespace TomatoLib {
 		this->Frozen = false;
 		this->AlwaysRedraw = true;
 		this->ShouldRedraw = true;
-		this->Buffer = null;
+		this->Buffer = nullptr;
 
 		this->SetParent(parent);
 
@@ -50,7 +50,7 @@ namespace TomatoLib {
 
 		this->OnInput = [this](int key, int mods) {
 			if (key == GLFW_KEY_TAB) {
-				if (this->TabIndex == -1 || this->Parent == null) return;
+				if (this->TabIndex == -1 || this->Parent == nullptr) return;
 
 				int lowesttab = this->TabIndex + 1;
 				int lowestID = -1;
@@ -98,7 +98,7 @@ namespace TomatoLib {
 			this->OnTop();
 		}
 
-		if (this->UIMan != null) this->UIMan->FocusPanel = this;
+		if (this->UIMan != nullptr) this->UIMan->FocusPanel = this;
 		this->OnFocus(true);
 	}
 
@@ -108,12 +108,12 @@ namespace TomatoLib {
 
 		bool found = false;
 
-		UIBase* c = null;
+		UIBase* c = nullptr;
 		while (childs.Count > 0) {
 			c = childs[childs.Count - 1];
 			childs.RemoveAt(childs.Count - 1);
 
-			if (this->UIMan != null && c == this->UIMan->FocusPanel) {
+			if (this->UIMan != nullptr && c == this->UIMan->FocusPanel) {
 				found = true;
 				break;
 			} else {
@@ -125,12 +125,12 @@ namespace TomatoLib {
 
 		if (!found) return;
 
-		if (this->UIMan != null) this->UIMan->FocusPanel = null;
+		if (this->UIMan != nullptr) this->UIMan->FocusPanel = nullptr;
 		c->OnFocus(false);
 	}
 
 	bool UIBase::HasFocus() {
-		if (this->UIMan == null) return false;
+		if (this->UIMan == nullptr) return false;
 
 		if (this->UIMan->FocusPanel == this) {
 			return true;
@@ -160,7 +160,7 @@ namespace TomatoLib {
 		pos.X += this->X;
 		pos.Y += this->Y;
 
-		if (this->Parent != null) this->Parent->_GetAbsoluteLocation(pos);
+		if (this->Parent != nullptr) this->Parent->_GetAbsoluteLocation(pos);
 	}
 
 	Vector2 UIBase::GetAbsoluteLocation() {
@@ -170,7 +170,7 @@ namespace TomatoLib {
 	}
 
 	UIBase* UIBase::GetAbsoluteParent() {
-		return this->Parent == null ? this : this->Parent->GetAbsoluteParent();
+		return this->Parent == nullptr ? this : this->Parent->GetAbsoluteParent();
 	}
 
 	void UIBase::_InternalDraw(Render& drawer) {
@@ -190,12 +190,12 @@ namespace TomatoLib {
 		
 		if (!this->Frozen && (this->ShouldRedraw || this->AlwaysRedraw)) {
 			this->OnDraw(drawer);
-		} else if(this->Buffer != null) {
+		} else if(this->Buffer != nullptr) {
 			drawer.Buffer(this->Buffer);
 		}
 
 		if (recorderstarted) {
-			if (this->Buffer != null) delete this->Buffer;
+			if (this->Buffer != nullptr) delete this->Buffer;
 			this->Buffer = drawer.RecorderStop();
 			this->ShouldRedraw = false;
 		}
@@ -242,16 +242,16 @@ namespace TomatoLib {
 	}
 
 	void UIBase::SetParent(UIBase* parent) {
-		if (this->Parent != null) {
+		if (this->Parent != nullptr) {
 			this->Parent->RemoveChild(this);
-		} else if (this->UIMan != null) {
+		} else if (this->UIMan != nullptr) {
 			this->UIMan->RemoveChild(this);
 		}
 
-		if (parent != null) {
+		if (parent != nullptr) {
 			this->Parent = parent;
 			parent->AddChild(this);
-		} else if (this->UIMan != null) {
+		} else if (this->UIMan != nullptr) {
 			this->UIMan->AddChild(this);
 		}
 	}
@@ -317,7 +317,7 @@ namespace TomatoLib {
 	}
 
 	bool UIBase::IsHovering() {
-		if (this->UIMan == null) return false;
+		if (this->UIMan == nullptr) return false;
 
 		Vector2 pos = this->GetAbsoluteLocation();
 
@@ -338,9 +338,9 @@ namespace TomatoLib {
 	}
 
 	void UIBase::OnTop() {
-		if (this->UIMan == null) return;
+		if (this->UIMan == nullptr) return;
 
-		if (this->Parent == null) {
+		if (this->Parent == nullptr) {
 			for (unsigned int i = 0; i < this->UIMan->Children.size(); i++) {
 				if (this->UIMan->Children[i] == this) {
 					this->UIMan->Children.erase(this->UIMan->Children.begin() + i);
@@ -362,19 +362,19 @@ namespace TomatoLib {
 	void UIBase::Kill() {
 		this->OnKill();
 
-		if (this->Parent != null) {
+		if (this->Parent != nullptr) {
 			this->Parent->RemoveChild(this);
-		} else if(this->UIMan != null) {
+		} else if(this->UIMan != nullptr) {
 			this->UIMan->RemoveChild(this);
 		}
 		
-		if (this->UIMan != null) {
+		if (this->UIMan != nullptr) {
 			if (this->UIMan->HoldPanel == this) {
-				this->UIMan->HoldPanel = null;
+				this->UIMan->HoldPanel = nullptr;
 			}
 
 			if (this->UIMan->FocusPanel == this) {
-				this->UIMan->FocusPanel = null;
+				this->UIMan->FocusPanel = nullptr;
 			}
 		}
 

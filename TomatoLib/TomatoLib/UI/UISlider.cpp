@@ -52,7 +52,7 @@ namespace TomatoLib {
 					return;
 				}
 
-				if (this->OnValueChanged != null) this->OnValueChanged();
+				if (this->OnValueChanged != nullptr) this->OnValueChanged();
 				return;
 			}
 
@@ -90,7 +90,7 @@ namespace TomatoLib {
 		if (this->Value > this->MaxValue) this->Value = this->MaxValue;
 
 		if (this->Value != oldval) {
-			if (this->OnValueChanged != null) this->OnValueChanged();
+			if (this->OnValueChanged != nullptr) this->OnValueChanged();
 			this->MarkForFullRedraw();
 		}
 	}

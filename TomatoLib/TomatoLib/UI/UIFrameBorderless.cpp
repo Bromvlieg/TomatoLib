@@ -11,9 +11,9 @@ namespace TomatoLib {
 		this->BorderColor = Color::Black;
 
 		this->ResizeBordersize = 0;
-		this->CloseButton = null;
-		this->MinButton = null;
-		this->MaxButton = null;
+		this->CloseButton = nullptr;
+		this->MinButton = nullptr;
+		this->MaxButton = nullptr;
 		this->_ResizeMode = 0;
 		this->MovingEnabled = false;
 
@@ -201,7 +201,7 @@ namespace TomatoLib {
 	}
 
 	void UIFrameBorderless::InvalidateLayout() {
-		if (this->CloseButton == null) return;
+		if (this->CloseButton == nullptr) return;
 
 		this->CloseButton->SetPos(this->W - 21 - this->ResizeBordersize, this->ResizeBordersize - 1);
 		this->MaxButton->SetPos(this->W - 43 - this->ResizeBordersize, this->ResizeBordersize - 1);

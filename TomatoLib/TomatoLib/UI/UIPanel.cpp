@@ -7,7 +7,7 @@ namespace TomatoLib {
 		this->AlwaysRedraw = false;
 
 		this->OnScroll = [this](int x, int y) {
-			if (this->Parent != null) {
+			if (this->Parent != nullptr) {
 				this->Parent->OnScroll(x, y);
 			}
 		};

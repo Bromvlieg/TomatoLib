@@ -27,7 +27,7 @@ namespace TomatoLib {
 		this->Back->SetPos(0, 0);
 		this->Back->SetSize(this->W, this->H);
 
-		this->GrabX = null;
+		this->GrabX = nullptr;
 		if (enablehorizontal) {
 			this->UpX = new UIButton(this);
 			this->UpX->SetSize(20, 20);
@@ -155,27 +155,27 @@ namespace TomatoLib {
 	}
 
 	void UIScrollPanel::DisableVerticalScrollball() {
-		if (this->GrabX == null) return;
+		if (this->GrabX == nullptr) return;
 
 		this->UpX->Kill();
 		this->DownX->Kill();
 		this->GrabX->Kill();
 
-		this->UpX = null;
-		this->DownX = null;
-		this->GrabX = null;
+		this->UpX = nullptr;
+		this->DownX = nullptr;
+		this->GrabX = nullptr;
 	}
 
 	void UIScrollPanel::DisableHorizontalScrollball() {
-		if (this->GrabY == null) return;
+		if (this->GrabY == nullptr) return;
 
 		this->UpY->Kill();
 		this->DownY->Kill();
 		this->GrabY->Kill();
 
-		this->UpY = null;
-		this->DownY = null;
-		this->GrabY = null;
+		this->UpY = nullptr;
+		this->DownY = nullptr;
+		this->GrabY = nullptr;
 	}
 
 	void UIScrollPanel::Scroll(int scrolly) {
@@ -184,13 +184,13 @@ namespace TomatoLib {
 
 	void UIScrollPanel::Scroll(int scrollx, int scrolly) {
 		this->Scroll(scrolly);
-		if (this->GrabX == null) return;
+		if (this->GrabX == nullptr) return;
 
 		this->DeltaX(this->Back->X + (int)(scrollx * this->ScrollAmplifier));
 	}
 
 	void UIScrollPanel::DeltaX(int delta) {
-		if (this->GrabX == null) return;
+		if (this->GrabX == nullptr) return;
 
 		if (delta < (this->W - this->Back->W)) delta = (this->W - this->Back->W);
 		if (delta > 0) delta = 0;
@@ -201,7 +201,7 @@ namespace TomatoLib {
 	}
 
 	void UIScrollPanel::DeltaY(int delta) {
-		if (this->GrabY == null) return;
+		if (this->GrabY == nullptr) return;
 
 		if (delta < (this->H - this->Back->H)) delta = (this->H - this->Back->H);
 		if (delta > 0) delta = 0;
@@ -212,8 +212,8 @@ namespace TomatoLib {
 	}
 
 	void UIScrollPanel::Draw(Render& p) {
-		if (this->GrabY != null && this->GrabY->ShouldRender) p.Box(this->GrabY->X, this->UpY->Y + this->UpY->H, this->GrabY->W, this->DownY->Y - this->UpY->Y - this->UpY->H, this->BorderColor);
-		if (this->GrabX != null && this->GrabX->ShouldRender) p.Box(this->UpX->W, this->GrabX->Y, this->DownX->X - this->UpX->X - this->UpX->W, this->UpX->H, this->BorderColor);
+		if (this->GrabY != nullptr && this->GrabY->ShouldRender) p.Box(this->GrabY->X, this->UpY->Y + this->UpY->H, this->GrabY->W, this->DownY->Y - this->UpY->Y - this->UpY->H, this->BorderColor);
+		if (this->GrabX != nullptr && this->GrabX->ShouldRender) p.Box(this->UpX->W, this->GrabX->Y, this->DownX->X - this->UpX->X - this->UpX->W, this->UpX->H, this->BorderColor);
 	}
 
 	void UIScrollPanel::Update() {
@@ -238,7 +238,7 @@ namespace TomatoLib {
 		int subx = 0;
 		int suby = 0;
 
-		if (this->GrabX != null) {
+		if (this->GrabX != nullptr) {
 			for (unsigned int i = 0; i < this->Back->Children.size(); i++) {
 				if ((this->Back->Children[i]->X + this->Back->Children[i]->W) > maxx) maxx = (this->Back->Children[i]->X + this->Back->Children[i]->W) + 1;
 			}
@@ -283,7 +283,7 @@ namespace TomatoLib {
 			}
 		}
 
-		if (this->GrabY != null) {
+		if (this->GrabY != nullptr) {
 			for (unsigned int i = 0; i < this->Back->Children.size(); i++) {
 				if ((this->Back->Children[i]->Y + this->Back->Children[i]->H) > maxy) maxy = (this->Back->Children[i]->Y + this->Back->Children[i]->H) + 1;
 			}

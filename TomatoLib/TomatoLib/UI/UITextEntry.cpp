@@ -56,14 +56,14 @@ namespace TomatoLib {
 							if (i == this->Caret) {
 								this->Text.erase(this->Caret - i, i);
 								this->Caret = 0;
-								if (this->OnTextChange != null) this->OnTextChange();
+								if (this->OnTextChange != nullptr) this->OnTextChange();
 								this->MarkForFullRedraw();
 							}
 							continue;
 						} else {
 							this->Text.erase(this->Caret - i + 1, i - 1);
 							this->Caret -= (i - 1);
-							if (this->OnTextChange != null) this->OnTextChange();
+							if (this->OnTextChange != nullptr) this->OnTextChange();
 							this->MarkForFullRedraw();
 							break;
 						}
@@ -75,7 +75,7 @@ namespace TomatoLib {
 						this->Text.erase(this->Caret - 1, 1);
 					}
 					this->Caret -= 1;
-					if (this->OnTextChange != null) this->OnTextChange();
+					if (this->OnTextChange != nullptr) this->OnTextChange();
 					this->MarkForFullRedraw();
 				}
 				return;
@@ -88,20 +88,20 @@ namespace TomatoLib {
 							if (l != 32) spc = true;
 							if (i == (this->Text.size() - this->Caret - 1)) {
 								this->Text.erase(this->Caret, i + 1);
-								if (this->OnTextChange != null) this->OnTextChange();
+								if (this->OnTextChange != nullptr) this->OnTextChange();
 								this->MarkForFullRedraw();
 							}
 							continue;
 						} else {
 							this->Text.erase(this->Caret, i);
-							if (this->OnTextChange != null) this->OnTextChange();
+							if (this->OnTextChange != nullptr) this->OnTextChange();
 							this->MarkForFullRedraw();
 							break;
 						}
 					}
 				} else {
 					this->Text.erase(this->Caret, 1);
-					if (this->OnTextChange != null) this->OnTextChange();
+					if (this->OnTextChange != nullptr) this->OnTextChange();
 					this->MarkForFullRedraw();
 				}
 				return;
@@ -194,7 +194,7 @@ namespace TomatoLib {
 
 			this->Recalc();
 			this->Caret++;
-			if (this->OnTextChange != null) this->OnTextChange();
+			if (this->OnTextChange != nullptr) this->OnTextChange();
 			this->MarkForFullRedraw();
 		};
 	}
@@ -210,7 +210,7 @@ namespace TomatoLib {
 		this->Recalc();
 		this->Caret = (int)text.size();
 
-		if (this->OnTextChange != null) this->OnTextChange();
+		if (this->OnTextChange != nullptr) this->OnTextChange();
 		this->MarkForFullRedraw();
 	}
 
@@ -218,7 +218,7 @@ namespace TomatoLib {
 		this->Text.clear();
 		this->Caret = 0;
 		this->WideScroll = 0;
-		if (this->OnTextChange != null) this->OnTextChange();
+		if (this->OnTextChange != nullptr) this->OnTextChange();
 		this->MarkForFullRedraw();
 
 		this->Recalc();
