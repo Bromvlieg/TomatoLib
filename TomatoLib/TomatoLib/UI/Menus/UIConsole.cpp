@@ -203,11 +203,11 @@ namespace TomatoLib {
 
 		this->RegisterConsoleFunc("help", [this](std::string args) {
 			for (int i = 0; i < this->RegisteredFunctions.Count; i++) {
-				this->Print(std::string("Function: ") + this->RegisteredFunctions.Keys[i].c_str() + " : useage: " + this->RegisteredFunctionsDesc.Values[i].c_str());
+				this->Print(std::string("Function: ") + this->RegisteredFunctions.Keys[i].c_str() + " : usage: " + this->RegisteredFunctionsDesc.Values[i].c_str());
 			}
 
 			for (int i = 0; i < this->RegisteredVariables.Count; i++) {
-				this->Print(std::string("Var: ") + this->RegisteredVariables.Keys[i].c_str() + " = " + this->RegisteredVariables.Values[i].c_str() + " : useage: " + this->RegisteredVariablesDesc.Values[i].c_str());
+				this->Print(std::string("Var: ") + this->RegisteredVariables.Keys[i].c_str() + " = " + this->RegisteredVariables.Values[i].c_str() + " : usage: " + this->RegisteredVariablesDesc.Values[i].c_str());
 			}
 
 			return "Done printing";
