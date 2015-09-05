@@ -11,6 +11,7 @@ namespace TomatoLib {
 		this->IP[3] = 1;
 
 		this->m_NewConCallback = nullptr;
+		this->m_usPort = 0;
 	}
 
 	Server::~Server() {
@@ -61,6 +62,7 @@ namespace TomatoLib {
 			return false;
 		}
 
+		this->m_usPort = port;
 		this->AcceptorThread = new std::thread([this] { this->ConAcceptorThreadFunc(); });
 		return true;
 	}
@@ -75,6 +77,7 @@ namespace TomatoLib {
 			bool handled = this->m_NewConCallback(mcon);
 			if (!handled) delete mcon;
 
+			mcon->StartThreads();
 			mcon = new Connection();
 		}
 	}

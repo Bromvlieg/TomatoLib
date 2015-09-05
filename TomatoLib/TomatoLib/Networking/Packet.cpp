@@ -496,9 +496,10 @@ namespace TomatoLib {
 		this->WriteFloat(v.Z);
 	}
 
-	void Packet::ReadDump() {
-		FILE *f;
-		f = fopen("packet_dump.bin", "rb");
+	bool Packet::ReadDump(const char* path) {
+		FILE* f = fopen(path, "rb");
+		if (f == nullptr) return false;
+
 		fseek(f, 0, SEEK_END);
 		size_t size = ftell(f);
 
@@ -511,36 +512,30 @@ namespace TomatoLib {
 		fread(this->InBuffer, sizeof(char), size, f);
 
 		fclose(f);
+		return true;
 	}
 
-	void Packet::Dump() {
-		remove("packet_dump.bin");
+	bool Packet::WriteDumpIn(const char* path) {
+		remove(path);
 
-		FILE *f;
-		f = fopen("packet_dump.bin", "wb");
+		FILE* f = fopen(path, "wb");
+		if (f == nullptr) return false;
 
-		fwrite(this->InBuffer + this->InPos, 1, this->InSize - this->InPos, f);
+		fwrite(this->InBuffer, 1, this->InSize, f);
 
 		fclose(f);
+		return false;
 	}
 
-	void Packet::Send() {
-		if (this->InsertOutlenIntOnSend) {
-			byte* packet = new byte[this->OutPos + 4];
-			*(int*)packet = this->OutPos;
+	bool Packet::WriteDumpOut(const char* path) {
+		remove(path);
 
-			memcpy(packet + 4, this->OutBuffer, this->OutPos);
-			this->Sock->SendRaw(packet, this->OutPos + 4);
+		FILE* f = fopen(path, "wb");
+		if (f == nullptr) return false;
 
-			delete[] packet;
-		} else {
-			this->Sock->SendRaw(this->OutBuffer, this->OutPos);
-		}
+		fwrite(this->OutBuffer, 1, this->OutPos, f);
 
-		delete[] this->OutBuffer;
-
-		this->OutBuffer = nullptr;
-		this->OutPos = 0;
-		this->OutSize = 0;
+		fclose(f);
+		return false;
 	}
 }

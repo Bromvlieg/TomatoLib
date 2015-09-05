@@ -36,7 +36,7 @@ namespace TomatoLib {
 
 		void WriteByte(unsigned char);
 		void WriteBool(bool);
-		void WriteBytes(unsigned char* arr, int size, bool sendsize);
+		void WriteBytes(unsigned char* arr, int size, bool sendsize = false);
 		void WriteShort(short);
 		void WriteUShort(unsigned short);
 		void WriteInt(int);
@@ -75,9 +75,9 @@ namespace TomatoLib {
 		bool HasDataLeft();
 		int DataLeft();
 
-		void Send();
-		void ReadDump();
-		void Dump();
+		bool ReadDump(const char* path);
+		bool WriteDumpIn(const char* path);
+		bool WriteDumpOut(const char* path);
 
 		void CheckSpaceOut(int);
 		void AllocateMoreSpaceOut(int);

@@ -3,6 +3,7 @@
 #include "Packet.h"
 #include "../Defines.h"
 #include "../Graphics/Color.h"
+#include "../Async/Async.h"
 #include "../Utilities/Utilities.h"
 
 #include <thread>
@@ -26,6 +27,7 @@ namespace TomatoLib {
 
 		this->CallbacksSize = 256;
 		this->Callbacks = new IncommingPacketCallback[this->CallbacksSize];
+		memset(this->Callbacks, 0, this->CallbacksSize * sizeof(IncommingPacketCallback));
 
 		this->SendThread = nullptr;
 		this->RecvThread = nullptr;
@@ -64,7 +66,11 @@ namespace TomatoLib {
 	
 	void Connection::ConnectThreaded(std::string ip, int port, std::function<void(bool)> callback) {
 		new std::thread([this, ip, port, callback]() {
-			callback(this->Connect(ip, port));
+			bool ret = this->Connect(ip, port);
+
+			Async::RunOnMainThread([ret, callback]() {
+				callback(ret);
+			});
 		});
 	}
 
@@ -148,7 +154,7 @@ namespace TomatoLib {
 				case ConnectionPacketIDType::Int: pid = p.ReadInt(); break;
 			}
 
-			if (pid < this->CallbacksSize && pid > 0 && this->Callbacks[pid] != nullptr) {
+			if (pid < this->CallbacksSize && pid >= 0 && this->Callbacks[pid] != nullptr) {
 				bool ret = this->Callbacks[pid](this->m_pTag, p);
 				if (!ret) {
 					this->Disconnect();
@@ -189,7 +195,7 @@ namespace TomatoLib {
 
 			if (!this->Sock.IsError()) {
 				int lenoffset = this->DataLengthType != ConnectionPacketDataLengthType::Int ? 4 - (int)this->DataLengthType : 0;
-				this->Sock.SendRaw(buff + 4 + lenoffset, *(int*)buff - lenoffset);
+				this->Sock.SendRaw(buff + lenoffset, *(int*)buff - lenoffset + 4);
 			}
 		}
 	}
@@ -215,7 +221,10 @@ namespace TomatoLib {
 				recamount += currec;
 			}
 
-			if (recamount != lensize) continue;
+			if (recamount != lensize) {
+				this->Sock.close();
+				continue;
+			}
 
 			int psize = 0;
 			switch (this->DataLengthType) {
@@ -237,8 +246,10 @@ namespace TomatoLib {
 
 				recamount += currec;
 			}
+
 			if (recamount != psize) {
 				delete[] buffer;
+				this->Sock.close();
 				continue;
 			}
 

@@ -25,10 +25,13 @@ namespace TomatoLib {
 
 		unsigned char IP[4];
 		void PollIP(PollCallback callback);
+		unsigned short GetPort() const { return this->m_usPort; }
 
 		void SetConnectionCallback(IncommingConnectionCallback callback);
 
 	private:
+		unsigned short m_usPort;
+
 		EzSock Sock;
 		IncommingConnectionCallback m_NewConCallback;
 
