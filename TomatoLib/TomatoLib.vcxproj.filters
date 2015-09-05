@@ -138,6 +138,12 @@
     <ClCompile Include="TomatoLib\Graphics\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TomatoLib\Networking\Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TomatoLib\Libaries\md5\md5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TomatoLib\Async\Async.h">
@@ -273,6 +279,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TomatoLib\Graphics\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TomatoLib\Networking\Server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TomatoLib\Libaries\md5\md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -21,6 +21,15 @@ namespace TomatoLib {
 		return Utilities::GetNumberPadded(this->R, 1, '0') + "," + Utilities::GetNumberPadded(this->G, 1, '0') + "," + Utilities::GetNumberPadded(this->B, 1, '0') + "," + Utilities::GetNumberPadded(this->A, 1, '0');
 	}
 
+	Color Color::Lerp(const Color& o, float timestep) {
+		int r = (int)(this->R + (o.R - this->R) * timestep);
+		int g = (int)(this->G + (o.G - this->G) * timestep);
+		int b = (int)(this->B + (o.B - this->B) * timestep);
+		int a = (int)(this->A + (o.A - this->A) * timestep);
+
+		return Color(r, g, b, a);
+	}
+
 	bool Color::operator== (const Color& o) const {
 		return this->R == o.R && this->G == o.G && this->B == o.B && this->A == o.A;
 	}

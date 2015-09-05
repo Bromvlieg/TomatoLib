@@ -25,6 +25,8 @@ namespace TomatoLib {
 		const static Color Yellow; // Color(255, 255, 0)
 		const static Color Transparent; // Color(0, 0, 0, 0)
 
+		Color Lerp(const Color& other, float timestep);
+
 		bool operator== (const Color& other) const;
 		bool operator!= (const Color& other) const;
 		Color operator* (int mult) const;

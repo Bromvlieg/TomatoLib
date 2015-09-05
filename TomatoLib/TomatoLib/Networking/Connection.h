@@ -17,7 +17,7 @@ namespace std {
 namespace TomatoLib {
 	class Packet;
 
-	typedef void(*IncommingPacketCallback)(Packet& p);
+	typedef bool(*IncommingPacketCallback)(void* Tag, Packet& p);
 
 	enum class ConnectionPacketIDType {
 		Byte, Short, Int
@@ -44,20 +44,23 @@ namespace TomatoLib {
 		std::mutex SendMutex;
 		std::mutex RecvMutex;
 
-		EzSock Sock;
-
 		void RecvThreadFunc();
 		void SendThreadFunc();
 
 		bool HitTheBrakes;
+		void* m_pTag;
 
 	public:
-		float LastReceivedPacket;
+		EzSock Sock;
+
+		time_t LastReceivedPacket;
 		ConnectionPacketIDType PIDType;
 		ConnectionPacketDataLengthType DataLengthType;
 
 		Connection();
 		~Connection();
+
+		void StartThreads();
 
 		bool IsConnected();
 		bool Connect(std::string ip, int port);
@@ -67,6 +70,7 @@ namespace TomatoLib {
 
 		void SetCallback(int pid, IncommingPacketCallback func);
 
+		void SetTag(void* ptr);
 		void SendPacket(Packet* p) { this->SendPacket(*p); }
 		void SendPacket(Packet& p);
 	};

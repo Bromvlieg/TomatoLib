@@ -19,7 +19,7 @@
 
 namespace TomatoLib {
 	Connection::Connection() {
-		this->LastReceivedPacket = TL_GET_TIME_MS;
+		this->LastReceivedPacket = time(nullptr);
 		this->PIDType = ConnectionPacketIDType::Byte;
 		this->DataLengthType = ConnectionPacketDataLengthType::Int;
 		this->HitTheBrakes = false;
@@ -27,19 +27,13 @@ namespace TomatoLib {
 		this->CallbacksSize = 256;
 		this->Callbacks = new IncommingPacketCallback[this->CallbacksSize];
 
-		this->SendThread = new std::thread([this] { this->SendThreadFunc(); });
-		this->RecvThread = new std::thread([this] { this->RecvThreadFunc(); });
+		this->SendThread = nullptr;
+		this->RecvThread = nullptr;
 	}
 
 	Connection::~Connection() {
 		this->HitTheBrakes = true;
 		this->Disconnect();
-
-		this->SendThread->join();
-		this->RecvThread->join();
-
-		delete this->SendThread;
-		delete this->RecvThread;
 
 		delete[] this->Callbacks;
 	}
@@ -81,12 +75,35 @@ namespace TomatoLib {
 
 		if (this->Sock.connect(ip.c_str(), port) > 0) return false;
 
-		this->LastReceivedPacket = TL_GET_TIME_MS;
+		this->StartThreads();
+		this->LastReceivedPacket = time(nullptr);
 		return true;
 	}
 
 	void Connection::Disconnect() {
+		if (this->SendThread == nullptr) return;
+
+		this->HitTheBrakes = true;
+
 		this->Sock.close();
+
+		this->SendThread->join();
+		this->RecvThread->join();
+
+		delete this->SendThread;
+		delete this->RecvThread;
+
+		this->SendThread = nullptr;
+		this->RecvThread = nullptr;
+
+		this->HitTheBrakes = false;
+	}
+
+	void Connection::StartThreads() {
+		if (this->SendThread != nullptr) return;
+
+		this->SendThread = new std::thread([this] { this->SendThreadFunc(); });
+		this->RecvThread = new std::thread([this] { this->RecvThreadFunc(); });
 	}
 
 	void Connection::SendPacket(Packet& p) {
@@ -100,9 +117,13 @@ namespace TomatoLib {
 		this->SendMutex.unlock();
 
 		delete[] p.OutBuffer;
-		p.OutBuffer = null;
+		p.OutBuffer = nullptr;
 		p.OutPos = 0;
 		p.OutSize = 0;
+	}
+
+	void Connection::SetTag(void* tag) {
+		this->m_pTag = tag;
 	}
 
 	void Connection::Update() {
@@ -128,7 +149,13 @@ namespace TomatoLib {
 			}
 
 			if (pid < this->CallbacksSize && pid > 0 && this->Callbacks[pid] != nullptr) {
-				this->Callbacks[pid](p);
+				bool ret = this->Callbacks[pid](this->m_pTag, p);
+				if (!ret) {
+					this->Disconnect();
+					this->RecvMutex.lock();
+					while (this->ToRecv.Count > 0) delete this->ToRecv.RemoveAt(this->ToRecv.Count - 1);
+					this->RecvMutex.unlock();
+				}
 
 				if (p.InPos != p.InSize) {
 					Utilities::Print("[col=%s]WARNING: Packet 0x%.4X(%d) was only read till %d, while the size is %d", Color::Orange.ToString().c_str(), pid, pid, p.InPos, p.InSize);
@@ -137,7 +164,7 @@ namespace TomatoLib {
 				Utilities::Print("[col=%s]Unknown packet: 0x%.4X(%d), size %d", Color::Red.ToString().c_str(), pid,  pid, p.InSize);
 			}
 
-			this->LastReceivedPacket = TL_GET_TIME_MS;
+			this->LastReceivedPacket = time(nullptr);
 
 			p.InBuffer = nullptr;
 			p.InSize = 0;
@@ -219,7 +246,7 @@ namespace TomatoLib {
 			this->ToRecv.Add(buffer);
 			this->RecvMutex.unlock();
 
-			this->LastReceivedPacket = TL_GET_TIME_MS;
+			this->LastReceivedPacket = time(nullptr);
 		}
 	}
 }

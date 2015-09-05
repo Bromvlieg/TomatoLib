@@ -27,6 +27,7 @@ add_library(tomato
 	${presrc}/Networking/EzSock.cpp
 	${presrc}/Networking/Packet.cpp
 	${presrc}/Networking/Connection.cpp
+	${presrc}/Networking/Server.cpp
 	${presrc}/Async/Async.cpp
 	${presrc}/UI/UIFrame.cpp
 	${presrc}/UI/UIDropDown.cpp
@@ -65,6 +66,7 @@ add_library(tomato
 	${presrc}/Game/Window.cpp
 	${presrc}/Libaries/LodePNG/lodepng_util.cpp
 	${presrc}/Libaries/LodePNG/lodepng.cpp
+	${presrc}/Libaries/md5/md5.cpp
 )
 
 add_definitions(-DLINUX -std=c++11)
