@@ -30,6 +30,29 @@ namespace TomatoLib {
 			return retval + min;
 		}
 
+		std::string GetFormatted(std::string format, ...) {
+			int size = 512;
+			char* buffer = new char[size];
+			const char* fbuff = format.c_str();
+
+			va_list vl;
+			va_start(vl, format);
+
+			int nsize = vsnprintf(buffer, size, fbuff, vl);
+			if (size <= nsize) { //fail delete buffer and try again
+				delete[] buffer;
+
+				buffer = new char[nsize + 1]; //+1 for /0
+				nsize = vsnprintf(buffer, size, fbuff, vl);
+			}
+
+			va_end(vl);
+
+			std::string ret = buffer;
+			delete[] buffer;
+			return ret;
+		}
+
 		std::string GetDurationFormated(time_t seconds, int secondMode, int minuteMode, int hourMode, int dayMode, int weekMode, int monthMode, int yearMode) {
 			tm* ltime = gmtime(&seconds);
 			ltime->tm_year -= 70;

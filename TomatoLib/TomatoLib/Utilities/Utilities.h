@@ -18,6 +18,7 @@ namespace TomatoLib {
 		std::string GetDateFormated(int unixtime, std::string format);
 		std::string StringReplace(const std::string& haystack, const std::string& needle, const std::string& replacement);
 
+		std::string GetFormatted(std::string format, ...);
 		List<std::string> Split(const std::string &s, char delim);
 		void Print(std::string format, ...);
 		std::string GetConsoleVar(std::string name);
