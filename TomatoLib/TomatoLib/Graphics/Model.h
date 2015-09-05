@@ -26,7 +26,7 @@ namespace TomatoLib {
 		int VerticeCount;
 		int IndiceCount;
 
-		Texture Texture;
+		TomatoLib::Texture Texture;
 	};
 
 	class Model {
