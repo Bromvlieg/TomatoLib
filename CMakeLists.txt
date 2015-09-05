@@ -12,9 +12,19 @@ list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/TomatoLib/TomatoLib)
 
 set(presrc "TomatoLib/TomatoLib")
 
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLEW REQUIRED glew)
-pkg_search_module(FT2 REQUIRED freetype2)
+find_package(PkgConfig)
+if(PKG_CONFIG_FOUND)
+	pkg_search_module(GLEW glew)
+	pkg_search_module(FT2 freetype2)
+else()
+	set(GLEW_LIBRARIES "GLEW_LIBRARIES_NOTFOUND" CACHE STRING "Glew libraries")
+	set(GLEW_INCLUDE_DIRS "GLEW_INCLUDE_DIRS_NOTFOUNd" CACHE STRING "Glew include dirs")
+
+	set(FT2_LIBRARIES "FT2_LIBRARIES_NOTFOUND" CACHE STRING "Freetype 2 libraries")
+	set(FT2_INCLUDE_DIRS "FT2_INCLUDE_DIRS_NOTFOUND" CACHE STRING "Freetype 2 include dirs")
+
+	message(FATAL_ERROR "PkgConfig not found, so you have to provide paths for FT2 and GLEW!")
+endif()
 
 list(APPEND tomato_INCLUDES ${FT2_INCLUDE_DIRS})
 list(APPEND tomato_INCLUDES ${GLEW_INCLUDE_DIRS})
