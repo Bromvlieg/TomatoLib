@@ -14,6 +14,7 @@ You need at least: (commands are for Debian distributions)
 
 * CMake 3.0 `apt-get install cmake`
 * libglew `apt-get install libglew-dev`
+* libfreetype6 `apt-get install libfreetype6-dev`
 
 Init all git submodules: `git submodule init && git submodule update`
 
