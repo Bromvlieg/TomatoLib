@@ -2,6 +2,7 @@
 #include "Defines.h"
 #include "Matrix.h"
 #include <math.h>
+#include <algorithm>
 
 namespace TomatoLib {
 	Rectangle::Rectangle() {
