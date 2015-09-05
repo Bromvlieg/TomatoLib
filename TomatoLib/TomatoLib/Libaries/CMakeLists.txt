@@ -15,10 +15,15 @@ list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/freetype-gl)
 list(APPEND tomato_LIBRARIES freetype-gl)
 
 # Add VTFLib
-add_subdirectory(VTFLib)
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/VTFLib/src)
-list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/VTFLib/src)
-list(APPEND tomato_LIBRARIES VTFLib13)
+if(NOT WIN32)
+	add_subdirectory(VTFLib)
+	list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/VTFLib/src)
+	list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/VTFLib/src)
+	list(APPEND tomato_LIBRARIES VTFLib13)
+else()
+	list(APPEND tomato_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/VTFLib_windows/lib)
+	list(APPEND tomato_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/VTFLib_windows/lib/x86/VTFLib.lib)
+endif()
 
 # Set lists in parent scope
 set(tomato_INCLUDES "${tomato_INCLUDES}" PARENT_SCOPE)
