@@ -28,7 +28,7 @@ public:
 	}
 
 	inline Type RemoveAt(int index) {
-		Type object = operator[](index);
+		Type object = (*this)[index];
 
 		this->erase(this->begin() + index);
 		this->Count--;
@@ -36,13 +36,13 @@ public:
 		return object;
 	}
 
-	inline void Set(int index, const Type& object) { operator[](index) = object; }
-	inline Type& Get(int index) { return operator[](index); }
-	inline Type* Buffer() { return &operator[](0); }
+	inline void Set(int index, const Type& object) { (*this)[index] = object; }
+	inline Type& Get(int index) { return (*this)[index]; }
+	inline Type* Buffer() { return &(*this)[0]; }
 	inline void Reserve(int num) { this->reserve(num); }
 	inline bool Contains(const Type& object) {
 		for (int i = 0; i < this->Count; i++) {
-			if (operator[](i) == object) {
+			if ((*this)[i] == object) {
 				return true;
 			}
 		}
