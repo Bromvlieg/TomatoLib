@@ -98,8 +98,11 @@ message(${tomato_INCLUDES})
 include_directories(${tomato_INCLUDES})
 target_link_libraries(tomato
 	${tomato_LIBRARIES}
-	stdc++
 )
+
+if(NOT WIN32)
+	target_link_libraries(tomato stdc++)
+endif()
 
 set(TOMATO_INCLUDES ${tomato_INCLUDES} CACHE STRING "TomatoLib include directories")
 set(TOMATO_LIBRARIES ${tomato_LIBRARIES} CACHE STRING "TomatoLib dependencies")
