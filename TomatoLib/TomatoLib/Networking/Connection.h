@@ -9,10 +9,7 @@
 #include <string>
 #include <mutex>
 #include <functional>
-
-namespace std {
-	class thread;
-}
+#include <thread>
 
 namespace TomatoLib {
 	class Packet;
