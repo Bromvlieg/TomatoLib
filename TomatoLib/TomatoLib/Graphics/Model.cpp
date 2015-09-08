@@ -10,6 +10,7 @@ namespace TomatoLib {
 	GLint Model::s_viewMatrixLocation = -1;
 	GLint Model::s_worldMatrixLocation = -1;
 	Shader* Model::s_Shader = nullptr;
+	Matrix Model::s_mProj;
 
 	Model::Model() : m_IndiceCount(0) {
 		checkGL;
@@ -63,9 +64,6 @@ namespace TomatoLib {
 		this->m_ShaderHandle = s_Shader->ProgramHandle;
 		s_Shader->Use();
 
-		// TODO: fix this projection thingy
-		Matrix proj = Matrix::CreatePerspective(float(M_PI_2), 1920.0f / 1080.0f, 0.001f, 100000.0f);
-
 		// Create Vertex Array Object
 		glGenVertexArrays(1, &this->vao);
 		glBindVertexArray(this->vao);
@@ -77,11 +75,9 @@ namespace TomatoLib {
 		checkGL;
 
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-		//glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 		checkGL;
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 		checkGL;
 
 		// Specify the layout of the vertex data
@@ -96,9 +92,14 @@ namespace TomatoLib {
 		glVertexAttribPointer(texposAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, UV));
 		checkGL;
 
-		glUniformMatrix4fv(s_projMatrixLocation, 1, GL_FALSE, proj.values);
+		glUniformMatrix4fv(s_projMatrixLocation, 1, GL_FALSE, s_mProj.values);
 		glUniform1i(glGetUniformLocation(s_Shader->ProgramHandle, "tex"), 0);
 		checkGL;
+	}
+
+	void Model::BindBuffers() {
+		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 	}
 
 	void Model::SetTexture(Texture& tex) {
@@ -138,11 +139,15 @@ namespace TomatoLib {
 		return this->m_Matrix;
 	}
 
+	GLuint Model::GetTexture() {
+		return this->m_TextureHandle;
+	}
+
 	void Model::Draw(const Camera& cam) {
 		if (this->m_IndiceCount == 0) return;
 
 		checkGL;
-		s_Shader->Use();
+		glUseProgram(this->m_ShaderHandle);
 
 		glBindVertexArray(this->vao);
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
@@ -159,7 +164,7 @@ namespace TomatoLib {
 		checkGL;
 	}
 
-	Model* Model::FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d) {
+	void Model::FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d) {
 		vertex_t buff[4];
 		buff[0].Pos = a;
 		buff[1].Pos = b;
@@ -173,10 +178,34 @@ namespace TomatoLib {
 
 		const static GLushort inds[6] = {0, 1, 2, 1, 2, 3};
 
-		Model* mdl = new Model();
-		mdl->SetVertices(buff, 4);
-		mdl->SetIndices(const_cast<GLushort*>(inds), 6);
+		this->SetVertices(buff, 4);
+		this->SetIndices(const_cast<GLushort*>(inds), 6);
+	}
 
-		return mdl;
+	void Model::FromCircle(int points, float radius) {
+		vertex_t* vbuff = new vertex_t[points];
+		GLushort* ibuff = new GLushort[points * 3 - 3];
+
+		float step = (float)(M_PI * 2 / points);
+		float cur = 0;
+		for (int i = 0; i < points; i++) {
+			float x = sin(cur);
+			float y = cos(cur);
+
+			vbuff[i].UV = Vector2(x, y) / 2.0f + 0.5f;
+			vbuff[i].Pos = Vector3(x * radius, y * radius, 0);
+
+
+			cur += step;
+		}
+
+		for (int i = 0; i < points - 1; i++) {
+			ibuff[i * 3 + 0] = 0;
+			ibuff[i * 3 + 1] = i;
+			ibuff[i * 3 + 2] = i + 1;
+		}
+
+		this->SetVertices(vbuff, points);
+		this->SetIndices(ibuff, points * 3 - 3);
 	}
 }

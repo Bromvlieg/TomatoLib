@@ -319,6 +319,7 @@ namespace TomatoLib {
 			return true;
 		}
 
+		ASSERT(res);
 		return res;
 	}
 
@@ -386,7 +387,7 @@ namespace TomatoLib {
 		this->OutBuffer[this->OutPos++] = num ? 1 : 0;
 	}
 
-	void Packet::WriteBytes(unsigned char* arr, int size, bool sendsize) {
+	void Packet::WriteBytes(const void* arr, int size, bool sendsize) {
 		this->CheckSpaceOut(size + sendsize);
 
 		if (sendsize) this->WriteInt(size);

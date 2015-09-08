@@ -55,6 +55,7 @@ namespace TomatoLib {
 		virtual void Draw(Render& drawer) = 0;
 		virtual void Update() = 0;
 		virtual void InvalidateLayout() = 0;
+		void InvalidateLayoutWithChilds();
 
 		Vector2 GetAbsoluteLocation();
 		UIBase* GetAbsoluteParent();

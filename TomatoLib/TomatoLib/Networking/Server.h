@@ -14,11 +14,13 @@ namespace TomatoLib {
 
 	class Server {
 	public:
-		typedef bool(*IncommingConnectionCallback)(Connection* c);
+		typedef bool(*IncommingConnectionCallback)(Server& s, Connection* c);
 		typedef void(*PollCallback)(bool worked);
 
 		Server();
 		~Server();
+
+		void* Tag;
 
 		void Shutdown();
 		bool Listen(short port);

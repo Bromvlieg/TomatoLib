@@ -263,6 +263,14 @@ namespace TomatoLib {
 	void UIBase::InvalidateLayout() {
 	}
 
+	void UIBase::InvalidateLayoutWithChilds() {
+		this->InvalidateLayout();
+
+		for (unsigned int i = 0; i < this->Children.size(); i++) {
+			this->Children[i]->InvalidateLayoutWithChilds();
+		}
+	}
+
 	void UIBase::MarkForFullRedraw() {
 		if (!this->AlwaysRedraw) this->ShouldRedraw = true;
 

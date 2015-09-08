@@ -47,6 +47,10 @@ namespace TomatoLib {
 		return Vector2(X / scale, Y / scale);
 	}
 
+	Vector2 Vector2::operator+ (const float& scale) const {
+		return Vector2(X + scale, Y + scale);
+	}
+
 	Vector2& Vector2::operator-= (const Vector2& other) {
 		X = X - other.X;
 		Y = Y - other.Y;
@@ -68,6 +72,12 @@ namespace TomatoLib {
 	Vector2& Vector2::operator*= (const float& other) {
 		X = X * other;
 		Y = Y * other;
+		return *this;
+	}
+
+	Vector2& Vector2::operator+= (const float& other) {
+		X = X + other;
+		Y = Y + other;
 		return *this;
 	}
 

@@ -74,7 +74,7 @@ namespace TomatoLib {
 			bool ret = this->Sock.accept(&mcon->Sock);
 			if (!ret) continue;
 
-			bool handled = this->m_NewConCallback(mcon);
+			bool handled = this->m_NewConCallback(*this, mcon);
 			if (!handled) delete mcon;
 
 			mcon->StartThreads();

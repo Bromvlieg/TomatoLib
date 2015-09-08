@@ -45,6 +45,8 @@ namespace TomatoLib {
 		static GLint s_worldMatrixLocation;
 		static Shader* s_Shader;
 	public:
+		static Matrix s_mProj;
+
 		Model();
 
 		void SetMatrix(const Matrix& m);
@@ -53,12 +55,17 @@ namespace TomatoLib {
 		void SetShader(Shader& s);
 		void SetTexture(Texture& tex);
 
+		GLuint GetTexture();
+
 		void SetVertices(vertex_t* verts, int count);
 		void SetIndices(GLushort* inds, int count);
 
 		void Draw(const Camera& cam);
 
-		static Model* FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d);
+		void BindBuffers();
+
+		void FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d);
+		void FromCircle(int points, float radius);
 	};
 }
 

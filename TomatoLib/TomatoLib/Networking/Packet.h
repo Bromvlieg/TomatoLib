@@ -36,7 +36,7 @@ namespace TomatoLib {
 
 		void WriteByte(unsigned char);
 		void WriteBool(bool);
-		void WriteBytes(unsigned char* arr, int size, bool sendsize = false);
+		void WriteBytes(const void* arr, int size, bool sendsize = false);
 		void WriteShort(short);
 		void WriteUShort(unsigned short);
 		void WriteInt(int);

@@ -196,10 +196,6 @@ namespace TomatoLib {
 		this->OnInvalidateLayout();
 	}
 
-	int UIFrameBorderless::GetResizeBorderSize() {
-		return this->ResizeBordersize;
-	}
-
 	void UIFrameBorderless::InvalidateLayout() {
 		if (this->CloseButton == nullptr) return;
 

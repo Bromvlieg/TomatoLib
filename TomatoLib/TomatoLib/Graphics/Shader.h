@@ -20,6 +20,7 @@ namespace TomatoLib {
 		void Link();
 		void AttachRaw(std::string text, GLint mode);
 		void Attach(std::string file, GLint mode);
+		void Cleanup();
 	};
 }
 #endif
