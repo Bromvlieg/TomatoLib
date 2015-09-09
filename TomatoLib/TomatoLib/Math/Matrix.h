@@ -41,6 +41,7 @@ namespace TomatoLib {
 		Vector3 GetScale() const;
 
 		Matrix Lerp(const Matrix& other, float timestep);
+		Matrix Inverted();
 
 		Matrix operator*(const Matrix& other) const;
 		void operator*=(const Matrix& other) { *this = *this * other; }
