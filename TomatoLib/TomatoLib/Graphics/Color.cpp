@@ -42,6 +42,14 @@ namespace TomatoLib {
 		return Color(this->R * other.R, this->G * other.G, this->B * other.B, this->A * other.A);
 	}
 
+	Color Color::operator+ (const Color& other) const {
+		return Color(this->R + other.R, this->G + other.G, this->B + other.B, this->A + other.A);
+	}
+
+	Color Color::operator- (const Color& other) const {
+		return Color(this->R - other.R, this->G - other.G, this->B - other.B, this->A - other.A);
+	}
+
 	Color Color::operator* (int mult) const {
 		int r = this->R * mult;
 		int g = this->G * mult;

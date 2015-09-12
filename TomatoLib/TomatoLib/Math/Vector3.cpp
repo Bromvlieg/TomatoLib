@@ -68,8 +68,20 @@ namespace TomatoLib {
 		return Vector3(X + other.X, Y + other.Y, Z + other.Z);
 	}
 
+	Vector3 Vector3::operator- (const float& other) const {
+		return Vector3(X - other, Y - other, Z - other);
+	}
+
+	Vector3 Vector3::operator+ (const float& other) const {
+		return Vector3(X + other, Y + other, Z + other);
+	}
+
 	Vector3 Vector3::operator* (const float& scale) const {
 		return Vector3(X * scale, Y * scale, Z * scale);
+	}
+
+	Vector3 Vector3::operator* (const Vector3& scale) const {
+		return Vector3(X * scale.X, Y * scale.Y, Z * scale.Z);
 	}
 
 	Vector3 Vector3::operator/ (const Vector3& other) const {
@@ -134,8 +146,16 @@ namespace TomatoLib {
 		return !operator==(other);
 	}
 
-	const Vector3 operator*(const Vector3& lhs, const Vector3& rhs) {
-		return Vector3(lhs.X * rhs.X, lhs.Y * rhs.Y, lhs.Z * rhs.Z);
+	const Vector3 operator*(const float& lhs, const Vector3& rhs) {
+		return Vector3(lhs * rhs.X, lhs * rhs.Y, lhs * rhs.Z);
+	}
+
+	const Vector3 operator-(const float& lhs, const Vector3& rhs) {
+		return Vector3(lhs - rhs.X, lhs - rhs.Y, lhs - rhs.Z);
+	}
+
+	const Vector3 operator+(const float& lhs, const Vector3& rhs) {
+		return Vector3(lhs + rhs.X, lhs + rhs.Y, lhs + rhs.Z);
 	}
 
 	Vector3 Vector3::FromAngles(float pitch, float yaw) {

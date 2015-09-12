@@ -19,6 +19,7 @@ namespace TomatoLib {
 		void UpdateLookat();
 
 		Matrix mat;
+		Matrix projmat;
 
 	public:
 		float GetX() const;
@@ -43,11 +44,12 @@ namespace TomatoLib {
 		void SetPitch(float pitch);
 		void SetYaw(float yaw);
 
-		void ApplyProjMatrix();
-
 		void InsertViewMatrix(GLint location) const;
 		void HandleRawInput(Window& w);
-		void SetMatrix(const Matrix& m);
+		void SetView(const Matrix& m);
+		void SetProjection(const Matrix& m);
+		Matrix& GetView();
+		Matrix& GetProjection();
 
 		Camera();
 	};

@@ -31,6 +31,8 @@ namespace TomatoLib {
 		bool operator!= (const Color& other) const;
 		Color operator* (int mult) const;
 		Color operator* (const Color& other) const;
+		Color operator+ (const Color& other) const;
+		Color operator- (const Color& other) const;
 	};
 }
 #endif

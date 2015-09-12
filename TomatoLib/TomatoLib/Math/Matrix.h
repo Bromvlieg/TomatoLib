@@ -43,6 +43,9 @@ namespace TomatoLib {
 		Matrix Lerp(const Matrix& other, float timestep);
 		Matrix Inverted();
 
+		// to switch between column and row type
+		Matrix Mirror();
+
 		Matrix operator*(const Matrix& other) const;
 		void operator*=(const Matrix& other) { *this = *this * other; }
 

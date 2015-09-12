@@ -19,7 +19,10 @@ namespace TomatoLib {
 		float Dot(const Vector3& other) const;
 
 		Vector3 operator- (const Vector3& other) const;
+		Vector3 operator- (const float& other) const;
 		Vector3 operator+ (const Vector3& other) const;
+		Vector3 operator+ (const float& other) const;
+		Vector3 operator* (const Vector3& other) const;
 		Vector3 operator* (const float& other) const;
 		Vector3 operator/ (const Vector3& other) const;
 		Vector3 operator/ (const float& other) const;
@@ -43,6 +46,9 @@ namespace TomatoLib {
 		const static Vector3 Min;
 		const static Vector3 Max;
 	};
-	const Vector3 operator*(const Vector3& lhs, const Vector3& rhs);
+
+	const Vector3 operator*(const float& lhs, const Vector3& rhs);
+	const Vector3 operator+(const float &lhs, const Vector3& rhs);
+	const Vector3 operator-(const float &lhs, const Vector3& rhs);
 }
 #endif

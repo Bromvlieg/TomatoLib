@@ -43,8 +43,21 @@ namespace TomatoLib {
 		glUniformMatrix4fv(location, 1, GL_FALSE, this->mat.values);
 	}
 
-	void Camera::SetMatrix(const Matrix& m) {
+	void Camera::SetView(const Matrix& m) {
 		this->mat = m;
+	}
+
+
+	void Camera::SetProjection(const Matrix& m) {
+		this->projmat = m;
+	}
+
+	Matrix& Camera::GetView() {
+		return this->mat;
+	}
+
+	Matrix& Camera::GetProjection() {
+		return this->projmat;
 	}
 
 	void Camera::HandleRawInput(Window& w) {

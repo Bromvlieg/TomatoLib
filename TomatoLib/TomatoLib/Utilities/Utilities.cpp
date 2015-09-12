@@ -18,16 +18,7 @@ namespace TomatoLib {
 				srand((unsigned int)time(NULL));
 			}
 
-			int absmin = abs(min);
-
-			int divisor = RAND_MAX / (max + absmin + 1);
-			int retval;
-
-			do {
-				retval = rand() / divisor;
-			} while (retval > max + absmin);
-
-			return retval + min;
+			return rand() % (max - min) + min;
 		}
 
 		std::string GetFormatted(std::string format, ...) {

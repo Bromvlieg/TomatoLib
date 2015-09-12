@@ -41,6 +41,18 @@ namespace TomatoLib {
 		return ret;
 	}
 
+	Matrix Matrix::Mirror() {
+		Matrix ret;
+
+		for (int x = 0; x < 4; x++) {
+			for (int y = 0; y < 4; y++) {
+				ret.values[x * 4 + y] = this->values[y * 4 + x];
+			}
+		}
+
+		return ret;
+	}
+
 	Matrix Matrix::Inverted() {
 		float num1 = this->values[0];
 		float num2 = this->values[1];
