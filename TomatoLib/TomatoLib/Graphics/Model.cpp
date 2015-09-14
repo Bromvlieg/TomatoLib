@@ -208,4 +208,37 @@ namespace TomatoLib {
 		this->SetVertices(vbuff, points);
 		this->SetIndices(ibuff, points * 3 - 3);
 	}
+
+	void Model::FromTube(int points, const Vector3& size) {
+		vertex_t* vbuff = new vertex_t[points * 2];
+		GLushort* ibuff = new GLushort[points * 12];
+
+		float step = (float)(M_PI * 2 / (points - 1));
+		float cur = 0;
+		for (int i = 0; i < points; i++) {
+			float x = sin(cur);
+			float y = cos(cur);
+
+			vbuff[i * 2].UV = Vector2(1.0f, cur / ((float)M_PI * 2));
+			vbuff[i * 2].Pos = Vector3(x * size.X, y * size.Y, size.Z);
+
+			vbuff[i * 2 + 1].UV = Vector2(0.0f, cur / ((float)M_PI * 2));
+			vbuff[i * 2 + 1].Pos = Vector3(x * size.X, y * size.Y, -size.Z);
+
+			cur += step;
+		}
+
+		for (int i = 0; i < points * 2 - 3; i++) {
+			ibuff[i * 6 + 0] = i;
+			ibuff[i * 6 + 1] = i + 1;
+			ibuff[i * 6 + 2] = i + 2;
+
+			ibuff[i * 6 + 3] = i + 1;
+			ibuff[i * 6 + 4] = i + 2;
+			ibuff[i * 6 + 5] = i + 3;
+		}
+
+		this->SetVertices(vbuff, points * 2);
+		this->SetIndices(ibuff, points * 12);
+	}
 }

@@ -51,6 +51,8 @@ namespace TomatoLib {
 		Matrix& GetView();
 		Matrix& GetProjection();
 
+		Vector3 WorldToScreen(Vector3& pos, Vector2& winsize);
+
 		Camera();
 	};
 }
