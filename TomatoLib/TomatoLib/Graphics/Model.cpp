@@ -207,6 +207,9 @@ namespace TomatoLib {
 
 		this->SetVertices(vbuff, points);
 		this->SetIndices(ibuff, points * 3 - 3);
+
+		delete[] vbuff;
+		delete[] ibuff;
 	}
 
 	void Model::FromTube(int points, const Vector3& size) {
@@ -240,5 +243,8 @@ namespace TomatoLib {
 
 		this->SetVertices(vbuff, points * 2);
 		this->SetIndices(ibuff, points * 12);
+
+		delete[] vbuff;
+		delete[] ibuff;
 	}
 }
