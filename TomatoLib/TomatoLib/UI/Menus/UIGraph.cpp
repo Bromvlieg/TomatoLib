@@ -3,7 +3,7 @@
 #include "../../Async/Async.h"
 #include "../../Defines.h"
 
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace TomatoLib {
 	UIGraph::UIGraph(UIBase* parent) : UIBase(parent) {
