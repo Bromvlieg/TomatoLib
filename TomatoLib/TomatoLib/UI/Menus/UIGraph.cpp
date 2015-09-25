@@ -1,6 +1,9 @@
 #include "UIGraph.h"
 #include "../../Utilities/Utilities.h"
 #include "../../Async/Async.h"
+#include "../../Defines.h"
+
+#include <GLFW\glfw3.h>
 
 namespace TomatoLib {
 	UIGraph::UIGraph(UIBase* parent) : UIBase(parent) {
@@ -14,10 +17,6 @@ namespace TomatoLib {
 		p.Box(71, 17, 308, this->H - 18, Color(50, 100, 50, 220));
 
 		unsigned int cats = this->CatNames.size();
-
-		for (int i = 0; i < 17; i++) {
-			p.Box(71, 20 + 8 * i, 308, 1, i == 0 ? Color(255, 0, 0, 200) : i == 8 ? Color(255, 153, 0, 200) : Color(50, 50, 50, 220));
-		}
 
 		for (unsigned int i = 0; i < cats; i++) {
 			if (this->CatNames[i].size() == 0) continue;
@@ -42,7 +41,6 @@ namespace TomatoLib {
 
 		unsigned int linecount = this->Lines.size();
 		for (unsigned int line = 0; line < linecount; line++) {
-
 			std::vector<UIGraphLineData>& CatData = this->Lines[line];
 			int height = 0;
 
@@ -50,15 +48,29 @@ namespace TomatoLib {
 			for (unsigned int cat = 0; cat < catcount; cat++) {
 				if (this->CatNames[cat].size() == 0) continue;
 
-				UIGraphLineData& LineData = CatData[cat];
-				int h = (int)(LineData.MS * 8);
+				UIGraphLineData& ld = CatData[cat];
+
+				int h = (int)(ld.MS * 8);
 				if (height + h > this->H - 18) h = this->H - 18 - height;
 				if (h <= 0) continue;
 
 				height += h;
-				p.Box(71 + line, this->H - height - 1, 1, h, this->CatColors[LineData.Category]);
+				p.Box(71 + line, this->H - height - 1, 1, h, this->CatColors[ld.Category]);
 			}
 		}
+
+		for (int i = 0; i < 17; i++) {
+			p.Box(71, 20 + 8 * i, 308, 1, i == 0 ? Color(255, 0, 0, 200) : i == 8 ? Color(255, 153, 0, 200) : Color(50, 50, 50, 220));
+		}
+	}
+
+	void UIGraph::StartWatch(int cat) {
+		this->m_RecordingCat = cat;
+		this->m_RecordingTime = TL_GET_TIME_MS;
+	}
+
+	void UIGraph::StopWatch() {
+		this->InsertData(this->m_RecordingCat, TL_GET_TIME_MS - this->m_RecordingTime);
 	}
 
 	void UIGraph::InsertData(int cat, float ms) {

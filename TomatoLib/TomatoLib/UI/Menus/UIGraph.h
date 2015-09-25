@@ -16,6 +16,9 @@ namespace TomatoLib {
 	};
 
 	class UIGraph : public UIBase {
+		int m_RecordingCat;
+		float m_RecordingTime;
+
 	public:
 		UIGraph(UIBase* parent);
 
@@ -33,6 +36,9 @@ namespace TomatoLib {
 		virtual void Update() override;
 
 		virtual void InvalidateLayout() override;
+
+		void StartWatch(int cat);
+		void StopWatch();
 	};
 }
 
