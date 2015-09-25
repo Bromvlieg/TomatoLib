@@ -160,7 +160,7 @@ namespace TomatoLib {
 	}
 
 	bool EzSock::IsError() {
-		if (state == skERROR)
+		if (state == skERROR || sock == -1)
 			return true;
 
 		FD_ZERO(scks);

@@ -39,7 +39,7 @@ namespace TomatoLib {
 		void EnableControls();
 		void SetResizeBorderSize(int size);
 
-		inline int UIFrameBorderless::GetResizeBorderSize() {
+		int GetResizeBorderSize() {
 			return this->ResizeBordersize;
 		}
 	};
