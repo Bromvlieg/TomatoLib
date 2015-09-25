@@ -111,6 +111,10 @@ namespace TomatoLib {
 		this->m_TextureHandle = tex.GLHandle;
 	}
 
+	void Model::SetTexture(GLuint t) {
+		this->m_TextureHandle = t;
+	}
+
 	void Model::SetShader(Shader& s) {
 		this->m_ShaderHandle = s.ProgramHandle;
 	}

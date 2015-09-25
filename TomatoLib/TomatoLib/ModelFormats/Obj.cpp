@@ -146,7 +146,8 @@ namespace TomatoLib {
 							_add_triangle(m, vertices, normals, texposs, parts[1], parts[2], parts[3]);
 							_add_triangle(m, vertices, normals, texposs, parts[1], parts[3], parts[4]);
 						} else {
-							throw "Obj::FromBuffer: Invalid face count";
+							// throw "Obj::FromBuffer: Invalid face count";
+							Utilities::Print("Obj::FromBuffer: Invalid face count while loading model");
 						}
 					} else if (parts[0] == "usemtl") {
 						m.Mtl = parts[1];

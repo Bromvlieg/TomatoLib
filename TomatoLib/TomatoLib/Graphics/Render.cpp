@@ -43,6 +43,8 @@ namespace TomatoLib {
 	Font* Render::DefaultFont = null;
 
 	Render::Render() {
+		this->DisableDeptTest = true;
+
 		this->VerticeDataCount = 0;
 		this->IndiceDataCount = 0;
 
@@ -536,17 +538,6 @@ namespace TomatoLib {
 		return Vector2(totalW, totalH);
 	}
 
-	void Render::Text(const std::string& text, int x, int y, const Color& color) {
-		this->Text(text, (float)x, (float)y, color);
-	}
-
-	void Render::Text(const std::string& text, float x, float y, const Color& color) {
-		if (this->DefaultFont == null) return;
-		if (color.A == 0) return;
-
-		this->Text(this->DefaultFont, text, x, y, color);
-	}
-
 	void Render::SetTexture(GLint handle) {
 		if (this->CurrentTexture != handle) this->DrawOnScreen();
 		this->CurrentTexture = handle;
@@ -572,14 +563,41 @@ namespace TomatoLib {
 		this->CurrentShader = shader.ProgramHandle;
 	}
 
-	void Render::Text(Font* font, const std::string& text, int x, int y, const Color& color) {
-		this->Text(font, text, (float)x, (float)y, color);
+	void Render::Text(const std::string& text, int x, int y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		this->Text(text, (float)x, (float)y, color, alignx, aligny);
 	}
 
-	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color) {
+	void Render::Text(const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		if (this->DefaultFont == null) return;
+		if (color.A == 0) return;
+
+		this->Text(this->DefaultFont, text, x, y, color, alignx, aligny);
+	}
+
+	void Render::Text(Font* font, const std::string& text, int x, int y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		this->Text(font, text, (float)x, (float)y, color, alignx, aligny);
+	}
+
+	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
 		if (color.A == 0) return;
 		this->SetTexture(font->Atlas->id);
 		this->SetShader(this->DefaultShaderText.ProgramHandle);
+
+		if (alignx != RenderAlignment::Left || aligny != RenderAlignment::Left) {
+			Vector2 tsize = this->GetTextSize(font, text);
+
+			switch (alignx) {
+				case RenderAlignment::Left: break;
+				case RenderAlignment::Center: x -= tsize.X / 2; break;
+				case RenderAlignment::Right: x -= tsize.X; break;
+			}
+
+			switch (aligny) {
+				case RenderAlignment::Left: break;
+				case RenderAlignment::Center: y -= tsize.Y / 2; break;
+				case RenderAlignment::Right: y -= tsize.Y; break;
+			}
+		}
 
 		x += this->_DrawOffset.X;
 		y += this->_DrawOffset.Y;
@@ -852,7 +870,7 @@ namespace TomatoLib {
 	void Render::DrawOnScreen() {
 		if (this->VerticeDataCount == 0) return;
 
-		glDisable(GL_DEPTH_TEST);
+		if (this->DisableDeptTest) glDisable(GL_DEPTH_TEST);
 
 		glUseProgram(this->CurrentShader);
 
@@ -908,7 +926,7 @@ namespace TomatoLib {
 
 		delete[] vertices;
 
-		glEnable(GL_DEPTH_TEST);
+		if (this->DisableDeptTest) glEnable(GL_DEPTH_TEST);
 
 		this->VerticeDataCount = 0;
 		this->IndiceDataCount = 0;

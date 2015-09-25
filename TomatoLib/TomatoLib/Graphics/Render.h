@@ -22,6 +22,12 @@ namespace TomatoLib {
 		None
 	};
 
+	enum class RenderAlignment {
+		Left,
+		Center,
+		Right
+	};
+
 	struct _vertexData {
 		Vector2 Location;
 		Vector2 TextureLocation;
@@ -97,6 +103,8 @@ namespace TomatoLib {
 		Vector2 _DrawOffset;
 		List<AABB> _ClippingList;
 
+		bool DisableDeptTest;
+
 		Render();
 		~Render();
 
@@ -113,10 +121,10 @@ namespace TomatoLib {
 		void Triangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& color);
 		void Poly(Vector2* points, int len, const Color& color);
 		void PolyOutlined(Vector2* points, int len, float linew, const Color& color);
-		void Text(const std::string& text, int x, int y, const Color& color);
-		void Text(const std::string& text, float x, float y, const Color& color);
-		void Text(Font* font, const std::string& text, int x, int y, const Color& color);
-		void Text(Font* font, const std::string& text, float x, float y, const Color& color);
+		void Text(const std::string& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+		void Text(const std::string& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+		void Text(Font* font, const std::string& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+		void Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
 		void PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color);
 
 		void SetTexture(GLint handle);

@@ -54,6 +54,7 @@ namespace TomatoLib {
 
 		void SetShader(Shader& s);
 		void SetTexture(Texture& tex);
+		void SetTexture(GLuint tex);
 
 		GLuint GetTexture();
 
