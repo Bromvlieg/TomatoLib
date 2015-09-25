@@ -45,13 +45,13 @@ namespace TomatoLib {
 		void SetYaw(float yaw);
 
 		void InsertViewMatrix(GLint location) const;
-		void HandleRawInput(Window& w);
+		void HandleRawInput(const Window& w);
 		void SetView(const Matrix& m);
 		void SetProjection(const Matrix& m);
 		Matrix& GetView();
 		Matrix& GetProjection();
 
-		Vector3 WorldToScreen(Vector3& pos, Vector2& winsize);
+		Vector3 WorldToScreen(const Vector3& pos, const Vector2& winsize);
 
 		Camera();
 	};

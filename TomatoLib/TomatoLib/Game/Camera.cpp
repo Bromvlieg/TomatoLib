@@ -79,7 +79,7 @@ namespace TomatoLib {
 		return 1;
 	}
 
-	Vector3 Camera::WorldToScreen(Vector3& pos, Vector2& winsize) {
+	Vector3 Camera::WorldToScreen(const Vector3& pos, const Vector2& winsize) {
 		GLint viewport[] = {0, 0, (int)winsize.X, (int)winsize.Y};
 
 		Matrix view = this->mat;
@@ -105,7 +105,7 @@ namespace TomatoLib {
 		return this->projmat;
 	}
 
-	void Camera::HandleRawInput(Window& w) {
+	void Camera::HandleRawInput(const Window& w) {
 		float speed = w.KeysIn[GLFW_KEY_LEFT_SHIFT] ? 60.0f : 25.0f;
 
 		Vector3 movement;

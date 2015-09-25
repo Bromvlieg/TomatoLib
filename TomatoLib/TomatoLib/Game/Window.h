@@ -30,8 +30,8 @@ namespace TomatoLib {
 		bool HasFocus;
 
 		void SetTitle(std::string title);
-		Vector2 GetSize();
-		Vector2 GetMouse();
+		Vector2 GetSize() const;
+		Vector2 GetMouse() const;
 		void SetMouse(int x, int y);
 		void SetMouse(const Vector2& pos);
 
@@ -39,7 +39,7 @@ namespace TomatoLib {
 		void SwapBuffer();
 		void PollEvents();
 		void Close();
-		bool IsClosing();
+		bool IsClosing() const;
 
 		void UpdateKeyHolding();
 

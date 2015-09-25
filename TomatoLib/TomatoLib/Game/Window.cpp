@@ -84,7 +84,7 @@ namespace TomatoLib {
 		EventsMutex.unlock();
 	}
 
-	bool Window::IsClosing() {
+	bool Window::IsClosing() const {
 		return glfwWindowShouldClose(this->Handle) == 1;
 	}
 
@@ -92,14 +92,14 @@ namespace TomatoLib {
 		glfwSetWindowTitle(this->Handle, title.c_str());
 	}
 
-	Vector2 Window::GetSize() {
+	Vector2 Window::GetSize() const {
 		int x, y;
 
 		glfwGetWindowSize(this->Handle, &x, &y);
 		return Vector2(x, y);
 	}
 
-	Vector2 Window::GetMouse() {
+	Vector2 Window::GetMouse() const {
 		double mouseX, mouseY;
 		glfwGetCursorPos(this->Handle, &mouseX, &mouseY);
 
@@ -223,7 +223,6 @@ namespace TomatoLib {
 		glfwMakeContextCurrent(this->Handle);
 		glViewport(0, 0, w, h);
 		glfwSwapInterval(1); // 0 == infinite FPS, 1 == 60, 2 == 30
-
 
 		glewExperimental = GL_TRUE;
 		GLenum err = glewInit();
