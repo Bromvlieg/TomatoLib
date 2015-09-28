@@ -67,6 +67,7 @@ namespace TomatoLib {
 
 		void FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d);
 		void FromCircle(int points, float radius);
+		void FromSphere(int upoints, int vpoints, float radius);
 		void FromTube(int points, const Vector3& size);
 	};
 }

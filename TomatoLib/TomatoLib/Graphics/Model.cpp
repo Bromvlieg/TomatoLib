@@ -186,6 +186,70 @@ namespace TomatoLib {
 		this->SetIndices(const_cast<GLushort*>(inds), 6);
 	}
 
+	inline Vector3 F(float u, float v) {
+		return Vector3(cos(u)*sin(v), cos(v), sin(u)*sin(v));
+	}
+
+	void Model::FromSphere(int rings, int sectors, float radius) {
+		float const R = 1 / (float)(rings - 1);
+		float const S = 1 / (float)(sectors - 1);
+		int r, s;
+
+		List<vertex_t> vertices;
+		List<GLfloat> normals;
+		List<GLfloat> texcoords;
+		List<GLushort> indices;
+
+		vertices.resize(rings * sectors * 3);
+		normals.resize(rings * sectors * 3);
+		texcoords.resize(rings * sectors * 2);
+
+		List<vertex_t>::iterator v = vertices.begin();
+		List<GLfloat>::iterator n = normals.begin();
+
+		int i = 0;
+		for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
+			float const y = (float)sin(-M_PI_2 + M_PI * r * R);
+			float const x = (float)cos(2 * M_PI * s * S) * sin(M_PI * r * R);
+			float const z = (float)sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+
+			vertex_t& v = vertices[i];
+			v.Pos.X = x * radius;
+			v.Pos.Y = y * radius;
+			v.Pos.Z = z * radius;
+
+			v.UV.X = s*S;
+			v.UV.Y = r*R;
+
+			*n++ = x;
+			*n++ = y;
+			*n++ = z;
+
+			i++;
+		}
+
+		indices.resize(rings * sectors * 6);
+		List<GLushort>::iterator ii = indices.begin();
+		const static GLushort inds[6] = {0, 1, 2, 1, 2, 3};
+		for (r = 0; r < rings - 1; r++) for (s = 0; s < sectors - 1; s++) {
+			GLushort a = r * sectors + s;
+			GLushort b = r * sectors + s + 1;
+			GLushort c = (r + 1) * sectors + s;
+			GLushort d = (r + 1) * sectors + s + 1;
+
+			*ii++ = a;
+			*ii++ = b;
+			*ii++ = c;
+
+			*ii++ = b;
+			*ii++ = c;
+			*ii++ = d;
+		}
+
+		this->SetVertices(&vertices[0], vertices.size());
+		this->SetIndices(&indices[0], indices.size());
+	}
+
 	void Model::FromCircle(int points, float radius) {
 		vertex_t* vbuff = new vertex_t[points];
 		GLushort* ibuff = new GLushort[points * 3 - 3];

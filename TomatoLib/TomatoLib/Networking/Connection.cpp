@@ -103,6 +103,10 @@ namespace TomatoLib {
 		this->RecvThread = nullptr;
 
 		this->HitTheBrakes = false;
+
+		// backwards delete is faster due no need to move elements forward
+		while (this->ToSend.Count > 0) delete[] this->ToSend.RemoveAt(this->ToSend.Count - 1);
+		while (this->ToRecv.Count > 0) delete[] this->ToRecv.RemoveAt(this->ToRecv.Count - 1);
 	}
 
 	void Connection::StartThreads() {
