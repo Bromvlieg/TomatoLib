@@ -34,7 +34,6 @@ namespace TomatoLib {
 	}
 
 	Connection::~Connection() {
-		this->HitTheBrakes = true;
 		this->Disconnect();
 
 		delete[] this->Callbacks;
@@ -93,8 +92,8 @@ namespace TomatoLib {
 
 		this->Sock.close();
 
-		this->SendThread->join();
-		this->RecvThread->join();
+		if (this->SendThread->joinable()) this->SendThread->join();
+		if (this->RecvThread->joinable()) this->RecvThread->join();
 
 		delete this->SendThread;
 		delete this->RecvThread;

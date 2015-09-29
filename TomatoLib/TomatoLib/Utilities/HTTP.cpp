@@ -7,6 +7,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <string.h>
+
 namespace TomatoLib {
 	string HTTP::UrlEncode(const string& str) {
 		string new_str = "";
@@ -20,8 +22,8 @@ namespace TomatoLib {
 			c = chars[i];
 			ic = c;
 			// uncomment this if you want to encode spaces with +
-			/*if (c==' ') new_str += '+';
-			else */if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') new_str += c;
+			if (c==' ') new_str += '+';
+			else if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') new_str += c;
 			else {
 				sprintf(bufHex, "%X", c);
 				if (ic < 16)
