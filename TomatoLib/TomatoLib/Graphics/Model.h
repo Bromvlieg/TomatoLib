@@ -27,6 +27,8 @@ namespace TomatoLib {
 		int IndiceCount;
 
 		TomatoLib::Texture Texture;
+
+		void GetBoundingBox(Vector3& min, Vector3& max);
 	};
 
 	class Model {

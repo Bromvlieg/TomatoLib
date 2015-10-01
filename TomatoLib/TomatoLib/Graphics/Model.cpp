@@ -12,6 +12,27 @@ namespace TomatoLib {
 	Shader* Model::s_Shader = nullptr;
 	Matrix Model::s_mProj;
 
+	void RawModelData::GetBoundingBox(Vector3& min, Vector3& max) {
+		min.X = 99999;
+		min.Y = 99999;
+		min.Z = 99999;
+		max.X = -99999;
+		max.Y = -99999;
+		max.Z = -99999;
+
+		for (int i = 0; i < this->VerticeCount; i++) {
+			vertex_t& v = this->VerticePtr[i];
+
+			if (v.Pos.X < min.X) min.X = v.Pos.X;
+			if (v.Pos.Y < min.Y) min.Y = v.Pos.Y;
+			if (v.Pos.Z < min.Z) min.Z = v.Pos.Z;
+
+			if (v.Pos.X > max.X) max.X = v.Pos.X;
+			if (v.Pos.Y > max.Y) max.Y = v.Pos.Y;
+			if (v.Pos.Z > max.Z) max.Z = v.Pos.Z;
+		}
+	}
+
 	Model::Model() : m_IndiceCount(0) {
 		checkGL;
 
