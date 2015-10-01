@@ -81,7 +81,7 @@ namespace TomatoLib {
 		float num24 = -(num5 * num17 - num7 * num20 + num8 * num21);
 		float num25 = (num5 * num18 - num6 * num20 + num8 * num22);
 		float num26 = -(num5 * num19 - num6 * num21 + num7 * num22);
-		float num27 = (1.0 / (num1 * num23 + num2 * num24 + num3 * num25 + num4 * num26));
+		float num27 = (1.0f / (num1 * num23 + num2 * num24 + num3 * num25 + num4 * num26));
 
 		float num28 = (num7 * num16 - num8 * num15);
 		float num29 = (num6 * num16 - num8 * num14);

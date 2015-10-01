@@ -231,8 +231,8 @@ namespace TomatoLib {
 		int i = 0;
 		for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
 			float const y = (float)sin(-M_PI_2 + M_PI * r * R);
-			float const x = (float)cos(2 * M_PI * s * S) * sin(M_PI * r * R);
-			float const z = (float)sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+			float const x = (float)cos(2 * M_PI * s * S) * (float)sin(M_PI * r * R);
+			float const z = (float)sin(2 * M_PI * s * S) * (float)sin(M_PI * r * R);
 
 			vertex_t& v = vertices[i];
 			v.Pos.X = x * radius;
