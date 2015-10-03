@@ -25,6 +25,8 @@ namespace TomatoLib {
 
 		Color BorderColor;
 		Color BackColor;
+		Color HoverColor;
+		int Spacing;
 
 		UIButton* ExtendButton;
 		UIPanel* MainPanel;

@@ -13,7 +13,9 @@ namespace TomatoLib {
 		this->CanAcceptInput = true;
 		this->BorderColor = Color(0, 0, 0, 255);
 		this->BackColor = Color(60, 60, 60, 255);
+		this->HoverColor = Color::Green;
 
+		this->Spacing = 2;
 		this->SelectedIndex = -1;
 		this->MaxShownOptions = 5;
 		this->Align = TextAlign::MidLeft;
@@ -26,7 +28,6 @@ namespace TomatoLib {
 		this->ScrollPanel = new UIScrollPanel(this->MainPanel, false);
 		this->ScrollPanel->SetPos(0, 0);
 		this->ScrollPanel->SetSize(this->MainPanel->W, 0);
-		this->AlwaysRedraw = false;
 		this->PrevHoverIndex = -1;
 
 		this->DrawPanel = new UIPanel(0);
@@ -36,8 +37,8 @@ namespace TomatoLib {
 			float currentY = this->ScrollPanel->Back->Y * -1.0f;
 			mousepos.Y -= this->MainPanel->Y;
 
-			p.Box(0, 0, this->DrawPanel->W, this->DrawPanel->H, Color(0, 0, 0, 150));
-			p.Box(1, 1, this->DrawPanel->W - 2, this->DrawPanel->H - 2, Color(60, 60, 60, 150));
+			p.Box(0, 0, this->DrawPanel->W, this->DrawPanel->H, this->BorderColor);
+			p.Box(1, 1, this->DrawPanel->W - 2, this->DrawPanel->H - 2, this->BackColor);
 
 			float fh = this->Font->FontHandle->height;
 			int linecount = this->Options.Count;
@@ -45,11 +46,11 @@ namespace TomatoLib {
 			for (int line = startline, i = 0; line < startline + this->MaxShownOptions && line < this->Options.Count; line++, i++) {
 				bool hovering = mousepos.Y >= i * fh && mousepos.Y < i * fh + fh;
 
-				if (line != 0) p.Box(0.0f, currentY, (float)this->DrawPanel->W, 1.0f, Color(0, 0, 0, 150));
+				if (line != 0) p.Box(0.0f, currentY + 1.0f, (float)this->DrawPanel->W, 1.0f, this->BorderColor);
 				Vector2 tsize = p.GetTextSize(this->Font, this->Options.Keys[line]);
-				p.Text(this->Font, this->Options.Keys[line], 2.0f, currentY + fh / 2 - tsize.Y / 2, hovering ? Color::Green : Color::White);
+				p.Text(this->Font, this->Options.Keys[line], 2.0f, currentY + (fh + this->Spacing) / 2 - tsize.Y / 2 + 3, hovering ? this->HoverColor : this->TextColor);
 
-				currentY += this->Font->FontHandle->height;
+				currentY += this->Font->FontHandle->height + this->Spacing;
 			}
 		};
 
@@ -63,7 +64,7 @@ namespace TomatoLib {
 			int linecount = this->Options.Count;
 			int startline = (int)(currentY / fh);
 			for (int line = startline, i = 0; line < startline + this->MaxShownOptions && line < this->Options.Count; line++, i++) {
-				if (mousepos.Y >= i * fh && mousepos.Y < i * fh + fh) {
+				if (mousepos.Y >= i * (fh + this->Spacing) && mousepos.Y < i * (fh + this->Spacing) + fh + this->Spacing) {
 					if (this->PrevHoverIndex != line) {
 						this->PrevHoverIndex = line;
 						this->MarkForFullRedraw();
@@ -85,7 +86,7 @@ namespace TomatoLib {
 			int linecount = this->Options.Count;
 			int startline = (int)(currentY / fh);
 			for (int line = startline, i = 0; line < startline + this->MaxShownOptions && line < this->Options.Count; line++, i++) {
-				if (mousepos.Y >= i * fh && mousepos.Y < i * fh + fh) {
+				if (mousepos.Y >= i * (fh + this->Spacing) && mousepos.Y < i * (fh + this->Spacing) + fh + this->Spacing) {
 					this->SelectedIndex = line;
 					this->SetText(this->Options.Keys[line]);
 					this->MainPanel->Hide();
@@ -161,7 +162,6 @@ namespace TomatoLib {
 		p.Box(0, 0, this->W, this->H, this->BorderColor);
 		p.Box(1, 1, this->W - 2, this->H - 2, this->BackColor);
 
-
 		Vector2 apos = this->GetAbsoluteLocation();
 		p.SetDrawingOffset((int)apos.X + 2, (int)apos.Y);
 		UILabel::Draw(p);
@@ -201,9 +201,11 @@ namespace TomatoLib {
 
 		int tw = (int)tsize.X + (this->ScrollPanel->GrabY->ShouldRender ? this->ScrollPanel->GrabY->W : 0);
 		if (tw < this->W) tw = this->W;
-		this->MainPanel->SetSize(tw, this->Options.Count > this->MaxShownOptions ? this->MaxShownOptions * 16 : this->Options.Count * 16);
 
-		this->DrawPanel->SetSize(this->MainPanel->W, this->Options.Count * 16);
+		int itemh = this->Font->FontHandle->height + this->Spacing;
+		this->MainPanel->SetSize(tw, this->Options.Count > this->MaxShownOptions ? this->MaxShownOptions * itemh : this->Options.Count * itemh);
+
+		this->DrawPanel->SetSize(this->MainPanel->W, this->Options.Count * itemh + this->Spacing);
 		this->ScrollPanel->SetSize(this->MainPanel->W, this->MainPanel->H);
 		this->ScrollPanel->InvalidateLayout();
 

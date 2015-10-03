@@ -30,4 +30,8 @@ namespace TomatoLib {
 		texture_font_load_glyphs(this->FontHandle, L"~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][”“’\n");
 		return true;
 	}
+
+	void Font::AddChars(const wchar_t* chars) {
+		texture_font_load_glyphs(this->FontHandle, chars);
+	}
 }
