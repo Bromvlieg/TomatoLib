@@ -10,6 +10,8 @@ namespace TomatoLib {
 
 	class UIBase {
 		inline void _GetAbsoluteLocation(Vector2& pos);
+		bool _ProtectedRemoveFlag;
+		bool _ProtectedScopeFlag;
 
 	public:
 		static UIManager* DefaultUImanager;

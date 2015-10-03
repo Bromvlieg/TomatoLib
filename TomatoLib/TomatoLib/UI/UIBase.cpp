@@ -26,6 +26,8 @@ namespace TomatoLib {
 		this->AlwaysRedraw = true;
 		this->ShouldRedraw = true;
 		this->Buffer = nullptr;
+		this->_ProtectedRemoveFlag = false;
+		this->_ProtectedScopeFlag = false;
 
 		this->SetParent(parent);
 
@@ -176,6 +178,9 @@ namespace TomatoLib {
 	void UIBase::_InternalDraw(Render& drawer) {
 		if (!this->ShouldRender) return;
 
+		bool old = this->_ProtectedScopeFlag;
+		this->_ProtectedScopeFlag = true;
+
 		Vector2 oldoffset = drawer.GetDrawingOffset();
 		Vector2 pos = this->GetAbsoluteLocation();
 
@@ -190,6 +195,7 @@ namespace TomatoLib {
 		
 		if (!this->Frozen && (this->ShouldRedraw || this->AlwaysRedraw)) {
 			this->OnDraw(drawer);
+			if (this->_ProtectedRemoveFlag) { delete this; return; };
 		} else if(this->Buffer != nullptr) {
 			drawer.Buffer(this->Buffer);
 		}
@@ -210,21 +216,32 @@ namespace TomatoLib {
 			if (pos2.Y > drawer._ClippingPos.Y + drawer._ClippingSize.Y) continue;
 
 			p->_InternalDraw(drawer);
+			if (this->_ProtectedRemoveFlag) { delete this; return; };
 		}
 
 		drawer.SetDrawingOffset((int)oldoffset.X, (int)oldoffset.Y);
 		drawer.DisableClipping();
+
+		this->_ProtectedScopeFlag = old;
 	}
 
 	void UIBase::_InternalUpdate() {
 		if (this->Frozen) return;
 
+		bool old = this->_ProtectedScopeFlag;
+		this->_ProtectedScopeFlag = true;
+
 		this->Update();
+		if (this->_ProtectedRemoveFlag) { delete this; return; };
 		this->OnUpdate();
+		if (this->_ProtectedRemoveFlag) { delete this; return; };
 
 		for (unsigned int i = 0; i < this->Children.size(); i++) {
 			this->Children[i]->_InternalUpdate();
+			if (this->_ProtectedRemoveFlag) { delete this; return; };
 		}
+
+		this->_ProtectedScopeFlag = old;
 	}
 
 	void UIBase::AddChild(UIBase* child) {
@@ -390,7 +407,12 @@ namespace TomatoLib {
 			this->Children[0]->Kill();
 		}
 
-		delete this;
+		// we can't delete it if it's inside the update or draw scope
+		if (!this->_ProtectedScopeFlag) {
+			delete this;
+		} else {
+			this->_ProtectedRemoveFlag = true;
+		}
 	}
 
 }
