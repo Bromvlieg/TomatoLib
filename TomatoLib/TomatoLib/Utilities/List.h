@@ -18,7 +18,7 @@ public:
 	}
 
 	inline void Insert(int index, const Type& object) {
-		this->insert(this->begin() + index);
+		this->insert(this->begin() + index, object);
 		this->Count++;
 	}
 
