@@ -208,6 +208,10 @@ namespace TomatoLib {
 
 		const GLFWvidmode* mode = glfwGetVideoMode(mon);
 
+		if (fullscreen) {
+			w = mode->width;
+			h = mode->height;
+		}
 		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
 		this->Handle = glfwCreateWindow(w, h, "", fullscreen ? mon : nullptr, nullptr);
