@@ -108,7 +108,7 @@ namespace TomatoLib {
 			} else {
 				Vector2 apos = this->GetAbsoluteLocation();
 				this->MainPanel->SetPos((int)apos.X, (int)apos.Y + this->H);
-				this->MainPanel->OnTop();
+				this->MainPanel->ForceTop();
 				this->MainPanel->Show();
 			}
 		};
@@ -169,7 +169,7 @@ namespace TomatoLib {
 
 	void UIDropDown::Update() {
 		if (!this->MainPanel->ShouldRender) return;
-		if (this->MainPanel->HasFocus()) return;
+		if (this->MainPanel->HasFocus() || this->HasFocus()) return;
 
 		this->MainPanel->Hide();
 	}
@@ -202,7 +202,7 @@ namespace TomatoLib {
 		int tw = (int)tsize.X + (this->ScrollPanel->GrabY->ShouldRender ? this->ScrollPanel->GrabY->W : 0);
 		if (tw < this->W) tw = this->W;
 
-		int itemh = this->Font->FontHandle->height + this->Spacing;
+		int itemh = (int)this->Font->FontHandle->height + this->Spacing;
 		this->MainPanel->SetSize(tw, this->Options.Count > this->MaxShownOptions ? this->MaxShownOptions * itemh : this->Options.Count * itemh);
 
 		this->DrawPanel->SetSize(this->MainPanel->W, this->Options.Count * itemh + this->Spacing);

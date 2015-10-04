@@ -95,6 +95,7 @@ namespace TomatoLib {
 		void Show();
 		void Hide();
 		void MarkForFullRedraw();
+		void ForceTop();
 	};
 }
 

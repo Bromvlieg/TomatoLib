@@ -95,6 +95,26 @@ namespace TomatoLib {
 		this->OnHide();
 	}
 
+	void UIBase::ForceTop() {
+		if (this->Parent == nullptr) {
+			for (int i = 0; i < (int)this->UIMan->Children.size(); i++) {
+				if (this->UIMan->Children[i] == this) {
+					this->UIMan->Children.erase(this->UIMan->Children.begin() + i);
+					this->UIMan->Children.push_back(this);
+					break;
+				}
+			}
+		} else {
+			for (int i = 0; i < (int)this->Parent->Children.size(); i++) {
+				if (this->Parent->Children[i] == this) {
+					this->Parent->Children.erase(this->Parent->Children.begin() + i);
+					this->Parent->Children.push_back(this);
+					break;
+				}
+			}
+		}
+	}
+
 	void UIBase::SetFocus() {
 		if (this->TopMost) {
 			this->OnTop();
@@ -245,8 +265,18 @@ namespace TomatoLib {
 	}
 
 	void UIBase::AddChild(UIBase* child) {
-		this->Children.push_back(child);
 		child->UIMan = this->UIMan;
+
+		bool added = false;
+		for (int i2 = (int)this->Children.size() - 1; i2 >= 0; i2--) {
+			if (!this->Children[i2]->TopMost) {
+				this->Children.insert(this->Children.begin() + i2 + 1, child);
+				added = true;
+				break;
+			}
+		}
+
+		if (!added) this->Children.insert(this->Children.begin(), child);
 	}
 
 	void UIBase::RemoveChild(UIBase* child) {
@@ -366,18 +396,38 @@ namespace TomatoLib {
 		if (this->UIMan == nullptr) return;
 
 		if (this->Parent == nullptr) {
-			for (unsigned int i = 0; i < this->UIMan->Children.size(); i++) {
+			for (int i = 0; i < (int)this->UIMan->Children.size(); i++) {
 				if (this->UIMan->Children[i] == this) {
 					this->UIMan->Children.erase(this->UIMan->Children.begin() + i);
-					this->UIMan->Children.push_back(this);
+
+					bool added = false;
+					for (int i2 = (int)this->UIMan->Children.size() - 1; i2 >= 0; i2--) {
+						if (!this->UIMan->Children[i2]->TopMost || i2 <= i) {
+							this->UIMan->Children.insert(this->UIMan->Children.begin() + i2 + 1, this);
+							added = true;
+							break;
+						}
+					}
+
+					if (!added) this->UIMan->Children.insert(this->UIMan->Children.begin(), this);
 					break;
 				}
 			}
 		} else {
-			for (unsigned int i = 0; i < this->UIMan->Children.size(); i++) {
+			for (int i = 0; i < (int)this->Parent->Children.size(); i++) {
 				if (this->Parent->Children[i] == this) {
-					this->Parent->Children.erase(this->UIMan->Children.begin() + i);
-					this->Parent->Children.push_back(this);
+					this->Parent->Children.erase(this->Parent->Children.begin() + i);
+
+					bool added = false;
+					for (int i2 = (int)this->Parent->Children.size() - 1; i2 >= 0; i2--) {
+						if (!this->Parent->Children[i2]->TopMost || i2 <= i) {
+							this->Parent->Children.insert(this->Parent->Children.begin() + i2 + 1, this);
+							added = true;
+							break;
+						}
+					}
+
+					if (!added) this->Parent->Children.insert(this->Parent->Children.begin(), this);
 					break;
 				}
 			}

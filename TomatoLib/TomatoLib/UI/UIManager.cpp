@@ -11,7 +11,17 @@
 namespace TomatoLib {
 	UIBase* UIManager::AddChild(UIBase* obj) {
 		obj->UIMan = this;
-		this->Children.push_back(obj);
+
+		bool added = false;
+		for (int i2 = (int)this->Children.size() - 1; i2 >= 0; i2--) {
+			if (!this->Children[i2]->TopMost) {
+				this->Children.insert(this->Children.begin() + i2 + 1, obj);
+				added = true;
+				break;
+			}
+		}
+
+		if (!added) this->Children.insert(this->Children.begin(), obj);
 
 		return obj;
 	}
