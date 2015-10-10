@@ -2,6 +2,7 @@
 #define _SCL_SECURE_NO_WARNINGS
 
 #include "Packet.h"
+#include <stdint.h>
 #include <string>
 using std::string;
 
@@ -9,6 +10,43 @@ using std::string;
 
 namespace TomatoLib {
 	bool Packet::InsertOutlenIntOnSend = true;
+
+	void Packet::swap_2(void* source) {
+		char ret[2];
+		for (int i = 0; i < 2; i++) {
+			ret[i] = ((char*)source)[1 - i];
+		}
+
+		memcpy(source, ret, 2);
+	}
+
+	void Packet::swap_4(void* source) {
+		char ret[4];
+		for (int i = 0; i < 4; i++) {
+			ret[i] = ((char*)source)[3 - i];
+		}
+
+		memcpy(source, ret, 4);
+	}
+
+	void Packet::swap_8(void* source) {
+		char ret[8];
+		for (int i = 0; i < 8; i++) {
+			ret[i] = ((char*)source)[7 - i];
+		}
+
+		memcpy(source, ret, 8);
+	}
+
+	EndianType Packet::get_local_endian(void) {
+		// compiler magic, GCC makes the result of this a constant, moar speeds
+		union {
+			uint32_t i;
+			char c[4];
+		} bint = {0x01000002}; // outcome: 0x01 == big endian, 0x02 == little endian
+
+		return (EndianType)bint.c[0];
+	}
 
 	Packet::Packet() {
 		this->Valid = false;
@@ -21,6 +59,8 @@ namespace TomatoLib {
 		this->OutSize = 0;
 		this->OutBuffer = nullptr;
 		this->InBuffer = nullptr;
+
+		this->Endian = EndianType::Little;
 	}
 
 	Packet::Packet(EzSock* sock) {
@@ -34,6 +74,8 @@ namespace TomatoLib {
 		this->OutSize = 0;
 		this->OutBuffer = nullptr;
 		this->InBuffer = nullptr;
+
+		this->Endian = EndianType::Little;
 	}
 
 	Packet::~Packet() {
@@ -115,6 +157,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 2);
 		this->InPos += 2;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_2(&ret);
 		return ret;
 	}
 
@@ -125,6 +168,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 2);
 		this->InPos += 2;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_2(&ret);
 		return ret;
 	}
 
@@ -135,6 +179,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 4);
 		this->InPos += 4;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_4(&ret);
 		return ret;
 	}
 
@@ -145,6 +190,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 8);
 		this->InPos += 8;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_8(&ret);
 		return ret;
 	}
 
@@ -155,6 +201,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 4);
 		this->InPos += 4;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_4(&ret);
 		return ret;
 	}
 
@@ -165,6 +212,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 4);
 		this->InPos += 4;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_4(&ret);
 		return ret;
 	}
 
@@ -175,6 +223,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 8);
 		this->InPos += 8;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_8(&ret);
 		return ret;
 	}
 
@@ -185,6 +234,7 @@ namespace TomatoLib {
 		memcpy(&ret, this->InBuffer + this->InPos, 8);
 		this->InPos += 8;
 
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_8(&ret);
 		return ret;
 	}
 
@@ -205,6 +255,30 @@ namespace TomatoLib {
 		float z = this->ReadFloat();
 
 		return Vector3(x, y, z);
+	}
+
+	Color Packet::ReadColor() {
+		if (!this->CanRead(4)) return Color::Black;
+
+		Color c;
+		c.R = this->InBuffer[this->InPos + 0];
+		c.G = this->InBuffer[this->InPos + 1];
+		c.B = this->InBuffer[this->InPos + 2];
+		c.A = this->InBuffer[this->InPos + 3];
+
+		this->InPos += 4;
+		return c;
+	}
+
+	Matrix Packet::ReadMatrix() {
+		if (!this->CanRead(sizeof(float) * 16)) return Matrix();
+
+		Matrix ret;
+		for (int i = 0; i < 16; i++) {
+			ret.values[i] = this->ReadFloat();
+		}
+
+		return ret;
 	}
 
 	const char* Packet::ReadString(int len) {
@@ -397,48 +471,56 @@ namespace TomatoLib {
 
 	void Packet::WriteShort(short num) {
 		this->CheckSpaceOut(2);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_2(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 2);
 		this->OutPos += 2;
 	}
 
 	void Packet::WriteUShort(unsigned short num) {
 		this->CheckSpaceOut(2);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_2(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 2);
 		this->OutPos += 2;
 	}
 
 	void Packet::WriteInt(int num) {
 		this->CheckSpaceOut(4);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_4(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 4);
 		this->OutPos += 4;
 	}
 
 	void Packet::WriteUInt(unsigned int num) {
 		this->CheckSpaceOut(4);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_4(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 4);
 		this->OutPos += 4;
 	}
 
 	void Packet::WriteLong(long long num) {
 		this->CheckSpaceOut(8);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_8(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 8);
 		this->OutPos += 8;
 	}
 
 	void Packet::WriteULong(unsigned long long num) {
 		this->CheckSpaceOut(8);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_8(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 8);
 		this->OutPos += 8;
 	}
 
 	void Packet::WriteFloat(float num) {
 		this->CheckSpaceOut(4);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_4(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 4);
 		this->OutPos += 4;
 	}
 
 	void Packet::WriteDouble(double num) {
 		this->CheckSpaceOut(8);
+		if (this->Endian != EndianType::System && this->Endian != get_local_endian()) swap_8(&num);
 		memcpy(this->OutBuffer + this->OutPos, &num, 8);
 		this->OutPos += 8;
 	}
@@ -482,19 +564,31 @@ namespace TomatoLib {
 		this->OutBuffer[this->OutPos++] = '\n';
 	}
 
-	void Packet::WriteVector2(Vector2& v) {
-		this->CheckSpaceOut(8);
+	void Packet::WriteVector2(const Vector2& v) {
+		this->CheckSpaceOut(sizeof(float) * 2);
 
 		this->WriteFloat(v.X);
 		this->WriteFloat(v.Y);
 	}
 
-	void Packet::WriteVector3(Vector3& v) {
-		this->CheckSpaceOut(12);
+	void Packet::WriteVector3(const Vector3& v) {
+		this->CheckSpaceOut(sizeof(float) * 3);
 
 		this->WriteFloat(v.X);
 		this->WriteFloat(v.Y);
 		this->WriteFloat(v.Z);
+	}
+
+	void Packet::WriteColor(const Color& c) {
+		this->WriteBytes(&c, sizeof(Color));
+	}
+
+	void Packet::WriteMatrix(const Matrix& m) {
+		this->CheckSpaceOut(sizeof(float) * 4);
+
+		for (int i = 0; i < 16; i++) {
+			this->WriteFloat(m.values[i]);
+		}
 	}
 
 	bool Packet::ReadDump(const char* path) {

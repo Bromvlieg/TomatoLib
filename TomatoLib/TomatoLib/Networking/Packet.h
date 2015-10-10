@@ -4,6 +4,8 @@
 #include "EzSock.h"
 #include "../Math/Vector2.h"
 #include "../Math/Vector3.h"
+#include "../Math/Matrix.h"
+#include "../Graphics/Color.h"
 #include "../Defines.h"
 
 #ifndef null
@@ -11,14 +13,24 @@
 #endif
 
 namespace TomatoLib {
+	enum class EndianType {
+		System, Big, Little
+	};
+
 	class Packet {
 	public:
+		static void swap_2(void* source);
+		static void swap_4(void* source);
+		static void swap_8(void* source);
+
+		EndianType get_local_endian(void);
 		static bool InsertOutlenIntOnSend;
 
 		static void DecryptBuffer(byte* buffer, int len);
 		static byte ror(byte val, int num);
 		static byte rol(byte val, int num);
 
+		EndianType Endian;
 		bool Valid;
 		EzSock* Sock;
 		unsigned int OutPos;
@@ -49,8 +61,10 @@ namespace TomatoLib {
 		void WriteStringNT(const char*);
 		void WriteStringRaw(const char*);
 		void WriteLine(const char*);
-		void WriteVector2(Vector2& v);
-		void WriteVector3(Vector3& v);
+		void WriteVector2(const Vector2& v);
+		void WriteVector3(const Vector3& v);
+		void WriteColor(const Color& c);
+		void WriteMatrix(const Matrix& m);
 
 		unsigned char ReadByte();
 		bool ReadBool();
@@ -69,6 +83,8 @@ namespace TomatoLib {
 		const char* ReadStringAll();
 		Vector2 ReadVector2();
 		Vector3 ReadVector3();
+		Color ReadColor();
+		Matrix ReadMatrix();
 
 		bool CanRead(int len);
 		bool CanRead(const char* seq);
