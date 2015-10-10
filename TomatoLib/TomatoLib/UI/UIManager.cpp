@@ -46,11 +46,9 @@ namespace TomatoLib {
 	}
 
 	void UIManager::Update() {
-		double dx, dy;
-		glfwGetCursorPos(TomatoLib::Window::CurrentWindow->Handle, &dx, &dy);
+		Vector2 mpos = Window::CurrentWindow->GetMouse();
 
-		this->LastMousePosition.X = (float)dx;
-		this->LastMousePosition.Y = (float)dy;
+		this->LastMousePosition = mpos;
 
 		int oldshape = this->CursorShape;
 		this->CursorShape = GLFW_ARROW_CURSOR;
@@ -62,8 +60,6 @@ namespace TomatoLib {
 			if (this->CurrentCursor != null) glfwDestroyCursor(this->CurrentCursor);
 			this->CurrentCursor = glfwCreateStandardCursor(this->CursorShape);
 		}
-
-		glfwSetCursor(Window::CurrentWindow->Handle, this->CurrentCursor);
 	}
 
 	void UIManager::_CheckClick(UIBase* panel, int x, int y) {
