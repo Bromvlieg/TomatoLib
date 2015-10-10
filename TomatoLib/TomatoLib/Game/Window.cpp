@@ -11,7 +11,6 @@
 
 namespace TomatoLib {
 	Window* Window::CurrentWindow = nullptr;
-	std::mutex EventsMutex;
 
 	void Window::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		if (key < 0 || key > GLFW_KEY_LAST) return; // filter out hardware that wants to be special and has special keys.
@@ -78,6 +77,8 @@ namespace TomatoLib {
 	}
 
 	void Window::PollEvents() {
+		static std::mutex EventsMutex;
+
 		EventsMutex.lock();
 		CurrentWindow = this;
 		glfwPollEvents();
@@ -135,6 +136,11 @@ namespace TomatoLib {
 		if (this->CurrentWindow == nullptr) {
 			this->CurrentWindow = this;
 		}
+
+		this->Hints[GLFW_CONTEXT_VERSION_MAJOR] = 3;
+		this->Hints[GLFW_CONTEXT_VERSION_MINOR] = 2;
+		this->Hints[GLFW_OPENGL_PROFILE] = GLFW_OPENGL_CORE_PROFILE;
+		this->Hints[GLFW_OPENGL_FORWARD_COMPAT] = GL_TRUE; // for Mac OS X
 	}
 
 	Window::~Window() {
@@ -192,12 +198,6 @@ namespace TomatoLib {
 			return false;
 		}
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for Mac OS X
-		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
-
 		glfwSetErrorCallback(error_callback);
 
 		GLFWmonitor* mon = glfwGetPrimaryMonitor();
@@ -214,6 +214,11 @@ namespace TomatoLib {
 		}
 		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
+		this->Hints[GLFW_RESIZABLE] = resizable ? GL_TRUE : GL_FALSE;
+		for (int i = 0; i < this->Hints.Count; i++) {
+			glfwWindowHint(this->Hints.Keys[i], this->Hints.Values[i]);
+		}
+
 		this->Handle = glfwCreateWindow(w, h, "", fullscreen ? mon : nullptr, nullptr);
 		if (this->Handle == nullptr) {
 			printf("glfwCreateWindow failed!\n");
@@ -222,7 +227,7 @@ namespace TomatoLib {
 
 		this->SetCallbacks();
 
-		glfwSetWindowPos(this->Handle, mode->width / 2 - w / 2, mode->height / 2 - h / 2);
+		if (!fullscreen) glfwSetWindowPos(this->Handle, mode->width / 2 - w / 2, mode->height / 2 - h / 2);
 
 		glfwMakeContextCurrent(this->Handle);
 		glViewport(0, 0, w, h);
