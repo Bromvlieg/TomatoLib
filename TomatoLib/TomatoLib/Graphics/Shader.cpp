@@ -19,6 +19,8 @@ namespace TomatoLib {
 
 	void Shader::Cleanup() {
 		checkGL;
+		if (this->ProgramHandle == -1) return;
+
 		for (int i = 0; i < this->Attached.Count; i++) {
 			glDeleteShader(this->Attached[i]);
 			checkGL;
@@ -99,6 +101,8 @@ namespace TomatoLib {
 	}
 
 	void Shader::AttachRaw(std::string text, GLint mode) {
+		checkGL;
+
 		if (this->ProgramHandle == -1) {
 			this->ProgramHandle = glCreateProgram();
 		}
@@ -126,6 +130,7 @@ namespace TomatoLib {
 
 			glDeleteShader(handle);
 
+			printf("Shader compile error: %s\n", log.c_str());
 			throw log.c_str();
 		}
 
