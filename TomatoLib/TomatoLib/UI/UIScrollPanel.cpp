@@ -21,13 +21,20 @@ namespace TomatoLib {
 		this->_IsGrabbingY = false;
 		this->AlwaysRedraw = false;
 
+
+		this->UpX = nullptr;
+		this->UpY = nullptr;
+		this->DownX = nullptr;
+		this->DownY = nullptr;
+		this->GrabX = nullptr;
+		this->GrabY = nullptr;
+
 		this->CanCatchScroll = true;
 
 		this->Back = new UIPanel(this);
 		this->Back->SetPos(0, 0);
 		this->Back->SetSize(this->W, this->H);
 
-		this->GrabX = nullptr;
 		if (enablehorizontal) {
 			this->UpX = new UIButton(this);
 			this->UpX->SetSize(20, 20);
