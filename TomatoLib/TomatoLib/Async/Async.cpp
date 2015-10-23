@@ -72,7 +72,7 @@ namespace TomatoLib {
 		}
 
 		void RunOnMainThread(std::function<void()> func, bool isblocking, bool forcequeue) {
-			if (Async::IsMainThread() && isblocking && !forcequeue) {
+			if (Async::IsMainThread() && !forcequeue) {
 				func();
 				return;
 			}
@@ -155,7 +155,7 @@ namespace TomatoLib {
 		}
 		
 		void RunOnAsyncThread(std::function<void()> func, bool isblocking, bool forcequeue) {
-			if (Async::IsAsyncThread() && isblocking && !forcequeue) {
+			if (Async::IsAsyncThread() && !forcequeue) {
 				func();
 				return;
 			}

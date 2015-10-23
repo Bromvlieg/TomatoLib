@@ -619,18 +619,20 @@ namespace TomatoLib {
 		fwrite(this->InBuffer, 1, this->InSize, f);
 
 		fclose(f);
-		return false;
+		return true;
 	}
 
 	bool Packet::WriteDumpOut(const char* path) {
 		remove(path);
 
 		FILE* f = fopen(path, "wb");
-		if (f == nullptr) return false;
+		if (f == nullptr) {
+			return false;
+		}
 
 		fwrite(this->OutBuffer, 1, this->OutPos, f);
 
 		fclose(f);
-		return false;
+		return true;
 	}
 }
