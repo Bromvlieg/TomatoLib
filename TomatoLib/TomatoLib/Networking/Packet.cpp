@@ -97,7 +97,7 @@ namespace TomatoLib {
 
 	void Packet::CheckSpaceOut(int needed) {
 		if (this->OutPos + needed >= this->OutSize) {
-			this->AllocateMoreSpaceOut(needed < 128 ? 128 : needed);
+			this->AllocateMoreSpaceOut(needed < 128 ? 128 : needed - (this->OutSize - this->OutPos));
 		}
 	}
 
