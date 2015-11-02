@@ -17,6 +17,8 @@ namespace TomatoLib {
 		Font();
 		~Font();
 
+		 unsigned int TexID;
+
 		bool Load(const std::string &file, float size);
 		void AddChars(const wchar_t* chars);
 

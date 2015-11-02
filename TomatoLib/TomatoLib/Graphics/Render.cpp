@@ -15,7 +15,29 @@ namespace TomatoLib {
 		s.Link();
 		s.Use();
 
+		GLint isLinked = 0;
+		glGetProgramiv(s.ProgramHandle, GL_LINK_STATUS, &isLinked);
+		if(isLinked == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(s.ProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
+
+			//The maxLength includes the NULL character
+			std::vector<GLchar> infoLog(maxLength);
+			glGetProgramInfoLog(s.ProgramHandle, maxLength, &maxLength, &infoLog[0]);
+
+			//The program is useless now. So delete it.
+			glDeleteProgram(s.ProgramHandle);
+
+			printf("%s\n", &infoLog[0]);
+			//Provide the infolog in whatever manner you deem best.
+			//Exit with failure.
+			return;
+		}
+
+#ifndef TL_OPENGL_OLD
 		glBindFragDataLocation(s.ProgramHandle, 0, "outColor");
+
 		glUniform1i(glGetUniformLocation(s.ProgramHandle, "tex"), 0);
 
 		GLint posAttrib = glGetAttribLocation(s.ProgramHandle, "position");
@@ -36,6 +58,7 @@ namespace TomatoLib {
 		glEnableVertexAttribArray(colAttrib);
 		checkGL;
 		glVertexAttribPointer(colAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 9, (void*)(sizeof(float) * 5));
+#endif
 	}
 	
 	bool firstcreate = true;
@@ -57,6 +80,7 @@ namespace TomatoLib {
 		this->ClippingEnabled = false;
 		this->CaptureBuffer = null;
 
+#ifndef TL_OPENGL_OLD
 		checkGL;
 		glGenVertexArrays(1, &this->vao);
 		glBindVertexArray(this->vao);
@@ -66,6 +90,7 @@ namespace TomatoLib {
 
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+#endif
 
 		if (firstcreate) {
 			firstcreate = false;
@@ -74,13 +99,15 @@ namespace TomatoLib {
 			this->DefaultTexture.BindGL();
 			this->DefaultTexture.Upload();
 
-			this->DefaultShaderText.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){outColor = output_color; outColor.a *= texture(tex, output_texpos).r;\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
-			this->DefaultShaderText.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
+#ifndef TL_OPENGL_OLD
+			this->DefaultShaderText.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){outColor = texture(tex, output_texpos) * output_color;\nif (outColor.a == 0.0) discard;\n}\n", GL_FRAGMENT_SHADER);
+			this->DefaultShaderText.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1.0);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
 			__shaderStuff(this->DefaultShaderText);
 
-			this->DefaultShaderTexture.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){\noutColor = texture(tex, output_texpos) * output_color;\n\nif (outColor.a == 0) discard;\n}\n", GL_FRAGMENT_SHADER);
-			this->DefaultShaderTexture.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
+			this->DefaultShaderTexture.AttachRaw("#version 150\n\nout vec4 outColor;\n\nin vec4 output_color;\nin vec2 output_texpos;\n\nuniform sampler2D tex;\n\nvoid main(){\noutColor = texture(tex, output_texpos) * output_color;\n\nif (outColor.a == 0.0) discard;\n}\n", GL_FRAGMENT_SHADER);
+			this->DefaultShaderTexture.AttachRaw("#version 150\nin vec3 position;\nin vec2 texpos;\nin vec4 color;\n\nout vec2 output_texpos;\nout vec4 output_color;\nvoid main() {\ngl_Position = vec4(position, 1.0);\noutput_color = color;\noutput_texpos = texpos;\n}\n", GL_VERTEX_SHADER);
 			__shaderStuff(this->DefaultShaderTexture);
+#endif
 		}
 
 		this->CurrentShader = this->DefaultShaderText.ProgramHandle;
@@ -90,12 +117,15 @@ namespace TomatoLib {
 	}
 
 	Render::~Render() {
+		checkGL;
 		if (this->VerticeData != null) delete[] this->VerticeData;
 		if (this->IndiceData != null) delete[] this->IndiceData;
 
+#ifndef TL_OPENGL_OLD
 		glDeleteBuffers(1, &this->ebo);
 		glDeleteBuffers(1, &this->vbo);
 		glDeleteVertexArrays(1, &this->vao);
+#endif
 	}
 
 	void Render::Line(float x1, float y1, float x2, float y2, float width, const Color& color) {
@@ -580,7 +610,7 @@ namespace TomatoLib {
 
 	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
 		if (color.A == 0) return;
-		this->SetTexture(font->Atlas->id);
+		this->SetTexture(font->TexID);
 		this->SetShader(this->DefaultShaderText.ProgramHandle);
 
 		if (alignx != RenderAlignment::Left || aligny != RenderAlignment::Left) {
@@ -868,14 +898,10 @@ namespace TomatoLib {
 	}
 
 	void Render::DrawOnScreen() {
+		//checkGL;
 		if (this->VerticeDataCount == 0) return;
 
 		if (this->DisableDeptTest) glDisable(GL_DEPTH_TEST);
-
-		glUseProgram(this->CurrentShader);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->CurrentTexture);
 
 		if (this->CaptureBuffer != null) {
 			RenderBufferChunk c;
@@ -892,7 +918,9 @@ namespace TomatoLib {
 
 			this->CaptureBuffer->Chunks.Add(c);
 		}
+		//checkGL;
 
+#ifndef TL_OPENGL_OLD
 		unsigned long count = this->VerticeDataCount;
 		float* vertices = new float[count * 9];
 
@@ -914,6 +942,11 @@ namespace TomatoLib {
 			vertices[offset++] = this->VerticeData[i].Color.A / 255.0f;
 		}
 
+		glUseProgram(this->CurrentShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->CurrentTexture);
+
 		glBindVertexArray(this->vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
@@ -925,10 +958,30 @@ namespace TomatoLib {
 		glDrawElements(GL_TRIANGLES, this->IndiceDataCount, GL_UNSIGNED_INT, 0);
 
 		delete[] vertices;
+#else
+		glUseProgram(0);
+
+		glLoadIdentity();
+
+		glEnable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->CurrentTexture);
+		glBegin(GL_TRIANGLES);
+		for (unsigned long i = 0; i < this->IndiceDataCount; i++) {
+			auto& v = this->VerticeData[this->IndiceData[i]];
+
+			glColor4f(v.Color.R / 255.0f, v.Color.G / 255.0f, v.Color.B / 255.0f, v.Color.A / 255.0f);
+			glTexCoord2f(v.TextureLocation.X, v.TextureLocation.Y);
+			glVertex3f(v.Location.X / this->ScreenSize.X * 2 - 1, (v.Location.Y / this->ScreenSize.Y * 2 - 1) * -1, 0.0f);
+		}
+		glEnd();
+#endif
+		//checkGL;
 
 		if (this->DisableDeptTest) glEnable(GL_DEPTH_TEST);
 
 		this->VerticeDataCount = 0;
 		this->IndiceDataCount = 0;
+		//checkGL;
 	}
 }

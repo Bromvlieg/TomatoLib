@@ -1,6 +1,9 @@
 #ifndef __TL_DEFINES__
 #define __TL_DEFINES__
 
+// if you want to use old opengl versions
+// #define TL_OPENGL_OLD
+
 #ifndef null
 #define null 0
 #endif
