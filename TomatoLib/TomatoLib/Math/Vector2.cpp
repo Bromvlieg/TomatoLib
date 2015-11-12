@@ -51,6 +51,24 @@ namespace TomatoLib {
 		return Vector2(X + scale, Y + scale);
 	}
 
+	Vector2 Vector2::RotateAroundOrigin(float rads, const Vector2& origin) {
+		if (rads == 0) return *this;
+
+		Vector2 u = *this - origin;
+
+		if (u == Vector2::Zero)
+			return u;
+
+		float a = atan2f(u.Y, u.X);
+		a += rads;
+
+		u = u.Length() * Vector2(cosf(a), sinf(a));
+		u.X = u.X + origin.X;
+		u.Y = u.Y + origin.Y;
+
+		return u;
+	}
+
 	Vector2& Vector2::operator-= (const Vector2& other) {
 		X = X - other.X;
 		Y = Y - other.Y;

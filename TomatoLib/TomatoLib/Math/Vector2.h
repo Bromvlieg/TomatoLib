@@ -16,6 +16,7 @@ namespace TomatoLib {
 		float Length() const;
 		Vector2 Normalized() const;
 		float Dot(const Vector2& other) const;
+		Vector2 RotateAroundOrigin(float rads, const Vector2& origin);
 
 		Vector2 operator- (const Vector2& other) const;
 		Vector2 operator+ (const Vector2& other) const;
