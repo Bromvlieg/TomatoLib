@@ -126,6 +126,9 @@ namespace TomatoLib {
 		void Text(Font* font, const std::string& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
 		void Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
 		void PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color);
+		void PutTexture(Texture& tex, float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color);
+		void PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, float rotation, const Color& color);
+		void PutTexture(Texture& tex, float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, float rotation, const Color& color);
 
 		void SetTexture(GLint handle);
 		void SetTexture(Texture& tex);

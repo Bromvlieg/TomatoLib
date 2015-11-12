@@ -386,6 +386,13 @@ namespace TomatoLib {
 		}
 	}
 
+	void Render::PutTexture(Texture& t, float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color) {
+		if (color.A == 0) return;
+
+		this->SetTexture(t);
+		this->PutTexture(x, y, w, h, tex_x_start, tex_y_start, tex_x_end, tex_y_end, color);
+	}
+
 	void Render::PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color) {
 		if (color.A == 0) return;
 		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
@@ -399,6 +406,118 @@ namespace TomatoLib {
 		b.Location = Vector2(x + w, y);
 		c.Location = Vector2(x, y + h);
 		d.Location = Vector2(x + w, y + h);
+
+		a.Color = color;
+		b.Color = color;
+		c.Color = color;
+		d.Color = color;
+
+		a.TextureLocation = Vector2(tex_x_start, tex_y_start);
+		b.TextureLocation = Vector2(tex_x_end, tex_y_start);
+		c.TextureLocation = Vector2(tex_x_start, tex_y_end);
+		d.TextureLocation = Vector2(tex_x_end, tex_y_end);
+
+		if (this->ClippingEnabled) {
+			float pixelWidth = (tex_x_end - tex_x_start) / w;
+			float pixelHeight = (tex_y_end - tex_y_start) / w;
+
+			if (a.Location.X < this->_ClippingPos.X) {
+				// if the sign is fully outside of the clipping, then just skip it.
+				if (a.Location.X + w < this->_ClippingPos.X) {
+					return;
+				} else {
+					// calculate the new screen and texture location
+					float offset = this->_ClippingPos.X - a.Location.X;
+
+					a.Location.X += offset;
+					c.Location.X += offset;
+
+					a.TextureLocation.X += offset * pixelWidth;
+					c.TextureLocation.X += offset * pixelWidth;
+				}
+			}
+
+			if (a.Location.X + w > this->_ClippingPos.X + this->_ClippingSize.X) {
+				if (a.Location.X > this->_ClippingPos.X + this->_ClippingSize.X) {
+					return;
+				} else {
+					float offset = a.Location.X + w - this->_ClippingPos.X - this->_ClippingSize.X;
+
+					b.Location.X -= offset;
+					d.Location.X -= offset;
+
+					b.TextureLocation.X -= offset * pixelWidth;
+					d.TextureLocation.X -= offset * pixelWidth;
+				}
+			}
+
+			if (a.Location.Y < this->_ClippingPos.Y) {
+				if (d.Location.Y < this->_ClippingPos.Y) {
+					return;
+				} else {
+					float offset = this->_ClippingPos.Y - a.Location.Y;
+
+					a.Location.Y += offset;
+					b.Location.Y += offset;
+
+					a.TextureLocation.Y += offset * pixelHeight;
+					b.TextureLocation.Y += offset * pixelHeight;
+				}
+			}
+
+			if (d.Location.Y > this->_ClippingPos.Y + this->_ClippingSize.Y) {
+				if (b.Location.Y > this->_ClippingPos.Y + this->_ClippingSize.Y) {
+					return;
+				} else {
+					float offset = d.Location.Y - this->_ClippingPos.Y - this->_ClippingSize.Y;
+
+					c.Location.Y -= offset;
+					d.Location.Y -= offset;
+
+					c.TextureLocation.Y -= offset * pixelHeight;
+					d.TextureLocation.Y -= offset * pixelHeight;
+				}
+			}
+		}
+
+		unsigned int curVertices = this->VerticeDataCount;
+		this->CheckSpace(4, 6); // per square, 4 vertices and 6 indices
+
+		VERTICE_PUSH(a);
+		VERTICE_PUSH(b);
+		VERTICE_PUSH(c);
+		VERTICE_PUSH(d);
+
+		INDICE_PUSH(curVertices + 0);
+		INDICE_PUSH(curVertices + 1);
+		INDICE_PUSH(curVertices + 2);
+
+		INDICE_PUSH(curVertices + 1);
+		INDICE_PUSH(curVertices + 3);
+		INDICE_PUSH(curVertices + 2);
+	}
+
+	void Render::PutTexture(Texture& t, float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, float rotation, const Color& color) {
+		if (color.A == 0) return;
+
+		this->SetTexture(t);
+		this->PutTexture(x, y, w, h, tex_x_start, tex_y_start, tex_x_end, tex_y_end, rotation, color);
+	}
+
+	void Render::PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, float rotation, const Color& color) {
+		if (color.A == 0) return;
+		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
+
+		x += this->_DrawOffset.X;
+		y += this->_DrawOffset.Y;
+
+		_vertexData a, b, c, d;
+
+		Vector2 center(x + w / 2, y + h / 2);
+		a.Location = Vector2(x, y).RotateAroundOrigin(rotation, center);
+		b.Location = Vector2(x + w, y).RotateAroundOrigin(rotation, center);
+		c.Location = Vector2(x, y + h).RotateAroundOrigin(rotation, center);
+		d.Location = Vector2(x + w, y + h).RotateAroundOrigin(rotation, center);
 
 		a.Color = color;
 		b.Color = color;
