@@ -133,33 +133,23 @@ namespace TomatoLib {
 		this->SetTexture(this->DefaultTexture.GLHandle);
 		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
 
-		float ang = atan2(x1 - x2, y1 - y2) - (float)(M_PI / 2);
+		float ang = -atan2(x1 - x2, y1 - y2) - (float)(M_PI / 2);
 		float dist = sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
-
-		float rad90 = (float)(M_PI / 4);
 
 		x1 += this->_DrawOffset.X;
 		y1 += this->_DrawOffset.Y;
 		x2 += this->_DrawOffset.X;
 		y2 += this->_DrawOffset.Y;
 
-		width /= 2;
-
-		// left side, pull back + up/down
-		Vector2 apos = Vector2(x1 + cos(ang) * -width, y1 + sin(ang - rad90) * width);
-		Vector2 cpos = Vector2(x1 + cos(ang) * -width, y1 + sin(ang + rad90) * width);
-
-		// right side, push away + up/down
-		Vector2 bpos = Vector2(x2 + cos(ang) * width, y2 + sin(ang - rad90) * width);
-		Vector2 dpos = Vector2(x2 + cos(ang) * width, y2 + sin(ang + rad90) * width);
-
-
 		_vertexData a, b, c, d;
 
-		a.Location = apos;
-		b.Location = bpos;
-		c.Location = cpos;
-		d.Location = dpos;
+		width /= 2;
+		Vector2 center = Vector2(x1, y1);
+
+		a.Location = Vector2(x1, y1 - width).RotateAroundOrigin(ang, center);
+		b.Location = Vector2(x1 + dist, y1 - width).RotateAroundOrigin(ang, center);
+		c.Location = Vector2(x1, y1 - width).RotateAroundOrigin(ang, center);
+		d.Location = Vector2(x1 + dist, y1 + width).RotateAroundOrigin(ang, center);
 
 		a.Color = color;
 		b.Color = color;
