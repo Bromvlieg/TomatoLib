@@ -51,6 +51,15 @@ namespace TomatoLib {
 		return Vector2(X + scale, Y + scale);
 	}
 
+	Vector2 Vector2::Lerp(const Vector2& other, float timestep) {
+		Vector2 ret;
+
+		ret.X = this->X + (other.X - this->X) * timestep;
+		ret.Y = this->Y + (other.Y - this->Y) * timestep;
+
+		return ret;
+	}
+
 	Vector2 Vector2::RotateAroundOrigin(float rads, const Vector2& origin) {
 		if (rads == 0) return *this;
 
