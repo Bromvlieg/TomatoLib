@@ -73,6 +73,7 @@ namespace TomatoLib {
 
 	void Texture::Upload() {
 		TL_ASSERT(this->RegisteredInGL);
+		glBindTexture(GL_TEXTURE_2D, this->GLHandle);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->Width, this->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &this->PixelData[0]);
 	}
 
