@@ -20,7 +20,8 @@ namespace TomatoLib {
 	}
 
 	Vector2 Vector2::Normalized() const {
-		return (*this) / Length();
+		float l = Length();
+		return l == 0 ? Vector2::Zero : (*this) / l;
 	}
 
 	float Vector2::Dot(const Vector2& other) const {
