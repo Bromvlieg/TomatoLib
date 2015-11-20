@@ -162,7 +162,8 @@ namespace TomatoLib {
 			} else if (headers.ContainsKey("transfer-encoding")) {
 				std::vector<unsigned char> datavec;
 				while (true) {
-					const char* chunklendata = p.ReadUntil("\r\n");
+					char* chunklendata = p.ReadUntil("\r\n");
+					chunklendata[strlen(chunklendata) - 2] = 0;
 					int toreceive = (int)strtol(chunklendata, NULL, 16);
 					delete[] chunklendata;
 
