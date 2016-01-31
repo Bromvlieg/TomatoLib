@@ -136,7 +136,7 @@ namespace TomatoLib {
 		this->m_TextureHandle = t;
 	}
 
-	void Model::SetShader(Shader& s) {
+	void Model::SetShader(const Shader& s) {
 		this->m_ShaderHandle = s.ProgramHandle;
 	}
 

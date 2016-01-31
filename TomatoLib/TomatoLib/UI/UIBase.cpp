@@ -26,6 +26,7 @@ namespace TomatoLib {
 		this->AlwaysRedraw = true;
 		this->ShouldRedraw = true;
 		this->Buffer = nullptr;
+		this->ChildsDrawFirst = false;
 		this->_ProtectedRemoveFlag = false;
 		this->_ProtectedScopeFlag = false;
 
@@ -207,6 +208,21 @@ namespace TomatoLib {
 		drawer.SetDrawingOffset((int)pos.X, (int)pos.Y);
 		drawer.EnableClipping((int)pos.X, (int)pos.Y, this->W, this->H);
 
+		if (this->ChildsDrawFirst) {
+			for (unsigned int i = 0; i < this->Children.size(); i++) {
+				UIBase* p = this->Children[i];
+				Vector2 pos2 = p->GetAbsoluteLocation();
+				if (pos2.X + p->W < drawer._ClippingPos.X) continue;
+				if (pos2.Y + p->H < drawer._ClippingPos.Y) continue;
+
+				if (pos2.X > drawer._ClippingPos.X + drawer._ClippingSize.X) continue;
+				if (pos2.Y > drawer._ClippingPos.Y + drawer._ClippingSize.Y) continue;
+
+				p->_InternalDraw(drawer);
+				if (this->_ProtectedRemoveFlag) { delete this; return; };
+			}
+		}
+
 		bool recorderstarted = false;
 		if (this->ShouldRedraw) {
 			drawer.RecorderStart();
@@ -226,17 +242,19 @@ namespace TomatoLib {
 			this->ShouldRedraw = false;
 		}
 
-		for (unsigned int i = 0; i < this->Children.size(); i++) {
-			UIBase* p = this->Children[i];
-			Vector2 pos2 = p->GetAbsoluteLocation();
-			if (pos2.X + p->W < drawer._ClippingPos.X) continue;
-			if (pos2.Y + p->H < drawer._ClippingPos.Y) continue;
+		if (!this->ChildsDrawFirst) {
+			for (unsigned int i = 0; i < this->Children.size(); i++) {
+				UIBase* p = this->Children[i];
+				Vector2 pos2 = p->GetAbsoluteLocation();
+				if (pos2.X + p->W < drawer._ClippingPos.X) continue;
+				if (pos2.Y + p->H < drawer._ClippingPos.Y) continue;
 
-			if (pos2.X > drawer._ClippingPos.X + drawer._ClippingSize.X) continue;
-			if (pos2.Y > drawer._ClippingPos.Y + drawer._ClippingSize.Y) continue;
+				if (pos2.X > drawer._ClippingPos.X + drawer._ClippingSize.X) continue;
+				if (pos2.Y > drawer._ClippingPos.Y + drawer._ClippingSize.Y) continue;
 
-			p->_InternalDraw(drawer);
-			if (this->_ProtectedRemoveFlag) { delete this; return; };
+				p->_InternalDraw(drawer);
+				if (this->_ProtectedRemoveFlag) { delete this; return; };
+			}
 		}
 
 		drawer.SetDrawingOffset((int)oldoffset.X, (int)oldoffset.Y);
@@ -301,6 +319,8 @@ namespace TomatoLib {
 		} else if (this->UIMan != nullptr) {
 			this->UIMan->AddChild(this);
 		}
+
+		this->MarkForFullRedraw();
 	}
 
 	UIBase* UIBase::GetParent() {

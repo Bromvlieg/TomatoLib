@@ -57,6 +57,26 @@ namespace TomatoLib {
 		this->RegisteredInGL = true;
 	}
 
+	void Texture::Resize(int neww, int newh) {
+		auto newdata = std::vector<unsigned char>(neww * newh * 4);
+
+		float wperc = (float)neww / (float)this->Width;
+		float hperc = (float)newh / (float)this->Height;
+
+		for (int cy = 0; cy < newh; cy++) {
+			for (int cx = 0; cx < neww; cx++) {
+				int pixel = (cy * (neww * 4)) + (cx * 4);
+				int nearestMatch = (((int)(cy / hperc) * (this->Width * 4)) + ((int)(cx / wperc) * 4));
+
+				*(int*)&newdata[pixel] = *(int*)&this->PixelData[nearestMatch];
+			}
+		}
+
+		this->PixelData = newdata;
+		this->Width = neww;
+		this->Height = newh;
+	}
+
 	Texture::Texture(const Texture& o) {
 		this->Copy(o);
 	}

@@ -78,7 +78,7 @@ namespace TomatoLib {
 		float ReadFloat();
 		double ReadDouble();
 		const char* ReadString(int len = -1);
-		const char* ReadUntil(const char* seq);
+		char* ReadUntil(const char* seq);
 		const char* ReadStringNT();
 		const char* ReadStringAll();
 		Vector2 ReadVector2();

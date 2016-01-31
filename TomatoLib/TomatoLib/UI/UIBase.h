@@ -4,6 +4,7 @@
 
 #include <functional>
 #include "../Graphics/Render.h"
+#include "../Utilities/List.h"
 
 namespace TomatoLib {
 	class UIManager;
@@ -27,6 +28,7 @@ namespace TomatoLib {
 		bool PassTroughSelfOnly;
 		bool CanCatchScroll;
 		bool Frozen;
+		bool ChildsDrawFirst;
 
 		bool ShouldRedraw;
 		bool AlwaysRedraw;

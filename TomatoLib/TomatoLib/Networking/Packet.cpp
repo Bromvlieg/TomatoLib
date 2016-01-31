@@ -327,7 +327,7 @@ namespace TomatoLib {
 		return buff;
 	}
 
-	const char* Packet::ReadUntil(const char* seq) {
+	char* Packet::ReadUntil(const char* seq) {
 		unsigned int startpos = this->InPos;
 		unsigned int seqsize = strlen(seq);
 

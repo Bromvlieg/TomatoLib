@@ -3,6 +3,7 @@
 #define __UIGRAPH_H__
 
 #include "../UIBase.h"
+#include "../../Utilities/Dictonary.h"
 
 #define GRAPH_COLOR_NET 0
 #define GRAPH_COLOR_ENT 1
@@ -16,8 +17,7 @@ namespace TomatoLib {
 	};
 
 	class UIGraph : public UIBase {
-		int m_RecordingCat;
-		float m_RecordingTime;
+		Dictonary<int, float> m_RecordingData;
 
 	public:
 		UIGraph(UIBase* parent);

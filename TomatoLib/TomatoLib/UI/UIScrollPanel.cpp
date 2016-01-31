@@ -232,11 +232,13 @@ namespace TomatoLib {
 		item->ShouldRender = true;
 		item->SetParent(this->Back);
 		this->InvalidateLayout();
+		this->MarkForFullRedraw();
 	}
 
 	void UIScrollPanel::RemoveItem(UIBase* item) {
 		this->Back->RemoveChild(item);
 		this->InvalidateLayout();
+		this->MarkForFullRedraw();
 	}
 
 	void UIScrollPanel::InvalidateLayout() {

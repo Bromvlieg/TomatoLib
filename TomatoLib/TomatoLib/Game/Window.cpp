@@ -193,7 +193,9 @@ namespace TomatoLib {
 	}
 
 	bool Window::Create(int w, int h, bool fullscreen, bool resizable) {
-		if (glfwInit() != GL_TRUE) {
+		int ret = glfwInit();
+		
+		if (ret != GL_TRUE) {
 			printf("glfwInit failed!\n");
 			return false;
 		}
@@ -230,7 +232,6 @@ namespace TomatoLib {
 		if (!fullscreen) glfwSetWindowPos(this->Handle, mode->width / 2 - w / 2, mode->height / 2 - h / 2);
 
 		glfwMakeContextCurrent(this->Handle);
-		glViewport(0, 0, w, h);
 		glfwSwapInterval(1); // 0 == infinite FPS, 1 == 60, 2 == 30
 
 		glewExperimental = GL_TRUE;
@@ -251,6 +252,7 @@ namespace TomatoLib {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glViewport(0, 0, w, h);
 
 		this->HasFocus = true;
 		return true;

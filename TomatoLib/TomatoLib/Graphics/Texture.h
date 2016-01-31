@@ -42,6 +42,7 @@ namespace TomatoLib {
 		void Upload();
 		void Use();
 		void Clear();
+		void Resize(int neww, int newh);
 	};
 }
 

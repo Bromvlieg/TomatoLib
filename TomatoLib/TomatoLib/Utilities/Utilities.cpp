@@ -30,10 +30,12 @@ namespace TomatoLib {
 			va_start(vl, format);
 
 			int nsize = vsnprintf(buffer, size, fbuff, vl);
-			if (size <= nsize) { //fail delete buffer and try again
+			while (nsize == -1 || size <= nsize) { //fail delete buffer and try again
 				delete[] buffer;
 
-				buffer = new char[nsize + 1]; //+1 for /0
+				if (nsize == -1) size *= 2;
+
+				buffer = new char[size + 1]; //+1 for /0
 				nsize = vsnprintf(buffer, size, fbuff, vl);
 			}
 
@@ -162,11 +164,12 @@ namespace TomatoLib {
 
 			// Make sure we don't overflow the buffer by checking against result length
 			int iPrintSize = vsnprintf(szBuffer, buffsize, format.c_str(), vL);
-			if (buffsize <= iPrintSize) {
-				// Fail delete buffer and try again
+			while (iPrintSize == -1 || buffsize <= iPrintSize) { //fail delete buffer and try again
+				if (iPrintSize == -1) buffsize *= 2;
 				delete[] szBuffer;
-				szBuffer = new char[iPrintSize + 1]; // +1 for \0
-				vsnprintf(szBuffer, iPrintSize + 1, format.c_str(), vL);
+
+				szBuffer = new char[buffsize + 1]; // +1 for \0
+				iPrintSize = vsnprintf(szBuffer, buffsize + 1, format.c_str(), vL);
 			}
 			va_end(vL);
 

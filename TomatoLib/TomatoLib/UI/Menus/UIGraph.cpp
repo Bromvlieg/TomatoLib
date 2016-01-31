@@ -65,12 +65,21 @@ namespace TomatoLib {
 	}
 
 	void UIGraph::StartWatch(int cat) {
-		this->m_RecordingCat = cat;
-		this->m_RecordingTime = TL_GET_TIME_MS;
+		this->m_RecordingData.Add(cat, TL_GET_TIME_MS);
 	}
 
 	void UIGraph::StopWatch() {
-		this->InsertData(this->m_RecordingCat, TL_GET_TIME_MS - this->m_RecordingTime);
+		float time = TL_GET_TIME_MS - this->m_RecordingData.Values[this->m_RecordingData.Count - 1];
+
+		this->InsertData(this->m_RecordingData.Keys[this->m_RecordingData.Count - 1], time);
+		this->m_RecordingData.RemoveAt(this->m_RecordingData.Count - 1);
+
+		// add time to make up for nested watching
+		if (this->m_RecordingData.Count > 1) {
+			for (int i = 0; i < this->m_RecordingData.Count; i++) {
+				this->m_RecordingData.Values[i] += time;
+			}
+		}
 	}
 
 	void UIGraph::InsertData(int cat, float ms) {

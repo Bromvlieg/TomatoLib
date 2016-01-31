@@ -13,6 +13,7 @@ namespace TomatoLib {
 	class Window {
 		void SetCallbacks();
 
+	public:
 		static void OnChar(GLFWwindow* window, unsigned int ch);
 		static void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static void OnMouse(GLFWwindow* window, int button, int action, int mods);
@@ -20,7 +21,6 @@ namespace TomatoLib {
 		static void OnMousePos(GLFWwindow* window, double x, double y);
 		static void OnFocus(GLFWwindow* window, int focus);
 
-	public:
 		static Window* CurrentWindow;
 
 		unsigned char KeysIn[GLFW_KEY_LAST];
