@@ -1,6 +1,7 @@
 #include "Render.h"
 
 #include "../Defines.h"
+#include "../Config.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -625,6 +626,7 @@ namespace TomatoLib {
 	}
 
 	Vector2 Render::GetTextSize(char letter) {
+#ifdef TL_ENABLE_FTGL
 		texture_glyph_t* glyph = texture_font_get_glyph(this->DefaultFont->FontHandle, (wchar_t)letter);
 		if (glyph == null) {
 			TL_ASSERT(false);
@@ -632,6 +634,9 @@ namespace TomatoLib {
 		}
 
 		return Vector2((float)glyph->width, (float)glyph->height);
+#else
+		return Vector2::Zero;
+#endif
 	}
 
 	Vector2 Render::GetTextSize(const std::string& text) {
@@ -646,6 +651,7 @@ namespace TomatoLib {
 		float totalW = 0;
 		float totalH = 0;
 
+#ifdef TL_ENABLE_FTGL
 		float cx = 0;
 		float cy = 0;
 		unsigned long len = text.size();
@@ -673,6 +679,7 @@ namespace TomatoLib {
 			if (cx > totalW) totalW = cx;
 			if (cy + font.FontHandle->height > totalH) totalH = cy + font.FontHandle->height;
 		}
+#endif
 
 		return Vector2(totalW, totalH);
 	}
@@ -718,6 +725,7 @@ namespace TomatoLib {
 	}
 
 	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+#ifdef TL_ENABLE_FTGL
 		if (color.A == 0) return;
 		this->SetTexture(font->TexID);
 		this->SetShader(this->DefaultShaderText.ProgramHandle);
@@ -896,6 +904,7 @@ namespace TomatoLib {
 
 			cx += glyph->advance_x;
 		}
+#endif
 	}
 
 	void Render::EnableClipping(int x, int y, int w, int h) {

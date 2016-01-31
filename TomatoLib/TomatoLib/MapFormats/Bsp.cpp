@@ -6,9 +6,13 @@
 #include "../Utilities/Dictonary.h"
 #include "../Utilities/zip_uncompressed.h"
 #include "../Defines.h"
+#include "../Config.h"
 
 #include <vector>
+
+#ifdef TL_ENABLE_VTFLIB
 #include <VTFLib.h>
+#endif
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -59,7 +63,7 @@ namespace TomatoLib {
 		return lenstr > lenpre ? false : strncmp(pre, str, lenstr) == 0;
 	}
 
-
+#ifdef TL_ENABLE_VTFLIB
 	void _rec_vmt_handler(VTFLib::CVTFFile& texfile, List<bsp_pak_file_t>& pakkedfiles, char* texname) {
 		VTFLib::CVMTFile mfile;
 		mfile.Load((std::string("E:/Tmp/csgomatstuff/materials/") + texname + ".vmt").c_str());
@@ -113,6 +117,7 @@ namespace TomatoLib {
 			}
 		}
 	}
+#endif
 
 	bsp_mesh_t& _getMesh(List<bsp_mesh_t*>& lst, int texid, char* texname, List<bsp_pak_file_t>& pakkedfiles) {
 		for (int i = 0; i < lst.Count; i++) {
@@ -126,6 +131,7 @@ namespace TomatoLib {
 
 		mesh->TextureID = texid;
 
+#ifdef TL_ENABLE_VTFLIB
 		VTFLib::CVTFFile texfile;
 		texfile.Load((std::string("E:/Tmp/csgomatstuff/materials/") + texname + ".vtf").c_str());
 
@@ -154,6 +160,10 @@ namespace TomatoLib {
 			mesh->Texture = Texture(1, 1);
 			mesh->Texture.SetPixel(0, 0, Color::Red);
 		}
+#else
+		mesh->Texture = Texture(1, 1);
+		mesh->Texture.SetPixel(0, 0, Color::Red);
+#endif
 
 		mesh->Texture.BindGL();
 		mesh->Texture.Upload();

@@ -200,6 +200,8 @@ namespace TomatoLib {
 	Copyright 2012 Christoph Gärtner
 	Distributed under the Boost Software License, Version 1.0
 	*/
+#pragma warning( push )
+#pragma warning( disable : 4566)
 
 	#define UNICODE_MAX 0x10FFFFul
 	static const char *const NAMED_ENTITIES[][2] = {
@@ -457,6 +459,7 @@ namespace TomatoLib {
 			{"zwj;", "\xE2\x80\x8D"},
 			{"zwnj;", "\xE2\x80\x8C"}
 	};
+#pragma warning( pop ) 
 
 	static int cmp(const void *key, const void *value) {
 		return strncmp((const char *)key, *(const char **)value,

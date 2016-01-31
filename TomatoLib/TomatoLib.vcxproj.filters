@@ -287,5 +287,8 @@
     <ClInclude Include="TomatoLib\Libaries\md5\md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TomatoLib\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

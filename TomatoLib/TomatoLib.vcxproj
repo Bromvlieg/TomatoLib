@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TomatoLib\Async\Async.h" />
+    <ClInclude Include="TomatoLib\Config.h" />
     <ClInclude Include="TomatoLib\Defines.h" />
     <ClInclude Include="TomatoLib\Game\Game.h" />
     <ClInclude Include="TomatoLib\Graphics\Font.h" />
@@ -158,7 +159,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;RELEASE;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
