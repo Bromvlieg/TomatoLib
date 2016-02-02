@@ -218,8 +218,8 @@ namespace TomatoLib {
 		retVal.values[0] = f / aspect;
 		retVal.values[5] = f;
 		retVal.values[10] = (zNear + zFar) * rangeInv;
-		retVal.values[11] = -1.0;
-		retVal.values[14] = zNear * zFar * rangeInv * 2.0f;
+		retVal.values[11] = zNear * zFar * rangeInv * 2.0f;
+		retVal.values[14] = -1.0;
 
 		return retVal;
 	}
