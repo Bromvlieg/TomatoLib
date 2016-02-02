@@ -83,7 +83,7 @@ namespace TomatoLib {
 		GLint viewport[] = {0, 0, (int)winsize.X, (int)winsize.Y};
 
 		Matrix view = this->mat;
-		Matrix proj = this->projmat.Mirror();
+		Matrix proj = this->projmat;
 
 		Vector3 sp;
 		glhProjectf(pos.X, pos.Y, pos.Z, view.values, proj.values, viewport, (float*)&sp);

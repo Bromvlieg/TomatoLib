@@ -113,7 +113,7 @@ namespace TomatoLib {
 		glVertexAttribPointer(texposAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, UV));
 		checkGL;
 
-		glUniformMatrix4fv(s_projMatrixLocation, 1, GL_FALSE, s_mProj.values);
+		glUniformMatrix4fv(s_projMatrixLocation, 1, GL_TRUE, s_mProj.values);
 		glUniform1i(glGetUniformLocation(s_Shader->ProgramHandle, "tex"), 0);
 		checkGL;
 	}
