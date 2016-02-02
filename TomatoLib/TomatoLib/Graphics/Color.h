@@ -27,12 +27,16 @@ namespace TomatoLib {
 
 		Color Lerp(const Color& other, float timestep);
 
-		bool operator== (const Color& other) const;
-		bool operator!= (const Color& other) const;
 		Color operator* (int mult) const;
+		Color operator* (float mult) const;
 		Color operator* (const Color& other) const;
 		Color operator+ (const Color& other) const;
 		Color operator- (const Color& other) const;
+		bool operator== (const Color& other) const;
+		bool operator!= (const Color& other) const;
 	};
+
+	Color operator* (int mult, const Color& col);
+	Color operator* (float mult, const Color& col);
 }
 #endif

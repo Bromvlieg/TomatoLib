@@ -6,6 +6,6 @@
 
 // extentions require external libaries, define these if you desire in your build script or uncomment them
  //#define TL_ENABLE_VTFLIB
-// #define TL_ENABLE_FTGL
+#define TL_ENABLE_FTGL
 
 #endif

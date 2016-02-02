@@ -20,6 +20,7 @@
     <ClCompile Include="TomatoLib\ModelFormats\Obj.cpp" />
     <ClCompile Include="TomatoLib\Networking\Connection.cpp" />
     <ClCompile Include="TomatoLib\Networking\Server.cpp" />
+    <ClCompile Include="TomatoLib\UI\UIColorPicker.cpp" />
     <ClCompile Include="TomatoLib\UI\UIContextMenu.cpp" />
     <ClCompile Include="TomatoLib\UI\UIFrameBorderless.cpp" />
     <ClCompile Include="TomatoLib\UI\UIManager.cpp" />
@@ -67,6 +68,7 @@
     <ClInclude Include="TomatoLib\ModelFormats\Obj.h" />
     <ClInclude Include="TomatoLib\Networking\Connection.h" />
     <ClInclude Include="TomatoLib\Networking\Server.h" />
+    <ClInclude Include="TomatoLib\UI\UIColorPicker.h" />
     <ClInclude Include="TomatoLib\UI\UIContextMenu.h" />
     <ClInclude Include="TomatoLib\UI\UIFrameBorderless.h" />
     <ClInclude Include="TomatoLib\UI\UIManager.h" />

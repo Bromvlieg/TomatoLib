@@ -61,6 +61,7 @@ add_library(tomato
 	${presrc}/UI/UIFrameBorderless.cpp
 	${presrc}/UI/UITexture.cpp
 	${presrc}/UI/UISlider.cpp
+	${presrc}/UI/UIColorPicker.cpp
 	${presrc}/UI/Menus/UIGraph.cpp
 	${presrc}/UI/Menus/UIConsole.cpp
 	${presrc}/UI/UIScrollPanel.cpp

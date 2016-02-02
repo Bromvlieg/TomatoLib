@@ -286,8 +286,12 @@ namespace TomatoLib {
 	}
 
 	void Render::Triangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& color) {
-		// TODO: clipping
-		if (color.A == 0) return;
+		this->Triangle(a, b, c, color, color, color);
+	}
+
+	void Render::Triangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& colora, const Color& colorb, const Color& colorc) {
+		if (colora.A == 0 && colorc.A == 0 && colorc.A == 0) return;
+
 		this->SetTexture(this->DefaultTexture.GLHandle);
 		this->SetShader(this->DefaultShaderTexture.ProgramHandle);
 
@@ -308,9 +312,9 @@ namespace TomatoLib {
 			if (vda.Location.Y > max.Y && vdb.Location.Y > max.Y && vdc.Location.Y > max.Y) return;
 		}
 
-		vda.Color = color;
-		vdb.Color = color;
-		vdc.Color = color;
+		vda.Color = colora;
+		vdb.Color = colorb;
+		vdc.Color = colorc;
 
 		unsigned int curVertices = this->VerticeDataCount;
 		this->CheckSpace(3, 3); // per triangle, 3 vertices and 3 indices

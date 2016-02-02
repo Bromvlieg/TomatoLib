@@ -21,6 +21,10 @@ namespace TomatoLib {
 			return rand() % (max - min) + min;
 		}
 
+		int Clamp(int val, int min, int max) { return val < min ? min : val > max ? max : val; }
+		float Clamp(float val, float min, float max) { return val < min ? min : val > max ? max : val; }
+		double Clamp(double val, double min, double max) { return val < min ? min : val > max ? max : val; }
+
 		std::string GetFormatted(std::string format, ...) {
 			int size = 512;
 			char* buffer = new char[size];

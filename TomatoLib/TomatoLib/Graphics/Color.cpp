@@ -63,4 +63,46 @@ namespace TomatoLib {
 
 		return Color(r, g, b, a);
 	}
+
+	Color Color::operator* (float mult) const {
+		int r = (int)((float)this->R * mult);
+		int g = (int)((float)this->G * mult);
+		int b = (int)((float)this->B * mult);
+		int a = (int)((float)this->A * mult);
+
+		if (r > 255) r = 255;
+		if (g > 255) g = 255;
+		if (b > 255) b = 255;
+		if (a > 255) a = 255;
+
+		return Color(r, g, b, a);
+	}
+
+	Color operator* (int mult, const Color& col) {
+		int r = col.R * mult;
+		int g = col.G * mult;
+		int b = col.B * mult;
+		int a = col.A * mult;
+
+		if (r > 255) r = 255;
+		if (g > 255) g = 255;
+		if (b > 255) b = 255;
+		if (a > 255) a = 255;
+
+		return Color(r, g, b, a);
+	}
+
+	Color operator* (float mult, const Color& col) {
+		int r = (int)((float)col.R * mult);
+		int g = (int)((float)col.G * mult);
+		int b = (int)((float)col.B * mult);
+		int a = (int)((float)col.A * mult);
+
+		if (r > 255) r = 255;
+		if (g > 255) g = 255;
+		if (b > 255) b = 255;
+		if (a > 255) a = 255;
+
+		return Color(r, g, b, a);
+	}
 }

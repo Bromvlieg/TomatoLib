@@ -22,6 +22,10 @@ namespace TomatoLib {
 		List<std::string> Split(const std::string &s, char delim);
 		void Print(std::string format, ...);
 		std::string GetConsoleVar(std::string name);
+
+		int Clamp(int val, int min, int max);
+		float Clamp(float val, float min, float max);
+		double Clamp(double val, double min, double max);
 	}
 }
 

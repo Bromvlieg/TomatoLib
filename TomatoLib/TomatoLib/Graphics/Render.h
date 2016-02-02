@@ -119,6 +119,7 @@ namespace TomatoLib {
 		void CircleOutlined(float x, float y, float w, float h, float bordersize, int roundness, const Color& color);
 		void Line(float x1, float y1, float x2, float y2, float width, const Color& color);
 		void Triangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& color);
+		void Triangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& colora, const Color& colorb, const Color& colorc);
 		void Poly(Vector2* points, int len, const Color& color);
 		void PolyOutlined(Vector2* points, int len, float linew, const Color& color);
 		void Text(const std::string& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
