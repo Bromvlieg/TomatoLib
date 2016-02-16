@@ -72,6 +72,11 @@ namespace TomatoLib {
 		CurrentWindow->HasFocus = focus == 1;
 	}
 
+	void Window::OnResize(GLFWwindow* window, int w, int h) {
+		if (CurrentWindow == nullptr) return;
+		if (CurrentWindow->OnResizeCallback != nullptr) CurrentWindow->OnResizeCallback(*CurrentWindow, w, h);
+	}
+
 	void error_callback(int error, const char* description) {
 		printf("GLFW error %d: '%s'\n", error, description);
 	}
@@ -190,6 +195,7 @@ namespace TomatoLib {
 		glfwSetCharCallback(this->Handle, this->OnChar);
 		glfwSetCursorPosCallback(this->Handle, this->OnMousePos);
 		glfwSetWindowFocusCallback(this->Handle, this->OnFocus);
+		glfwSetWindowSizeCallback(this->Handle, this->OnResize);
 	}
 
 	bool Window::Create(int w, int h, bool fullscreen, bool resizable) {
