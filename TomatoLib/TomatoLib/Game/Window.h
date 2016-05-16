@@ -2,10 +2,18 @@
 #ifndef __WINDOW_H__
 #define __WINDOW_H__
 
+// #define TL_ENABLE_GLFW
+
 #include "../Math/Vector2.h"
 #include <string>
-#include <GLFW/glfw3.h>
 #include "../Utilities/Dictonary.h"
+#include "../Defines.h"
+#include "../Config.h"
+
+#ifdef TL_ENABLE_GLFW
+#include <gl/glew.h>
+#include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	class UIManager;
@@ -13,14 +21,15 @@ namespace TomatoLib {
 	class Window {
 		void SetCallbacks();
 
-	public:
+#ifdef TL_ENABLE_GLFW
 		static void OnChar(GLFWwindow* window, unsigned int ch);
 		static void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static void OnMouse(GLFWwindow* window, int button, int action, int mods);
 		static void OnScroll(GLFWwindow* window, double x, double y);
 		static void OnMousePos(GLFWwindow* window, double x, double y);
 		static void OnFocus(GLFWwindow* window, int focus);
-
+#endif
+	public:
 		static Window* CurrentWindow;
 
 		unsigned char KeysIn[GLFW_KEY_LAST];
@@ -28,7 +37,12 @@ namespace TomatoLib {
 
 		Dictonary<int, int> Hints;
 
+#ifdef TL_ENABLE_GLFW
 		GLFWwindow* Handle;
+#else
+		void* Handle;
+#endif
+
 		UIManager* UIMan;
 		bool HasFocus;
 
@@ -38,7 +52,7 @@ namespace TomatoLib {
 		virtual void SetMouse(int x, int y);
 		virtual void SetMouse(const Vector2& pos);
 
-		virtual bool Create(int w, int h, bool fullscreen = false, bool resizable = false);
+		virtual bool Create(unsigned int w, unsigned int h, bool fullscreen = false, bool resizable = false);
 		virtual void SwapBuffer();
 		virtual void PollEvents();
 		virtual void Close();

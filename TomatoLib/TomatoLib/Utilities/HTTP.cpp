@@ -130,10 +130,8 @@ namespace TomatoLib {
 			sock.SendRaw(p.OutBuffer, p.OutPos);
 			p.Clear();
 
-			const char* headerdata = p.ReadUntil("\r\n\r\n");
-			std::string headerstr(headerdata);
-			delete[] headerdata;
-
+			std::string headerstr = p.ReadUntil("\r\n\r\n");
+			
 			size_t curpos = 0;
 			size_t oldpos = curpos;
 			bool first = false;
@@ -172,10 +170,9 @@ namespace TomatoLib {
 			} else if (headers.ContainsKey("transfer-encoding")) {
 				std::vector<unsigned char> datavec;
 				while (true) {
-					char* chunklendata = p.ReadUntil("\r\n");
-					chunklendata[strlen(chunklendata) - 2] = 0;
-					int toreceive = (int)strtol(chunklendata, NULL, 16);
-					delete[] chunklendata;
+					std::string chunklendata = p.ReadUntil("\r\n");
+					chunklendata[chunklendata.size() - 2] = 0;
+					int toreceive = (int)strtol(chunklendata.c_str(), NULL, 16);
 
 					if (toreceive == 0) break;
 					unsigned char* chunkdata = p.ReadBytes(toreceive + 2);

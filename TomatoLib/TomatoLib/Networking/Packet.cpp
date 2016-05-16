@@ -114,7 +114,8 @@ namespace TomatoLib {
 	}
 
 	void Packet::CheckSpaceIn(int needed) {
-		if (this->InPos + needed >= this->InSize) {
+		// +1 to ensure a null at the end
+		if (this->InPos + needed + 1 >= this->InSize) {
 			this->AllocateMoreSpaceIn(needed);
 		}
 	}
@@ -122,6 +123,7 @@ namespace TomatoLib {
 	void Packet::AllocateMoreSpaceIn(int addsize) {
 		this->InSize += addsize;
 		unsigned char* newbuff = new unsigned char[this->InSize];
+		memset(newbuff, 0, this->InSize);
 
 		if (this->InBuffer != nullptr) {
 			memcpy(newbuff, this->InBuffer, this->InSize - addsize);
@@ -281,33 +283,42 @@ namespace TomatoLib {
 		return ret;
 	}
 
-	const char* Packet::ReadString(int len) {
+	std::string Packet::ReadString(int len) {
 		if (len == -1) len = this->ReadShort();
 		if (!this->CanRead(len)) return "";
 
-		if (len == 0) return "";
-
-		char* buff = new char[len + 1];
-		memcpy(buff, this->InBuffer + this->InPos, len);
-		buff[len] = 0;
-
+		int startpos = this->InPos;
 		this->InPos += len;
-		return buff;
+		if (startpos == this->InPos) return "";
+
+		// make sure there's a 0 byte behind it, and then let std::string do the rest for us
+		char oldchar = this->InBuffer[this->InPos];
+		this->InBuffer[this->InPos] = 0;
+
+		std::string ret((char*)this->InBuffer + startpos);
+
+		this->InBuffer[this->InPos] = oldchar;
+		return ret;
 	}
 
-	const char* Packet::ReadStringAll() {
+	std::string Packet::ReadStringAll() {
 		int len = this->InSize - this->InPos;
-		if (len == 0) return "";
 
-		char* buff = new char[len + 1];
-		memcpy(buff, this->InBuffer + this->InPos, len);
-		buff[len] = 0;
-
+		int startpos = this->InPos;
 		this->InPos += len;
-		return buff;
+		if (startpos == this->InPos) return "";
+
+		// make sure there's a 0 byte behind it, and then let std::string do the rest for us
+		char oldchar = this->InBuffer[this->InPos];
+		this->InBuffer[this->InPos ] = 0;
+
+		std::string ret((char*)this->InBuffer + startpos);
+
+		this->InBuffer[this->InPos] = oldchar;
+		return ret;
 	}
 
-	const char* Packet::ReadStringNT() {
+	std::string Packet::ReadStringNT() {
 		int startpos = this->InPos;
 
 		while (this->CanRead(1)) {
@@ -320,16 +331,19 @@ namespace TomatoLib {
 
 		if (startpos == this->InPos) return "";
 
-		char* buff = new char[this->InPos - startpos];
-		memcpy(buff, this->InBuffer + startpos, this->InPos - startpos);
-		buff[this->InPos - startpos] = 0;
+		// make sure there's a 0 byte behind it, and then let std::string do the rest for us
+		char oldchar = this->InBuffer[this->InPos];
+		this->InBuffer[this->InPos] = 0;
 
-		return buff;
+		std::string ret((char*)this->InBuffer + startpos);
+
+		this->InBuffer[this->InPos] = oldchar;
+		return ret;
 	}
 
-	char* Packet::ReadUntil(const char* seq) {
-		unsigned int startpos = this->InPos;
-		unsigned int seqsize = strlen(seq);
+	std::string Packet::ReadUntil(const std::string& seq) {
+		size_t startpos = (size_t)this->InPos;
+		size_t seqsize = seq.size();
 
 		while (this->CanRead(1)) {
 			this->InPos++;
@@ -352,11 +366,13 @@ namespace TomatoLib {
 
 		if (startpos == this->InPos) return "";
 
-		char* buff = new char[this->InPos - startpos + 1];
-		memcpy(buff, this->InBuffer + startpos, this->InPos - startpos);
-		buff[this->InPos - startpos] = 0;
+		char oldchar = this->InBuffer[this->InPos];
+		this->InBuffer[this->InPos] = 0;
 
-		return buff;
+		std::string ret((char*)this->InBuffer + startpos);
+
+		this->InBuffer[this->InPos] = oldchar;
+		return ret;
 	}
 
 	int Packet::DataLeft() {
@@ -397,13 +413,13 @@ namespace TomatoLib {
 		return res;
 	}
 
-	bool Packet::CanRead(const char* seq) {
+	bool Packet::CanRead(const std::string& seq) {
 		if (this->Sock == nullptr)
 			return false;
 
 		char* buffer = new char[4096];
 		int curoffset = 0;
-		int seqsize = strlen(seq);
+		int seqsize = (int)seq.size();
 
 		while (true) {
 			int currec = recv(this->Sock->sock, buffer + curoffset, 1, 0);
@@ -525,8 +541,8 @@ namespace TomatoLib {
 		this->OutPos += 8;
 	}
 
-	void Packet::WriteString(const char* str) {
-		int size = strlen(str);
+	void Packet::WriteString(const std::string& str) {
+		int size = (int)str.size();
 		this->CheckSpaceOut(size + 2);
 
 		this->WriteShort(size);
@@ -535,8 +551,8 @@ namespace TomatoLib {
 			this->OutBuffer[this->OutPos++] = str[i];
 	}
 
-	void Packet::WriteStringNT(const char* str) {
-		int size = strlen(str);
+	void Packet::WriteStringNT(const std::string& str) {
+		int size = (int)str.size();
 		this->CheckSpaceOut(size + 1);
 
 		for (int i = 0; i < size; i++)
@@ -545,16 +561,16 @@ namespace TomatoLib {
 		this->OutBuffer[this->OutPos++] = 0;
 	}
 
-	void Packet::WriteStringRaw(const char* str) {
-		int size = strlen(str);
+	void Packet::WriteStringRaw(const std::string& str) {
+		int size = (int)str.size();
 		this->CheckSpaceOut(size);
 
 		for (int i = 0; i < size; i++)
 			this->OutBuffer[this->OutPos++] = str[i];
 	}
 
-	void Packet::WriteLine(const char* str) {
-		int size = strlen(str);
+	void Packet::WriteLine(const std::string& str) {
+		int size = (int)str.size();
 		this->CheckSpaceOut(size + 2);
 
 		for (int i = 0; i < size; i++)
@@ -591,8 +607,8 @@ namespace TomatoLib {
 		}
 	}
 
-	bool Packet::ReadDump(const char* path) {
-		FILE* f = fopen(path, "rb");
+	bool Packet::ReadDump(const std::string& path) {
+		FILE* f = fopen(path.c_str(), "rb");
 		if (f == nullptr) return false;
 
 		fseek(f, 0, SEEK_END);
@@ -610,10 +626,10 @@ namespace TomatoLib {
 		return true;
 	}
 
-	bool Packet::WriteDumpIn(const char* path) {
-		remove(path);
+	bool Packet::WriteDumpIn(const std::string& path) {
+		remove(path.c_str());
 
-		FILE* f = fopen(path, "wb");
+		FILE* f = fopen(path.c_str(), "wb");
 		if (f == nullptr) return false;
 
 		fwrite(this->InBuffer, 1, this->InSize, f);
@@ -622,10 +638,10 @@ namespace TomatoLib {
 		return true;
 	}
 
-	bool Packet::WriteDumpOut(const char* path) {
-		remove(path);
+	bool Packet::WriteDumpOut(const std::string& path) {
+		remove(path.c_str());
 
-		FILE* f = fopen(path, "wb");
+		FILE* f = fopen(path.c_str(), "wb");
 		if (f == nullptr) {
 			return false;
 		}

@@ -2,10 +2,18 @@
 #ifndef __CAMERA_H__
 #define __CAMERA_H__
 
-#include <GL/glew.h>
 #include "../Math/Vector2.h"
 #include "../Math/Matrix.h"
 #include "Window.h"
+
+#include "../Config.h"
+#ifndef TL_ENABLE_EGL
+#include <GL/glew.h>
+#else
+#include "GLES/gl.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#endif
 
 namespace TomatoLib {
 	class Camera {

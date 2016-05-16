@@ -1,6 +1,21 @@
 #include "UIBase.h"
 #include "UIManager.h"
+
+#include "../Utilities/Utilities.h"
+#include "../Config.h"
+#include "../Defines.h"
+
+#ifndef TL_ENABLE_EGL
+#include <GL/glew.h>
+#else
+#include "GLES/gl.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#endif
+
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	UIManager* UIBase::DefaultUImanager = nullptr;

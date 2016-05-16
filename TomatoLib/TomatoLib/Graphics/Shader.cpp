@@ -18,6 +18,7 @@ namespace TomatoLib {
 	}
 
 	void Shader::Cleanup() {
+#ifndef TL_OPENGL_OLD
 		checkGL;
 		if (this->ProgramHandle == -1) return;
 
@@ -31,9 +32,11 @@ namespace TomatoLib {
 
 		this->ProgramHandle = -1;
 		this->Attached.Clear();
+#endif
 	}
 
 	bool Shader::Attach(std::string file, GLint mode) {
+#ifndef TL_OPENGL_OLD
 		checkGL;
 
 		std::ifstream infile;
@@ -97,10 +100,12 @@ namespace TomatoLib {
 		this->Attached.Add(handle);
 
 		checkGL;
-		return false;
+#endif
+		return true;
 	}
 
 	void Shader::AttachRaw(std::string text, GLint mode) {
+#ifndef TL_OPENGL_OLD
 		checkGL;
 
 		if (this->ProgramHandle == -1) {
@@ -139,62 +144,85 @@ namespace TomatoLib {
 		this->Attached.Add(handle);
 
 		checkGL;
+#endif
 	}
 
 	void Shader::Use() {
+#ifndef TL_OPENGL_OLD
 		glUseProgram(this->ProgramHandle);
+#endif
 	}
 
 	void Shader::Link() {
+#ifndef TL_OPENGL_OLD
 		glLinkProgram(this->ProgramHandle);
+#endif
 	}// Setting floats
 
 	void Shader::SetUniform(std::string sName, float* fValues, int iCount) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform1fv(iLoc, iCount, fValues);
+#endif
 	}
 
 	void Shader::SetUniform(std::string sName, const float fValue) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform1fv(iLoc, 1, &fValue);
+#endif
 	}
 
 	// Setting vectors
 
 	void Shader::SetUniform(std::string sName, TomatoLib::Vector2* vVectors, int iCount) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform2fv(iLoc, iCount, (GLfloat*)vVectors);
+#endif
 	}
 
 	void Shader::SetUniform(std::string sName, const TomatoLib::Vector2& vVector) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform2fv(iLoc, 1, (GLfloat*)&vVector);
+#endif
 	}
 
 	void Shader::SetUniform(std::string sName, TomatoLib::Vector3* vVectors, int iCount) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform3fv(iLoc, iCount, (GLfloat*)vVectors);
+#endif
 	}
 
 	void Shader::SetUniform(std::string sName, const TomatoLib::Vector3& vVector) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform3fv(iLoc, 1, (GLfloat*)&vVector);
+#endif
 	}
 
 	void Shader::SetUniform(std::string sName, const TomatoLib::Matrix& mMatrix) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniformMatrix4fv(iLoc, 1, true, mMatrix.values);
+#endif
 	}
 
 	// Setting integers
 
 	void Shader::SetUniform(std::string sName, int* iValues, int iCount) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform1iv(iLoc, iCount, iValues);
+#endif
 	}
 
 	void Shader::SetUniform(std::string sName, const int iValue) {
+#ifndef TL_OPENGL_OLD
 		int iLoc = glGetUniformLocation(this->ProgramHandle, sName.c_str());
 		glUniform1i(iLoc, iValue);
+#endif
 	}
 }

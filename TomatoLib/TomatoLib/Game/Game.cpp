@@ -10,9 +10,6 @@
 #include <thread>
 #include <vector>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <stdarg.h>
 #include <chrono>
 #include <thread>
@@ -56,6 +53,11 @@ namespace TomatoLib {
 
 			float framestarttime = TL_GET_TIME_MS;
 			lasttick += msperfps;
+			if (curtime - lasttick > 1000) {
+				// we try to make up for ticks that take longer so that we still get the target fps
+				// but it would be bad if we turn it into a while(true) at some point, gotta give it a break
+				lasttick = curtime;
+			}
 
 			Async::RunMainThreadCalls();
 			if (this->ShouldShutdown) break;

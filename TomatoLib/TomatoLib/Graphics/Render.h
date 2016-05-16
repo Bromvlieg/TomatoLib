@@ -12,7 +12,13 @@
 #include <vector>
 #include <string>
 
+#ifndef TL_ENABLE_EGL
 #include <GL/glew.h>
+#else
+#include <GLES/gl.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#endif
 
 namespace TomatoLib {
 	enum class FlipMode {

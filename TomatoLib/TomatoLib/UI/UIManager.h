@@ -7,7 +7,15 @@
 #include "../Graphics/Shader.h"
 #include "../Math/Vector2.h"
 
+#include "../Config.h"
+
+#ifndef TL_ENABLE_EGL
 #include <GL/glew.h>
+#else
+#include "GLES/gl.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#endif
 
 struct GLFWcursor;
 

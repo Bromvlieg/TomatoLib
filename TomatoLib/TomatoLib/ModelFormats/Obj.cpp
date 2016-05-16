@@ -8,7 +8,6 @@
 #include "../Defines.h"
 
 #include <vector>
-#include <VTFLib.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>

@@ -5,8 +5,13 @@
 #include "Menus/UIConsole.h"
 #include "Menus/UIGraph.h"
 #include "../Defines.h"
+#include "../Utilities/Utilities.h"
 
+#include "../Config.h"
+
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	UIBase* UIManager::AddChild(UIBase* obj) {
@@ -57,8 +62,10 @@ namespace TomatoLib {
 		}
 
 		if (oldshape != this->CursorShape) {
+#ifdef TL_ENABLE_GLFW
 			if (this->CurrentCursor != null) glfwDestroyCursor(this->CurrentCursor);
 			this->CurrentCursor = glfwCreateStandardCursor(this->CursorShape);
+#endif
 		}
 	}
 

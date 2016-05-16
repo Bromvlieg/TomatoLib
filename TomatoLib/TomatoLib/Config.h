@@ -5,7 +5,14 @@
 // #define TL_OPENGL_OLD
 
 // extentions require external libaries, define these if you desire in your build script or uncomment them
- //#define TL_ENABLE_VTFLIB
-#define TL_ENABLE_FTGL
+// #define TL_ENABLE_VTFLIB
+// #define TL_ENABLE_FTGL
+
+#ifdef LINUX
+#define TL_OPENGL_OLD
+#define TL_ENABLE_EGL
+#else
+#define TL_ENABLE_GLFW
+#endif
 
 #endif

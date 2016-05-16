@@ -4,8 +4,11 @@
 #include "UIManager.h"
 #include "../Utilities/Utilities.h"
 #include "../Defines.h"
+#include "../Config.h"
 
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	UIAdvancedTextEntryLinePart::UIAdvancedTextEntryLinePart() {};

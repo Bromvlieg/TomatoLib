@@ -57,10 +57,10 @@ namespace TomatoLib {
 		void WriteULong(unsigned long long);
 		void WriteFloat(float);
 		void WriteDouble(double);
-		void WriteString(const char*);
-		void WriteStringNT(const char*);
-		void WriteStringRaw(const char*);
-		void WriteLine(const char*);
+		void WriteString(const std::string&);
+		void WriteStringNT(const std::string&);
+		void WriteStringRaw(const std::string&);
+		void WriteLine(const std::string&);
 		void WriteVector2(const Vector2& v);
 		void WriteVector3(const Vector3& v);
 		void WriteColor(const Color& c);
@@ -77,23 +77,23 @@ namespace TomatoLib {
 		unsigned long long ReadULong();
 		float ReadFloat();
 		double ReadDouble();
-		const char* ReadString(int len = -1);
-		char* ReadUntil(const char* seq);
-		const char* ReadStringNT();
-		const char* ReadStringAll();
+		std::string ReadString(int len = -1);
+		std::string ReadUntil(const std::string& seq);
+		std::string ReadStringNT();
+		std::string ReadStringAll();
 		Vector2 ReadVector2();
 		Vector3 ReadVector3();
 		Color ReadColor();
 		Matrix ReadMatrix();
 
 		bool CanRead(int len);
-		bool CanRead(const char* seq);
+		bool CanRead(const std::string& seq);
 		bool HasDataLeft();
 		int DataLeft();
 
-		bool ReadDump(const char* path);
-		bool WriteDumpIn(const char* path);
-		bool WriteDumpOut(const char* path);
+		bool ReadDump(const std::string& path);
+		bool WriteDumpIn(const std::string& path);
+		bool WriteDumpOut(const std::string& path);
 
 		void CheckSpaceOut(int);
 		void AllocateMoreSpaceOut(int);

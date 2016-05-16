@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include "../Config.h"
 #include "../UI/UIManager.h"
 #include "../UI/Menus/UIConsole.h"
 
@@ -7,6 +8,16 @@
 #include <sstream>
 #include <cstring>
 #include <cstdarg>
+
+#ifdef LINUX
+#include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
+#endif
+
+#ifdef TL_ENABLE_GLFW
+#include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	namespace Utilities {
@@ -19,6 +30,50 @@ namespace TomatoLib {
 			}
 
 			return rand() % (max - min) + min;
+		}
+		
+		long starttime = 0;
+		void ResetTime(){
+			// TODO: make this work n windows too
+#ifdef LINUX
+			struct timeval start;
+
+			long mtime, seconds, useconds;    
+
+			gettimeofday(&start, NULL);
+
+			seconds  = start.tv_sec;
+			useconds = start.tv_usec;
+
+			mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+			
+			starttime = mtime;
+#endif
+		}
+		
+		float GetTimeMS() {
+#ifdef TL_ENABLE_GLFW
+			return ((float)(glfwGetTime() * 1000));
+#else
+			static bool inited = false;
+			if (!inited) {
+				ResetTime();
+				inited = true;
+			}
+			
+			struct timeval start;
+
+			long mtime, seconds, useconds;    
+
+			gettimeofday(&start, NULL);
+
+			seconds  = start.tv_sec;
+			useconds = start.tv_usec;
+
+			mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+			
+			return (float)(mtime - starttime);
+#endif
 		}
 
 		int Clamp(int val, int min, int max) { return val < min ? min : val > max ? max : val; }

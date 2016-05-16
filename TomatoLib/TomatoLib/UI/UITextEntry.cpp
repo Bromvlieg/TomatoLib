@@ -1,7 +1,13 @@
 #include "UITextEntry.h"
 #include "UIManager.h"
 
+
+#include "../Config.h"
+#include "../Defines.h"
+
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 #ifdef _MSC_VER
 #include <Windows.h>
@@ -285,7 +291,7 @@ namespace TomatoLib {
 	}
 
 	void UITextEntry::Update() {
-		int time = (int)(glfwGetTime() * 2);
+		int time = (int)(Utilities::GetTimeMS() * 2);
 		time = time % 2;
 
 		if (this->prevtime != time) {

@@ -1,6 +1,10 @@
 #include "UIScrollPanel.h"
 #include "UIManager.h"
+#include "../Config.h"
+
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	UIScrollPanel::UIScrollPanel(UIBase* parent, bool enablehorizontal) : UIBase(parent) {

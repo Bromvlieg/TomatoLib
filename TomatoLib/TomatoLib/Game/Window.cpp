@@ -1,6 +1,3 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include "Window.h"
 
 #include "../UI/UIManager.h"
@@ -12,6 +9,7 @@
 namespace TomatoLib {
 	Window* Window::CurrentWindow = nullptr;
 
+#ifdef TL_ENABLE_GLFW
 	void Window::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		if (key < 0 || key > GLFW_KEY_LAST) return; // filter out hardware that wants to be special and has special keys.
 		if (CurrentWindow == nullptr) return;
@@ -75,34 +73,49 @@ namespace TomatoLib {
 	void error_callback(int error, const char* description) {
 		printf("GLFW error %d: '%s'\n", error, description);
 	}
+#endif
 
 	void Window::PollEvents() {
 		static std::mutex EventsMutex;
 
 		EventsMutex.lock();
 		CurrentWindow = this;
+
+#ifdef TL_ENABLE_GLFW
 		glfwPollEvents();
+#endif
+
 		EventsMutex.unlock();
 	}
 
 	bool Window::IsClosing() const {
+#ifdef TL_ENABLE_GLFW
 		return glfwWindowShouldClose(this->Handle) == 1;
+#else
+		return false;
+#endif
 	}
 
 	void Window::SetTitle(std::string title) {
+#ifdef TL_ENABLE_GLFW
 		glfwSetWindowTitle(this->Handle, title.c_str());
+#endif
 	}
 
 	Vector2 Window::GetSize() const {
-		int x, y;
+		int x = 0, y = 0;
 
+#ifdef TL_ENABLE_GLFW
 		glfwGetWindowSize(this->Handle, &x, &y);
+#endif
 		return Vector2(x, y);
 	}
 
 	Vector2 Window::GetMouse() const {
-		double mouseX, mouseY;
+		double mouseX = 0, mouseY = 0;
+#ifdef TL_ENABLE_GLFW
 		glfwGetCursorPos(this->Handle, &mouseX, &mouseY);
+#endif
 
 		return Vector2((float)mouseX, (float)mouseY);
 	}
@@ -122,7 +135,9 @@ namespace TomatoLib {
 	}
 
 	void Window::SwapBuffer() {
+#ifdef TL_ENABLE_GLFW
 		glfwSwapBuffers(this->Handle);
+#endif
 	}
 
 	Window::Window() {
@@ -137,24 +152,31 @@ namespace TomatoLib {
 			this->CurrentWindow = this;
 		}
 
+#ifdef TL_ENABLE_GLFW
 		this->Hints[GLFW_CONTEXT_VERSION_MAJOR] = 3;
 		this->Hints[GLFW_CONTEXT_VERSION_MINOR] = 2;
 		this->Hints[GLFW_OPENGL_PROFILE] = GLFW_OPENGL_CORE_PROFILE;
 		this->Hints[GLFW_OPENGL_FORWARD_COMPAT] = GL_TRUE; // for Mac OS X
+#endif
 	}
 
 	Window::~Window() {
 		checkGL;
 
+#ifdef TL_ENABLE_GLFW
 		glfwDestroyWindow(this->Handle);
 		glGetError();
 
 		glfwTerminate();
 		glGetError();
+#endif
 	}
 
 	void Window::Close() {
+
+#ifdef TL_ENABLE_GLFW
 		glfwSetWindowShouldClose(this->Handle, GL_TRUE);
+#endif
 
 		if (CurrentWindow == this) {
 			CurrentWindow = nullptr;
@@ -162,40 +184,51 @@ namespace TomatoLib {
 	}
 
 	void Window::SetSize(int w, int h) {
+
+#ifdef TL_ENABLE_GLFW
 		glfwSetWindowSize(this->Handle, w, h);
+#endif
 	}
 
 
 	void Window::SetPos(int x, int y) {
+#ifdef TL_ENABLE_GLFW
 		glfwSetWindowPos(this->Handle, x, y);
+#endif
 	}
 
 	Vector2 Window::GetPos() {
-		int x;
-		int y;
+		int x = 0;
+		int y = 0;
+
+#ifdef TL_ENABLE_GLFW
 		glfwGetWindowPos(this->Handle, &x, &y);
+#endif
 
 		return Vector2(x, y);
 	}
 
 	void Window::SetMouse(const Vector2& pos) { this->SetMouse((int)pos.X, (int)pos.Y); }
 	void Window::SetMouse(int x, int y) {
+#ifdef TL_ENABLE_GLFW
 		glfwSetCursorPos(this->Handle, x, y);
+#endif
 	}
 
 	void Window::SetCallbacks() {
+#ifdef TL_ENABLE_GLFW
 		glfwSetKeyCallback(this->Handle, this->OnKey);
 		glfwSetMouseButtonCallback(this->Handle, this->OnMouse);
 		glfwSetScrollCallback(this->Handle, this->OnScroll);
 		glfwSetCharCallback(this->Handle, this->OnChar);
 		glfwSetCursorPosCallback(this->Handle, this->OnMousePos);
 		glfwSetWindowFocusCallback(this->Handle, this->OnFocus);
+#endif
 	}
 
-	bool Window::Create(int w, int h, bool fullscreen, bool resizable) {
-		int ret = glfwInit();
-		
-		if (ret != GL_TRUE) {
+	bool Window::Create(unsigned int w, unsigned int h, bool fullscreen, bool resizable) {
+#ifdef TL_ENABLE_GLFW
+		if (glfwInit() != GL_TRUE) {
 			printf("glfwInit failed!\n");
 			return false;
 		}
@@ -232,6 +265,7 @@ namespace TomatoLib {
 		if (!fullscreen) glfwSetWindowPos(this->Handle, mode->width / 2 - w / 2, mode->height / 2 - h / 2);
 
 		glfwMakeContextCurrent(this->Handle);
+		glViewport(0, 0, w, h);
 		glfwSwapInterval(1); // 0 == infinite FPS, 1 == 60, 2 == 30
 
 		glewExperimental = GL_TRUE;
@@ -252,9 +286,11 @@ namespace TomatoLib {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glViewport(0, 0, w, h);
 
 		this->HasFocus = true;
 		return true;
+#else
+		return false;
+#endif
 	}
 }

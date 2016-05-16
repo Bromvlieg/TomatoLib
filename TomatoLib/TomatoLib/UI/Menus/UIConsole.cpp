@@ -7,7 +7,12 @@
 #include <locale>
 #include <cstring>
 
+#include "../../Config.h"
+#include "../../Defines.h"
+
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	// trim from start

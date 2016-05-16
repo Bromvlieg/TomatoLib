@@ -1,17 +1,24 @@
-#include "Render.h"
-
-#include "../Defines.h"
 #include "../Config.h"
+#include "../Defines.h"
+
+#include "Render.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 #include <cstring>
 
+#ifdef TL_ENABLE_EGL
+#include <GLES/gl.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#endif
+
 #define INDICE_PUSH(x) TL_ASSERT(this->IndiceDataCount != this->IndiceDataSize); this->IndiceData[this->IndiceDataCount++] = x
 #define VERTICE_PUSH(x) TL_ASSERT(this->VerticeDataCount != this->VerticeDataSize); this->VerticeData[this->VerticeDataCount++] = x
 
 namespace TomatoLib {
+#ifndef TL_OPENGL_OLD
 	void __shaderStuff(Shader& s) {
 		s.Link();
 		s.Use();
@@ -36,7 +43,6 @@ namespace TomatoLib {
 			return;
 		}
 
-#ifndef TL_OPENGL_OLD
 		glBindFragDataLocation(s.ProgramHandle, 0, "outColor");
 
 		glUniform1i(glGetUniformLocation(s.ProgramHandle, "tex"), 0);
@@ -59,8 +65,9 @@ namespace TomatoLib {
 		glEnableVertexAttribArray(colAttrib);
 		checkGL;
 		glVertexAttribPointer(colAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 9, (void*)(sizeof(float) * 5));
-#endif
+
 	}
+#endif
 	
 	bool firstcreate = true;
 	Texture Render::DefaultTexture(1, 1);
@@ -630,17 +637,14 @@ namespace TomatoLib {
 	}
 
 	Vector2 Render::GetTextSize(char letter) {
-#ifdef TL_ENABLE_FTGL
-		texture_glyph_t* glyph = texture_font_get_glyph(this->DefaultFont->FontHandle, (wchar_t)letter);
-		if (glyph == null) {
-			TL_ASSERT(false);
-			return Vector2::Zero;
+		for (size_t i = 0; i < this->DefaultFont->FontHandle->glyphs_count; i++) {
+			ftgl::texture_glyph_t& glyph = this->DefaultFont->FontHandle->glyphs[i];
+			if (glyph.charcode == letter) {
+				return Vector2((float)glyph.width, (float)glyph.height);
+			}
 		}
-
-		return Vector2((float)glyph->width, (float)glyph->height);
-#else
+		
 		return Vector2::Zero;
-#endif
 	}
 
 	Vector2 Render::GetTextSize(const std::string& text) {
@@ -655,7 +659,6 @@ namespace TomatoLib {
 		float totalW = 0;
 		float totalH = 0;
 
-#ifdef TL_ENABLE_FTGL
 		float cx = 0;
 		float cy = 0;
 		unsigned long len = text.size();
@@ -663,14 +666,22 @@ namespace TomatoLib {
 		for (unsigned long i = 0; i < len; i++) {
 			char l = text[i];
 
-			texture_glyph_t* glyph = texture_font_get_glyph(font.FontHandle, (wchar_t)text[i]);
-			if (glyph == null) {
-				TL_ASSERT(false);
-				return Vector2::Zero;
+			ftgl::texture_glyph_t* glyph = nullptr;
+			for (size_t i2 = 0; i2 < this->DefaultFont->FontHandle->glyphs_count; i2++) {
+				glyph = &this->DefaultFont->FontHandle->glyphs[i2];
+				if (glyph->charcode == l) {
+					break;
+				}
 			}
 
 			if (i > 0) {
-				cx += texture_glyph_get_kerning(glyph, text[i - 1]);
+				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
+					ftgl::kerning_t* kerning = &glyph->kerning[i2];
+					if (kerning->charcode == text[i - 1]) {
+						cx += kerning->kerning;
+						break;
+					}
+				}
 			}
 
 			if (l == '\n') {
@@ -683,7 +694,6 @@ namespace TomatoLib {
 			if (cx > totalW) totalW = cx;
 			if (cy + font.FontHandle->height > totalH) totalH = cy + font.FontHandle->height;
 		}
-#endif
 
 		return Vector2(totalW, totalH);
 	}
@@ -729,11 +739,9 @@ namespace TomatoLib {
 	}
 
 	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
-#ifdef TL_ENABLE_FTGL
 		if (color.A == 0) return;
 		this->SetTexture(font->TexID);
 		this->SetShader(this->DefaultShaderText.ProgramHandle);
-
 		if (alignx != RenderAlignment::Left || aligny != RenderAlignment::Left) {
 			Vector2 tsize = this->GetTextSize(font, text);
 
@@ -765,14 +773,27 @@ namespace TomatoLib {
 		for (int i = 0; i < len; i++) {
 			char l = text[i];
 
-			texture_glyph_t* glyph = texture_font_get_glyph(font->FontHandle, (wchar_t)text[i]);
+			ftgl::texture_glyph_t* glyph = nullptr;
+			for (size_t i2 = 0; i2 < this->DefaultFont->FontHandle->glyphs_count; i2++) {
+				glyph = &this->DefaultFont->FontHandle->glyphs[i2];
+				if (glyph->charcode == l) {
+					break;
+				}
+			}
+
 			if (glyph == null) {
 				TL_ASSERT(false);
 				return;
 			}
 
 			if (i > 0) {
-				cx += texture_glyph_get_kerning(glyph, text[i - 1]);
+				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
+					ftgl::kerning_t* kerning = &glyph->kerning[i2];
+					if( kerning->charcode == text[i - 1] ){
+						cx += kerning->kerning;
+						break;
+					}
+				}
 			}
 
 			if (l == '\n') {
@@ -794,8 +815,8 @@ namespace TomatoLib {
 			float y1 = glyph->t0;
 			float y2 = glyph->t1;
 
-			float pixelWidth = 1.0f / this->DefaultFont->Atlas->width;
-			float pixelHeight = 1.0f / this->DefaultFont->Atlas->height;
+			float pixelWidth = 1.0f / this->DefaultFont->FontHandle->tex_width;
+			float pixelHeight = 1.0f / this->DefaultFont->FontHandle->tex_height;
 
 			a.Location.X = lw;
 			a.Location.Y = lh;
@@ -908,7 +929,6 @@ namespace TomatoLib {
 
 			cx += glyph->advance_x;
 		}
-#endif
 	}
 
 	void Render::EnableClipping(int x, int y, int w, int h) {
@@ -1081,22 +1101,55 @@ namespace TomatoLib {
 
 		delete[] vertices;
 #else
-		glUseProgram(0);
+		//glUseProgram(0);
 
 		glLoadIdentity();
 
 		glEnable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE0);
+		//Utilities::Print("TL_R 12.1");
+		//glActiveTexture(GL_TEXTURE0);
+		//Utilities::Print("TL_R 12.2");
 		glBindTexture(GL_TEXTURE_2D, this->CurrentTexture);
-		glBegin(GL_TRIANGLES);
+		
+		List<float> vertices;
+		List<float> texcoords;
+		List<float> colors;
 		for (unsigned long i = 0; i < this->IndiceDataCount; i++) {
 			auto& v = this->VerticeData[this->IndiceData[i]];
-
-			glColor4f(v.Color.R / 255.0f, v.Color.G / 255.0f, v.Color.B / 255.0f, v.Color.A / 255.0f);
-			glTexCoord2f(v.TextureLocation.X, v.TextureLocation.Y);
-			glVertex3f(v.Location.X / this->ScreenSize.X * 2 - 1, (v.Location.Y / this->ScreenSize.Y * 2 - 1) * -1, 0.0f);
+			
+			colors.Add(v.Color.R / 255.0f);
+			colors.Add(v.Color.G / 255.0f);
+			colors.Add(v.Color.B / 255.0f);
+			colors.Add(v.Color.A / 255.0f);
+			
+			texcoords.Add(v.TextureLocation.X);
+			texcoords.Add(v.TextureLocation.Y);
+			
+			vertices.Add(v.Location.X / this->ScreenSize.X * 2 - 1);
+			vertices.Add((v.Location.Y / this->ScreenSize.Y * 2 - 1) * -1);
+			vertices.Add(0.0f);
 		}
-		glEnd();
+		
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_COLOR_MATERIAL);
+	
+		glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+		glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
+		glColorPointer(4, GL_FLOAT, 0, &colors[0]);
+		
+		glDrawArrays(GL_TRIANGLES, 0, vertices.Count / 3);
+		
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_COLOR_MATERIAL);
 #endif
 		//checkGL;
 

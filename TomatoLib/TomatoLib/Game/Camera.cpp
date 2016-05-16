@@ -40,7 +40,9 @@ namespace TomatoLib {
 	void Camera::SetYaw(float yy) { yaw = yy; UpdateLookat(); }
 
 	void Camera::InsertViewMatrix(GLint location) const {
+#ifndef TL_OPENGL_OLD
 		glUniformMatrix4fv(location, 1, GL_FALSE, this->mat.values);
+#endif
 	}
 
 	void Camera::SetView(const Matrix& m) {
@@ -152,8 +154,14 @@ namespace TomatoLib {
 
 		Vector2 wsize = w.GetSize();
 
+
+		// TODO: move cursor move to window
 		double mouseX, mouseY;
+
+#ifdef TL_ENABLE_GLFW
 		glfwGetCursorPos(w.Handle, &mouseX, &mouseY);
+#endif
+
 		double mouseDeltaX = mouseX - wsize.X / 2;
 		double mouseDeltaY = mouseY - wsize.Y / 2;
 
@@ -164,7 +172,9 @@ namespace TomatoLib {
 			this->SetPitch(newPitch);
 		}
 
+#ifdef TL_ENABLE_GLFW
 		glfwSetCursorPos(w.Handle, wsize.X / 2, wsize.Y / 2);
+#endif
 
 		this->AddPos(movement.X, movement.Y, movement.Z);
 	}

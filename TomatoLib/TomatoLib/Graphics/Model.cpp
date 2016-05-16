@@ -34,6 +34,7 @@ namespace TomatoLib {
 	}
 
 	Model::Model() : m_IndiceCount(0) {
+#ifndef TL_OPENGL_OLD
 		checkGL;
 
 		if (s_Shader == nullptr) {
@@ -116,11 +117,14 @@ namespace TomatoLib {
 		glUniformMatrix4fv(s_projMatrixLocation, 1, GL_TRUE, s_mProj.values);
 		glUniform1i(glGetUniformLocation(s_Shader->ProgramHandle, "tex"), 0);
 		checkGL;
+#endif
 	}
 
 	void Model::BindBuffers() {
+#ifndef TL_OPENGL_OLD
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+#endif
 	}
 
 	void Model::SetTexture(Texture& tex) {
@@ -141,19 +145,23 @@ namespace TomatoLib {
 	}
 
 	void Model::SetVertices(vertex_t* verts, int count) {
+#ifndef TL_OPENGL_OLD
 		checkGL;
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(vertex_t), verts, GL_STATIC_DRAW);
 		checkGL;
+#endif
 	}
 
 	void Model::SetIndices(GLushort* inds, int count) {
+#ifndef TL_OPENGL_OLD
 		checkGL;
 		glBindBuffer(GL_ARRAY_BUFFER, this->ebo);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLushort), inds, GL_STATIC_DRAW);
 		checkGL;
 
 		this->m_IndiceCount = count;
+#endif
 	}
 
 	void Model::SetMatrix(const Matrix& m) {
@@ -169,6 +177,7 @@ namespace TomatoLib {
 	}
 
 	void Model::Draw(const Camera& cam) {
+#ifndef TL_OPENGL_OLD
 		if (this->m_IndiceCount == 0) return;
 
 		checkGL;
@@ -187,6 +196,7 @@ namespace TomatoLib {
 
 		glDrawElements(GL_TRIANGLES, this->m_IndiceCount, GL_UNSIGNED_SHORT, 0);
 		checkGL;
+#endif
 	}
 
 	void Model::FromSquare(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d) {

@@ -9,7 +9,14 @@
 #include "../Math/Vector2.h"
 #include "Texture.h"
 #include "Shader.h"
+
+#ifndef TL_ENABLE_EGL
 #include <GL/glew.h>
+#else
+#include "GLES/gl.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#endif
 
 namespace TomatoLib {
 	class Camera;

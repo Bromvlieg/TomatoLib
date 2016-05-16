@@ -57,11 +57,11 @@ namespace TomatoLib {
 		float f, p, q, t;
 		if (s == 0) {
 			// achromatic (grey)
-			return Color(v * 255, v * 255, v * 255);
+			return Color((unsigned char)v * 255, (unsigned char)v * 255, (unsigned char)v * 255);
 		}
 
 		h /= 60;            // sector 0 to 5
-		i = floor(h);
+		i = (int)floor(h);
 		f = h - i;          // factorial part of h
 		p = v * (1 - s);
 		q = v * (1 - s * f);
@@ -100,7 +100,7 @@ namespace TomatoLib {
 				break;
 		}
 
-		return Color(r * 255, g * 255, b * 255);
+		return Color((unsigned char)r * 255, (unsigned char)g * 255, (unsigned char)b * 255);
 	}
 
 	void UIColorPicker::Draw(Render& p) {
@@ -156,7 +156,7 @@ namespace TomatoLib {
 
 		float mdist = mp.Distance(this->pm_vCenter);
 		if (mdist >= this->W / 2 - BorderSize && mdist <= this->W / 2) {
-			this->pm_fHue = (int)(-atan2(mp.X - (float)this->W / 2, (float)this->H / 2 - mp.Y) * (float)(180.0 / M_PI) + 180) % 360;
+			this->pm_fHue = (float)((int)(-atan2(mp.X - (float)this->W / 2, (float)this->H / 2 - mp.Y) * (float)(180.0 / M_PI) + 180) % 360);
 		} else {
 			if (mp.X >= this->BorderSize * 3 + +this->Padding && mp.Y >= this->BorderSize * 3 + this->Padding && mp.X <= this->W - this->BorderSize * 3 - this->Padding  && mp.Y <= this->H - this->BorderSize * 3 - this->Padding) {
 				Vector2 tmp = mp;

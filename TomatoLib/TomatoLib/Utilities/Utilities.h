@@ -23,6 +23,9 @@ namespace TomatoLib {
 		void Print(std::string format, ...);
 		std::string GetConsoleVar(std::string name);
 
+		void ResetTime();
+		float GetTimeMS();
+
 		int Clamp(int val, int min, int max);
 		float Clamp(float val, float min, float max);
 		double Clamp(double val, double min, double max);

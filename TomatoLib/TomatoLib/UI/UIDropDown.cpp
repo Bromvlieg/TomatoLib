@@ -6,7 +6,13 @@
 #include <functional> 
 #include <cctype>
 #include <locale>
+
+#include "../Config.h"
+#include "../Defines.h"
+
+#ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
+#endif
 
 namespace TomatoLib {
 	UIDropDown::UIDropDown(UIBase* parent) : UILabel(parent) {
