@@ -12,8 +12,30 @@ namespace TomatoLib {
 	class Vector3;
 	class Matrix;
 
+	template<typename T>
+	class Uniform {
+	private:
+		GLint m_GLiIndex;
+
+	public:
+		void Set(const T& value);
+
+		Uniform(const GLint& index) {
+			this->m_GLiIndex = index;
+		}
+
+		Uniform() {
+			this->m_GLiIndex = -1;
+		}
+	};
+
 	class Shader {
 	public:
+		template<typename T>
+		Uniform<T> GetUniform(const std::string& sName) {
+			return Uniform<T>(glGetUniformLocation(this->ProgramHandle, sName.c_str()));
+		}
+
 		GLint ProgramHandle;
 		List<GLint> Attached;
 

@@ -7,6 +7,7 @@
 #include "../Math/Vector2.h"
 #include <string>
 #include "../Utilities/Dictonary.h"
+
 #include "../Defines.h"
 #include "../Config.h"
 
@@ -14,6 +15,8 @@
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 #endif
+
+#include <functional>
 
 namespace TomatoLib {
 	class UIManager;
@@ -28,7 +31,9 @@ namespace TomatoLib {
 		static void OnScroll(GLFWwindow* window, double x, double y);
 		static void OnMousePos(GLFWwindow* window, double x, double y);
 		static void OnFocus(GLFWwindow* window, int focus);
+		static void OnResize(GLFWwindow* window, int w, int h);
 #endif
+
 	public:
 		static Window* CurrentWindow;
 
@@ -45,6 +50,8 @@ namespace TomatoLib {
 
 		UIManager* UIMan;
 		bool HasFocus;
+
+		std::function<void(Window& window, int width, int height)> OnResizeCallback;
 
 		virtual void SetTitle(std::string title);
 		virtual Vector2 GetSize() const;
