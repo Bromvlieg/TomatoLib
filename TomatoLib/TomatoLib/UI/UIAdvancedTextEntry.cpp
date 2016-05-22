@@ -123,7 +123,7 @@ namespace TomatoLib {
 					if (cx <= mpos.X && cx + part->Width >= mpos.X && cy <= mpos.Y && cy + lineh >= mpos.Y) {
 						hoverpart = i;
 						hoverline = line;
-						this->UIMan->CursorShape = part->CursorIcon;
+						this->UIMan->CurrentCursorShape = part->CursorIcon;
 
 						if (hoverpart != this->CurrentHoverPart || hoverline != this->CurrentHoverLine) {
 							this->CurrentHoverPart = hoverpart;

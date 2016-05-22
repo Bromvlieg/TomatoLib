@@ -55,16 +55,16 @@ namespace TomatoLib {
 
 		this->LastMousePosition = mpos;
 
-		int oldshape = this->CursorShape;
-		this->CursorShape = GLFW_ARROW_CURSOR;
+		int oldshape = this->CurrentCursorShape;
+		this->CurrentCursorShape = GLFW_ARROW_CURSOR;
 		for (unsigned int i = 0; i < this->Children.size(); i++) {
 			this->Children[i]->_InternalUpdate();
 		}
 
-		if (oldshape != this->CursorShape) {
+		if (oldshape != this->CurrentCursorShape) {
 #ifdef TL_ENABLE_GLFW
 			if (this->CurrentCursor != null) glfwDestroyCursor(this->CurrentCursor);
-			this->CurrentCursor = glfwCreateStandardCursor(this->CursorShape);
+			this->CurrentCursor = glfwCreateStandardCursor(this->CurrentCursorShape);
 #endif
 		}
 	}
