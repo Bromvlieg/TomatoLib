@@ -45,7 +45,7 @@ namespace TomatoLib {
 		bool HandleScrollInteraction(int x, int y);
 		bool HandleCharInteraction(int ch);
 
-		int CursorShape;
+		int CurrentCursorShape;
 		GLFWcursor* CurrentCursor;
 
 		UIBase* HoldPanel;

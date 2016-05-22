@@ -71,15 +71,15 @@ namespace TomatoLib {
 
 		int bs = this->GetResizeBorderSize();
 		if (bs > 0) {
-			if (x - apos.X < bs) this->UIMan->CursorShape = GLFW_HRESIZE_CURSOR;
-			if (x - apos.X > this->W - bs) this->UIMan->CursorShape = GLFW_HRESIZE_CURSOR;
+			if (x - apos.X < bs) this->UIMan->CurrentCursorShape = GLFW_HRESIZE_CURSOR;
+			if (x - apos.X > this->W - bs) this->UIMan->CurrentCursorShape = GLFW_HRESIZE_CURSOR;
 
-			if (this->UIMan->CursorShape == GLFW_HRESIZE_CURSOR) {
-				if (y - apos.Y < bs) this->UIMan->CursorShape = GLFW_HAND_CURSOR;
-				if (y - apos.Y > this->H - bs) this->UIMan->CursorShape = GLFW_HAND_CURSOR;
+			if (this->UIMan->CurrentCursorShape == GLFW_HRESIZE_CURSOR) {
+				if (y - apos.Y < bs) this->UIMan->CurrentCursorShape = GLFW_HAND_CURSOR;
+				if (y - apos.Y > this->H - bs) this->UIMan->CurrentCursorShape = GLFW_HAND_CURSOR;
 			} else {
-				if (y - apos.Y < bs) this->UIMan->CursorShape = GLFW_VRESIZE_CURSOR;
-				if (y - apos.Y > this->H - bs) this->UIMan->CursorShape = GLFW_VRESIZE_CURSOR;
+				if (y - apos.Y < bs) this->UIMan->CurrentCursorShape = GLFW_VRESIZE_CURSOR;
+				if (y - apos.Y > this->H - bs) this->UIMan->CurrentCursorShape = GLFW_VRESIZE_CURSOR;
 			}
 		}
 
@@ -88,28 +88,28 @@ namespace TomatoLib {
 			int oldx = this->X;
 			this->X = x - this->_GrabX;
 			if (oldx != this->X) dothethingwiththeupdate++;
-			this->UIMan->CursorShape = GLFW_HRESIZE_CURSOR;
+			this->UIMan->CurrentCursorShape = GLFW_HRESIZE_CURSOR;
 		}
 
 		if ((this->_ResizeMode & 2) > 0) {
 			int oldw = this->W;
 			this->W = x + (this->_OldW - this->_GrabX) - (int)apos.X;
 			if (oldw != this->W) dothethingwiththeupdate++;
-			this->UIMan->CursorShape = GLFW_HRESIZE_CURSOR;
+			this->UIMan->CurrentCursorShape = GLFW_HRESIZE_CURSOR;
 		}
 
 		if ((this->_ResizeMode & 4) > 0) {
 			int oldy = this->Y;
 			this->Y = y - this->_GrabY;
 			if (oldy != this->Y) dothethingwiththeupdate++;
-			this->UIMan->CursorShape = GLFW_VRESIZE_CURSOR;
+			this->UIMan->CurrentCursorShape = GLFW_VRESIZE_CURSOR;
 		}
 
 		if ((this->_ResizeMode & 8) > 0) {
 			int oldh = this->H;
 			this->H = y + (this->_OldH - this->_GrabY) - (int)apos.Y;
 			if (oldh != this->H) dothethingwiththeupdate++;
-			this->UIMan->CursorShape = GLFW_VRESIZE_CURSOR;
+			this->UIMan->CurrentCursorShape = GLFW_VRESIZE_CURSOR;
 		}
 
 		if ((this->_ResizeMode & 16) > 0) {
@@ -117,12 +117,12 @@ namespace TomatoLib {
 			int oldy = this->Y;
 			this->X = x - this->_GrabX;
 			this->Y = y - this->_GrabY;
-			this->UIMan->CursorShape = GLFW_HAND_CURSOR;
+			this->UIMan->CurrentCursorShape = GLFW_HAND_CURSOR;
 			if (oldx != this->X || oldy != this->Y) dothethingwiththeupdate++;
 		}
 
 		if (dothethingwiththeupdate > 1) {
-			this->UIMan->CursorShape = GLFW_HAND_CURSOR;
+			this->UIMan->CurrentCursorShape = GLFW_HAND_CURSOR;
 		}
 
 		if (dothethingwiththeupdate) {
