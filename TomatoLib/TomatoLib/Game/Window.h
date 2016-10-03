@@ -12,7 +12,7 @@
 #include "../Config.h"
 
 #ifdef TL_ENABLE_GLFW
-#include <gl/glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #endif
 

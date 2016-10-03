@@ -20,6 +20,11 @@
 #include <EGL/eglext.h>
 #endif
 
+// Small fix for Linux builds where 'None' is defined to 0
+#ifdef None
+#undef None
+#endif
+
 namespace TomatoLib {
 	enum class FlipMode {
 		Vertical,

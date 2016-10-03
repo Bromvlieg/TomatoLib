@@ -242,7 +242,7 @@ namespace TomatoLib {
 			tmp[this->Caret] = 0;
 
 			pushback = this->UIMan->Drawer.GetTextSize(tmp).X;
-			delete tmp;
+			delete[] tmp;
 		} else {
 			pushback = this->UIMan->Drawer.GetTextSize(this->Text.substr(0, this->Caret)).X;
 		}

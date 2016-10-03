@@ -227,8 +227,8 @@ namespace TomatoLib {
 	}
 
 	// Uniforms!
-	void Uniform<int>::Set(const int& value) { glUniform1i(this->m_GLiIndex, value); }
-	void Uniform<float>::Set(const float& value) { glUniform1fv(this->m_GLiIndex, 1, (GLfloat*)&value); }
-	void Uniform<Vector2>::Set(const Vector2& value) { glUniform2fv(this->m_GLiIndex, 1, (GLfloat*)&value); }
-	void Uniform<Vector3>::Set(const Vector3& value) { glUniform3fv(this->m_GLiIndex, 1, (GLfloat*)&value); }
+	template<> void Uniform<int>::Set(const int& value) { glUniform1i(this->m_GLiIndex, value); }
+	template<> void Uniform<float>::Set(const float& value) { glUniform1fv(this->m_GLiIndex, 1, (GLfloat*)&value); }
+	template<> void Uniform<Vector2>::Set(const Vector2& value) { glUniform2fv(this->m_GLiIndex, 1, (GLfloat*)&value); }
+	template<> void Uniform<Vector3>::Set(const Vector3& value) { glUniform3fv(this->m_GLiIndex, 1, (GLfloat*)&value); }
 }
