@@ -15,12 +15,61 @@
 #include <unistd.h>
 #endif
 
+#ifdef _MSC_VER
+#include < time.h >
+#include < windows.h >
+
+#if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
+#define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
+#else
+#define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
+#endif
+#endif
+
 #ifdef TL_ENABLE_GLFW
 #include <GLFW/glfw3.h>
 #endif
 
 namespace TomatoLib {
 	namespace Utilities {
+		struct timezone {
+			int  tz_minuteswest; /* minutes W of Greenwich */
+			int  tz_dsttime;     /* type of dst correction */
+		};
+
+#ifdef _MSC_VER
+		int gettimeofday(struct timeval *tv, struct timezone *tz) {
+			FILETIME ft;
+			unsigned __int64 tmpres = 0;
+			static int tzflag = 0;
+
+			if (NULL != tv) {
+				GetSystemTimeAsFileTime(&ft);
+
+				tmpres |= ft.dwHighDateTime;
+				tmpres <<= 32;
+				tmpres |= ft.dwLowDateTime;
+
+				tmpres /= 10;  /*convert into microseconds*/
+				/*converting file time to unix epoch*/
+				tmpres -= DELTA_EPOCH_IN_MICROSECS;
+				tv->tv_sec = (long)(tmpres / 1000000UL);
+				tv->tv_usec = (long)(tmpres % 1000000UL);
+			}
+
+			if (NULL != tz) {
+				if (!tzflag) {
+					_tzset();
+					tzflag++;
+				}
+				tz->tz_minuteswest = _timezone / 60;
+				tz->tz_dsttime = _daylight;
+			}
+
+			return 0;
+		}
+#endif
+
 		bool randinited = false;
 		int GetRandom(int min, int max) {
 			if (!randinited) {
@@ -32,29 +81,23 @@ namespace TomatoLib {
 			return rand() % (max - min) + min;
 		}
 		
-		long starttime = 0;
+		time_t starttime = 0;
 		void ResetTime(){
-			// TODO: make this work n windows too
-#ifdef LINUX
 			struct timeval start;
 
-			long mtime, seconds, useconds;    
+			time_t mtime, seconds, useconds;
 
 			gettimeofday(&start, NULL);
 
 			seconds  = start.tv_sec;
 			useconds = start.tv_usec;
 
-			mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+			mtime = (time_t)(((seconds)* 1000 + useconds / 1000.0) + 0.5);
 			
 			starttime = mtime;
-#endif
 		}
 		
 		float GetTimeMS() {
-#ifdef TL_ENABLE_GLFW
-			return ((float)(glfwGetTime() * 1000));
-#else
 			static bool inited = false;
 			if (!inited) {
 				ResetTime();
@@ -63,17 +106,16 @@ namespace TomatoLib {
 			
 			struct timeval start;
 
-			long mtime, seconds, useconds;    
+			time_t mtime, seconds, useconds;
 
 			gettimeofday(&start, NULL);
 
 			seconds  = start.tv_sec;
 			useconds = start.tv_usec;
 
-			mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+			mtime = (time_t)(((seconds)* 1000 + useconds / 1000.0) + 0.5);
 			
 			return (float)(mtime - starttime);
-#endif
 		}
 
 		int Clamp(int val, int min, int max) { return val < min ? min : val > max ? max : val; }

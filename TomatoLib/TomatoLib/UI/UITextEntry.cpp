@@ -273,7 +273,7 @@ namespace TomatoLib {
 		float y = this->H / 2.0f - this->Font->FontHandle->height / 2;
 
 		p.EnableClipping((int)Offset.X + 1, (int)Offset.Y + 1, this->W - 2, this->H - 2);
-		if (this->prevtime == 1 && this->UIMan->FocusPanel == this) p.Box(this->CaretX + 2, this->H / 2.0f - this->Font->FontHandle->height / 3, 2.0f, this->Font->FontHandle->height / 3 * 2, this->CaretColor);
+		if (this->m_blink && this->UIMan->FocusPanel == this) p.Box(this->CaretX + 2, this->H / 2.0f - this->Font->FontHandle->height / 3, 2.0f, this->Font->FontHandle->height / 3 * 2, this->CaretColor);
 
 		if (this->MaskChar != 0) {
 			char* str = new char[this->Text.size() + 1];
@@ -291,10 +291,10 @@ namespace TomatoLib {
 	}
 
 	void UITextEntry::Update() {
-		int time = (int)(Utilities::GetTimeMS() * 2);
-		time = time % 2;
+		int time = (int)(Utilities::GetTimeMS() / 800);
 
 		if (this->prevtime != time) {
+			this->m_blink = !this->m_blink;
 			this->prevtime = time;
 			this->MarkForFullRedraw();
 		}

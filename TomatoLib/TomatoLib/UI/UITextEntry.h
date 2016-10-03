@@ -8,6 +8,7 @@ namespace TomatoLib {
 	class UITextEntry : public UIBase {
 		std::string Text;
 		int prevtime;
+		bool m_blink;
 
 	public:
 		UITextEntry(UIBase* parent);
