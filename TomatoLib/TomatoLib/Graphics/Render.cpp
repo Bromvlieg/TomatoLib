@@ -699,7 +699,6 @@ namespace TomatoLib {
 		return Vector2(totalW, totalH);
 	}
 
-	List<unsigned int> knowntex;
 	void Render::SetTexture(GLint handle) {
 		if (this->CurrentTexture != handle) this->DrawOnScreen();
 		this->CurrentTexture = handle;
