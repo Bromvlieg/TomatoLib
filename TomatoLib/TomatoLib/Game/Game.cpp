@@ -19,7 +19,7 @@
 #endif
 
 namespace TomatoLib {
-	Game::Game() : ShouldShutdown(false),currentFPS(0),currentFPSTime(0) {}
+	Game::Game() : ShouldShutdown(false), currentFPS(0), currentFPSTime(0), m_fTargetFPS(60.0f) {}
 	Game::~Game() {}
 
 	void Game::Init() {}
@@ -42,7 +42,7 @@ namespace TomatoLib {
 		float lastfpssecond = lasttick; // ms
 		while (!this->ShouldShutdown) {
 			float curtime = TL_GET_TIME_MS;
-			float msperfps = 1000.0f / 60.0f;
+			float msperfps = 1000.0f / this->m_fTargetFPS;
 
 			if (curtime - lasttick < msperfps) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));

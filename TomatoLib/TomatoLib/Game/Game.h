@@ -12,6 +12,7 @@ namespace TomatoLib {
 
 		int currentFPS;
 		float currentFPSTime;
+		float m_fTargetFPS;
 
 		virtual void Init();
 		virtual void RegisterConsoleStuff();

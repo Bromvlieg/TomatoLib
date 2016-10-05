@@ -199,9 +199,10 @@ namespace TomatoLib {
 		this->Box(x + bordersize, y + h - bordersize, w - bordersize * 2, bordersize, color);
 	}
 
-	void Render::Buffer(RenderBuffer* buff) {
-		for (int i = 0; i < buff->Chunks.Count; i++) {
-			RenderBufferChunk& b = buff->Chunks[i];
+	void Render::Buffer(const RenderBuffer& buff) {
+		for (int i = 0; i < buff.Chunks.Count; i++) {
+			const RenderBufferChunk& b = buff.Chunks[i];
+
 			this->SetShader(b.ShaderHandle);
 			this->SetTexture(b.TextureHandle);
 
@@ -698,6 +699,7 @@ namespace TomatoLib {
 		return Vector2(totalW, totalH);
 	}
 
+	List<unsigned int> knowntex;
 	void Render::SetTexture(GLint handle) {
 		if (this->CurrentTexture != handle) this->DrawOnScreen();
 		this->CurrentTexture = handle;
@@ -728,7 +730,7 @@ namespace TomatoLib {
 	}
 
 	void Render::Text(const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
-		if (this->DefaultFont == null) return;
+		if (this->DefaultFont == nullptr) return;
 		if (color.A == 0) return;
 
 		this->Text(this->DefaultFont, text, x, y, color, alignx, aligny);
@@ -739,7 +741,8 @@ namespace TomatoLib {
 	}
 
 	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
-		if (color.A == 0) return;
+		if (color.A == 0 || text.size() == 0) return;
+
 		this->SetTexture(font->TexID);
 		this->SetShader(this->DefaultShaderText.ProgramHandle);
 		if (alignx != RenderAlignment::Left || aligny != RenderAlignment::Left) {
@@ -967,21 +970,18 @@ namespace TomatoLib {
 		}
 	}
 
-	void Render::RecorderStart() {
-		if (this->CaptureBuffer != null) throw("Already capturing!");
+	void Render::RecorderStart(RenderBuffer& buff) {
+		if (this->CaptureBuffer != nullptr) throw("Already capturing!");
 
 		this->DrawOnScreen();
-		this->CaptureBuffer = new RenderBuffer();
+		this->CaptureBuffer = &buff;
 	}
 
-	RenderBuffer* Render::RecorderStop() {
-		if (this->CaptureBuffer == null) throw("Not capturing!");
+	void Render::RecorderStop() {
+		if (this->CaptureBuffer == nullptr) throw("Not capturing!");
 
 		this->DrawOnScreen();
-		RenderBuffer* tmp = this->CaptureBuffer;
-		this->CaptureBuffer = null;
-
-		return tmp;
+		this->CaptureBuffer = nullptr;
 	}
 
 	void Render::EnableFlipping(FlipMode mode, const Vector2 &center) {
@@ -1045,7 +1045,7 @@ namespace TomatoLib {
 
 		if (this->DisableDeptTest) glDisable(GL_DEPTH_TEST);
 
-		if (this->CaptureBuffer != null) {
+		if (this->CaptureBuffer != nullptr) {
 			RenderBufferChunk c;
 			c.ShaderHandle = this->CurrentShader;
 			c.TextureHandle = this->CurrentTexture;
@@ -1101,19 +1101,19 @@ namespace TomatoLib {
 
 		delete[] vertices;
 #else
-		//glUseProgram(0);
-
 		glLoadIdentity();
 
 		glEnable(GL_TEXTURE_2D);
-		//Utilities::Print("TL_R 12.1");
-		//glActiveTexture(GL_TEXTURE0);
-		//Utilities::Print("TL_R 12.2");
 		glBindTexture(GL_TEXTURE_2D, this->CurrentTexture);
-		
-		List<float> vertices;
+
 		List<float> texcoords;
+		List<float> vertices;
 		List<float> colors;
+
+		texcoords.Reserve(2 * this->IndiceDataCount);
+		vertices.Reserve(2 * this->IndiceDataCount);
+		colors.Reserve(4 * this->IndiceDataCount);
+
 		for (unsigned long i = 0; i < this->IndiceDataCount; i++) {
 			auto& v = this->VerticeData[this->IndiceData[i]];
 			
@@ -1127,7 +1127,6 @@ namespace TomatoLib {
 			
 			vertices.Add(v.Location.X / this->ScreenSize.X * 2 - 1);
 			vertices.Add((v.Location.Y / this->ScreenSize.Y * 2 - 1) * -1);
-			vertices.Add(0.0f);
 		}
 		
 
@@ -1138,11 +1137,11 @@ namespace TomatoLib {
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_COLOR_MATERIAL);
 	
-		glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+		glVertexPointer(2, GL_FLOAT, 0, &vertices[0]);
 		glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
 		glColorPointer(4, GL_FLOAT, 0, &colors[0]);
 		
-		glDrawArrays(GL_TRIANGLES, 0, vertices.Count / 3);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.Count / 2);
 		
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);

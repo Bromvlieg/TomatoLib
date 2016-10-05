@@ -119,7 +119,7 @@ namespace TomatoLib {
 		Render();
 		~Render();
 
-		void Buffer(RenderBuffer* buffer);
+		void Buffer(const RenderBuffer& buffer);
 		void Box(int x, int y, int w, int h, const Color& color);
 		void Box(float x, float y, float w, float h, const Color& color);
 		void BoxOutlined(int x, int y, int w, int h, int bordersize, const Color& color);
@@ -161,8 +161,8 @@ namespace TomatoLib {
 		void EnableFlipping(FlipMode mode, const Vector2& center);
 		void DisableFlipping();
 
-		void RecorderStart();
-		RenderBuffer* RecorderStop();
+		void RecorderStart(RenderBuffer& buff);
+		void RecorderStop();
 
 		void CheckSpace(int vcount, int icount);
 		void DrawOnScreen();

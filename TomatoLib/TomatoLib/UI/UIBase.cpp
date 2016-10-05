@@ -40,7 +40,6 @@ namespace TomatoLib {
 		this->Frozen = false;
 		this->AlwaysRedraw = true;
 		this->ShouldRedraw = true;
-		this->Buffer = nullptr;
 		this->ChildsDrawFirst = false;
 		this->_ProtectedRemoveFlag = false;
 		this->_ProtectedScopeFlag = false;
@@ -239,21 +238,21 @@ namespace TomatoLib {
 		}
 
 		bool recorderstarted = false;
-		if (this->ShouldRedraw) {
-			drawer.RecorderStart();
+		if (this->ShouldRedraw && !this->AlwaysRedraw) {
+			this->Buffer.Chunks.Clear();
+			drawer.RecorderStart(this->Buffer);
 			recorderstarted = true;
 		}
 		
 		if (!this->Frozen && (this->ShouldRedraw || this->AlwaysRedraw)) {
 			this->OnDraw(drawer);
 			if (this->_ProtectedRemoveFlag) { delete this; return; };
-		} else if(this->Buffer != nullptr) {
+		} else {
 			drawer.Buffer(this->Buffer);
 		}
 
 		if (recorderstarted) {
-			if (this->Buffer != nullptr) delete this->Buffer;
-			this->Buffer = drawer.RecorderStop();
+			drawer.RecorderStop();
 			this->ShouldRedraw = false;
 		}
 

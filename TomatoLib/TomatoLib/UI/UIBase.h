@@ -63,7 +63,7 @@ namespace TomatoLib {
 
 		Vector2 GetAbsoluteLocation();
 		UIBase* GetAbsoluteParent();
-		RenderBuffer* Buffer;
+		RenderBuffer Buffer;
 
 		void SetParent(UIBase* parent);
 		UIBase* GetParent();
