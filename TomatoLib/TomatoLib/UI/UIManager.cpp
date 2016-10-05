@@ -248,5 +248,8 @@ namespace TomatoLib {
 	}
 
 	UIManager::~UIManager() {
+		if (TomatoLib::UIBase::DefaultUImanager == this) {
+			TomatoLib::UIBase::DefaultUImanager = nullptr;
+		}
 	}
 }
