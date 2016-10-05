@@ -165,7 +165,7 @@ namespace TomatoLib {
 		this->UpY->OnScroll = [this](int x, int y) { this->Scroll(y); };
 	}
 
-	void UIScrollPanel::DisableVerticalScrollball() {
+	void UIScrollPanel::DisableVerticalScrollbar() {
 		if (this->GrabX == nullptr) return;
 
 		this->UpX->Kill();
@@ -177,7 +177,7 @@ namespace TomatoLib {
 		this->GrabX = nullptr;
 	}
 
-	void UIScrollPanel::DisableHorizontalScrollball() {
+	void UIScrollPanel::DisableHorizontalScrollbar() {
 		if (this->GrabY == nullptr) return;
 
 		this->UpY->Kill();

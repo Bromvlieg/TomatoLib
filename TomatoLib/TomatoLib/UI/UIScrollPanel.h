@@ -36,8 +36,8 @@ namespace TomatoLib {
 		void AddItem(UIBase* item);
 		void RemoveItem(UIBase* item);
 
-		void DisableVerticalScrollball();
-		void DisableHorizontalScrollball();
+		void DisableVerticalScrollbar();
+		void DisableHorizontalScrollbar();
 
 		virtual void Draw(Render& p) override;
 		virtual void Update() override;
