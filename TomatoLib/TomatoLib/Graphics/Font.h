@@ -54,10 +54,10 @@ extern "C" {
 namespace TomatoLib {
 	class Font {
 	public:
-		ftgl::texture_font_t* FontHandle;
+		const ftgl::texture_font_t* FontHandle;
 
 		Font(const std::string &file, float size);
-		Font(ftgl::texture_font_t& persistant_data);
+		Font(const ftgl::texture_font_t& persistant_data);
 		Font();
 		~Font();
 		

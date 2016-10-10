@@ -29,10 +29,7 @@ namespace TomatoLib {
 #endif
 	}
 
-	Font::Font(ftgl::texture_font_t& fontdata) {
-		this->FontHandle = nullptr;
-		this->TexID = 0;
-
+	Font::Font(const ftgl::texture_font_t& fontdata) {
 		this->FontHandle = &fontdata;
 
 		unsigned char* data = (unsigned char*)this->FontHandle->tex_data;

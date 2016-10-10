@@ -638,13 +638,21 @@ namespace TomatoLib {
 	}
 
 	Vector2 Render::GetTextSize(char letter) {
-		for (size_t i = 0; i < this->DefaultFont->FontHandle->glyphs_count; i++) {
-			ftgl::texture_glyph_t& glyph = this->DefaultFont->FontHandle->glyphs[i];
+		return this->GetTextSize(Render::DefaultFont, letter);
+	}
+
+	Vector2 Render::GetTextSize(const Font& font, char letter) {
+		return this->GetTextSize(&font, letter);
+	}
+
+	Vector2 Render::GetTextSize(const Font* font, char letter) {
+		for (size_t i = 0; i < font->FontHandle->glyphs_count; i++) {
+			const ftgl::texture_glyph_t& glyph = font->FontHandle->glyphs[i];
 			if (glyph.charcode == letter) {
 				return Vector2((float)glyph.width, (float)glyph.height);
 			}
 		}
-		
+
 		return Vector2::Zero;
 	}
 
@@ -652,7 +660,7 @@ namespace TomatoLib {
 		return this->GetTextSize(*Render::DefaultFont, text);
 	}
 
-	Vector2 Render::GetTextSize(Font* font, const std::string& text) {
+	Vector2 Render::GetTextSize(const Font* font, const std::string& text) {
 		return this->GetTextSize(*font, text);
 	}
 
@@ -667,7 +675,7 @@ namespace TomatoLib {
 		for (unsigned long i = 0; i < len; i++) {
 			char l = text[i];
 
-			ftgl::texture_glyph_t* glyph = nullptr;
+			const ftgl::texture_glyph_t* glyph = nullptr;
 			for (size_t i2 = 0; i2 < this->DefaultFont->FontHandle->glyphs_count; i2++) {
 				glyph = &this->DefaultFont->FontHandle->glyphs[i2];
 				if (glyph->charcode == l) {
@@ -677,7 +685,7 @@ namespace TomatoLib {
 
 			if (i > 0) {
 				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
-					ftgl::kerning_t* kerning = &glyph->kerning[i2];
+					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
 					if (kerning->charcode == text[i - 1]) {
 						cx += kerning->kerning;
 						break;
@@ -735,11 +743,11 @@ namespace TomatoLib {
 		this->Text(this->DefaultFont, text, x, y, color, alignx, aligny);
 	}
 
-	void Render::Text(Font* font, const std::string& text, int x, int y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+	void Render::Text(const Font* font, const std::string& text, int x, int y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
 		this->Text(font, text, (float)x, (float)y, color, alignx, aligny);
 	}
 
-	void Render::Text(Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+	void Render::Text(const Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
 		if (color.A == 0 || text.size() == 0) return;
 
 		this->SetTexture(font->TexID);
@@ -775,9 +783,9 @@ namespace TomatoLib {
 		for (int i = 0; i < len; i++) {
 			char l = text[i];
 
-			ftgl::texture_glyph_t* glyph = nullptr;
-			for (size_t i2 = 0; i2 < this->DefaultFont->FontHandle->glyphs_count; i2++) {
-				glyph = &this->DefaultFont->FontHandle->glyphs[i2];
+			const ftgl::texture_glyph_t* glyph = nullptr;
+			for (size_t i2 = 0; i2 < font->FontHandle->glyphs_count; i2++) {
+				glyph = &font->FontHandle->glyphs[i2];
 				if (glyph->charcode == l) {
 					break;
 				}
@@ -790,7 +798,7 @@ namespace TomatoLib {
 
 			if (i > 0) {
 				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
-					ftgl::kerning_t* kerning = &glyph->kerning[i2];
+					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
 					if( kerning->charcode == text[i - 1] ){
 						cx += kerning->kerning;
 						break;
@@ -817,8 +825,8 @@ namespace TomatoLib {
 			float y1 = glyph->t0;
 			float y2 = glyph->t1;
 
-			float pixelWidth = 1.0f / this->DefaultFont->FontHandle->tex_width;
-			float pixelHeight = 1.0f / this->DefaultFont->FontHandle->tex_height;
+			float pixelWidth = 1.0f / font->FontHandle->tex_width;
+			float pixelHeight = 1.0f / font->FontHandle->tex_height;
 
 			a.Location.X = lw;
 			a.Location.Y = lh;
