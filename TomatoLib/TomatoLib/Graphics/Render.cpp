@@ -676,8 +676,8 @@ namespace TomatoLib {
 			char l = text[i];
 
 			const ftgl::texture_glyph_t* glyph = nullptr;
-			for (size_t i2 = 0; i2 < this->DefaultFont->FontHandle->glyphs_count; i2++) {
-				glyph = &this->DefaultFont->FontHandle->glyphs[i2];
+			for (size_t i2 = 0; i2 < font.FontHandle->glyphs_count; i2++) {
+				glyph = &font.FontHandle->glyphs[i2];
 				if (glyph->charcode == l) {
 					break;
 				}
@@ -700,6 +700,7 @@ namespace TomatoLib {
 			}
 
 			cx += glyph->advance_x;
+
 			if (cx > totalW) totalW = cx;
 			if (cy + font.FontHandle->height > totalH) totalH = cy + font.FontHandle->height;
 		}

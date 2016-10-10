@@ -2,6 +2,12 @@
 #ifndef __FONT_H__
 #define __FONT_H__
 
+#ifdef TL_FONT_STATIC_SIZE
+#define TL_FONT_STATICSIZE_INTERNAL TL_FONT_STATIC_SIZE
+#else
+#define TL_FONT_STATICSIZE_INTERNAL 65536
+#endif
+
 #include "../Config.h"
 #include "../Defines.h"
 #include <string>
@@ -36,7 +42,7 @@ extern "C" {
 			size_t tex_width;
 			size_t tex_height;
 			size_t tex_depth;
-			char tex_data[16384];
+			char tex_data[TL_FONT_STATICSIZE_INTERNAL];
 			float size;
 			float height;
 			float linegap;

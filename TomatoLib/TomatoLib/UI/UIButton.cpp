@@ -50,22 +50,24 @@ namespace TomatoLib {
 	}
 
 	void UIButton::ResizeToContents() {
-		Vector2 size = this->UIMan->Drawer.GetTextSize(this->Text);
+		TomatoLib::Font* fontused = this->Font.FontHandle == nullptr ? Render::DefaultFont : &this->Font;
+
+		Vector2 size = this->UIMan->Drawer.GetTextSize(fontused, this->Text);
 		this->SetSize((int)size.X + this->BorderSize * 2, (int)size.Y + this->BorderSize * 2);
 	}
 
 	void UIButton::Draw(Render& p) {
-		TomatoLib::Font* fontused = this->Font.FontHandle == nullptr ? p.DefaultFont : &this->Font;
+		TomatoLib::Font* fontused = this->Font.FontHandle == nullptr ? Render::DefaultFont : &this->Font;
 
 		p.Box(0, 0, this->W, this->H, this->BorderColor);
 		p.Box(this->BorderSize, this->BorderSize, this->W - this->BorderSize * 2, this->H - this->BorderSize * 2, this->CanClick ? this->IsHovering() ? this->HoverColor : this->BackColor : this->DisabledColor);
 
 		std::string strrem(this->GetText());
-		Vector2 size = p.GetTextSize(strrem);
+		Vector2 size = p.GetTextSize(fontused, strrem);
 
 		// the easy way out
 		if (size.X < this->W - this->BorderSize) {
-			p.Text(fontused, strrem, this->W / 2 + (int)size.X / -2, this->H / 2 + (int)size.Y / -2, this->CanClick ? this->TextColor : this->DisabledTextColor);
+			p.Text(fontused, strrem, this->W / 2 - size.X / 2, this->H / 2 - size.Y / 2, this->CanClick ? this->TextColor : this->DisabledTextColor);
 			return;
 		}
 		
@@ -112,7 +114,7 @@ namespace TomatoLib {
 			}
 
 			strrem = strrem.substr(found + 1);
-			size = p.GetTextSize(strrem);
+			size = p.GetTextSize(fontused, strrem);
 		}
 
 		// add final part
