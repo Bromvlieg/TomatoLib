@@ -166,18 +166,6 @@ namespace TomatoLib {
 	}
 
 	void UIScrollPanel::DisableVerticalScrollbar() {
-		if (this->GrabX == nullptr) return;
-
-		this->UpX->Kill();
-		this->DownX->Kill();
-		this->GrabX->Kill();
-
-		this->UpX = nullptr;
-		this->DownX = nullptr;
-		this->GrabX = nullptr;
-	}
-
-	void UIScrollPanel::DisableHorizontalScrollbar() {
 		if (this->GrabY == nullptr) return;
 
 		this->UpY->Kill();
@@ -187,6 +175,18 @@ namespace TomatoLib {
 		this->UpY = nullptr;
 		this->DownY = nullptr;
 		this->GrabY = nullptr;
+	}
+
+	void UIScrollPanel::DisableHorizontalScrollbar() {
+		if (this->GrabX == nullptr) return;
+
+		this->UpX->Kill();
+		this->DownX->Kill();
+		this->GrabX->Kill();
+
+		this->UpX = nullptr;
+		this->DownX = nullptr;
+		this->GrabX = nullptr;
 	}
 
 	void UIScrollPanel::Scroll(int scrolly) {
