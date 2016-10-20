@@ -96,6 +96,9 @@ namespace TomatoLib {
 
 		RenderBuffer* CaptureBuffer;
 
+		size_t m_uiDrawnVertices;
+		size_t m_uiDrawnIndices;
+
 	public:
 		Shader DefaultShaderText;
 		Shader DefaultShaderTexture;
@@ -168,6 +171,9 @@ namespace TomatoLib {
 
 		void CheckSpace(int vcount, int icount);
 		void DrawOnScreen();
+
+		void GetDrawStats(size_t& vertices, size_t& indices);
+		void ResetDrawStats();
 	};
 }
 

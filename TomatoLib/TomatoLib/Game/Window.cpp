@@ -6,6 +6,11 @@
 #include <mutex>
 #include <cstring>
 
+
+#ifdef TL_ENABLE_GLFW
+#include <GLFW/glfw3.h>
+#endif
+
 namespace TomatoLib {
 	Window* Window::CurrentWindow = nullptr;
 
@@ -252,7 +257,10 @@ namespace TomatoLib {
 		if (fullscreen) {
 			w = mode->width;
 			h = mode->height;
+		} else if (w == mode->width && h == mode->height) {
+			fullscreen = true;
 		}
+
 		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
 		this->Hints[GLFW_RESIZABLE] = resizable ? GL_TRUE : GL_FALSE;

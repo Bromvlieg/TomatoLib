@@ -409,7 +409,7 @@ namespace TomatoLib {
 			return true;
 		}
 
-		ASSERT(res);
+		TL_ASSERT(res);
 		return res;
 	}
 

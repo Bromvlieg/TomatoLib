@@ -1047,6 +1047,8 @@ namespace TomatoLib {
 		}
 	}
 
+	void GetDrawStats(size_t& vertices, size_t& indices);
+	void ResetDrawStats();
 	void Render::DrawOnScreen() {
 		//checkGL;
 		if (this->VerticeDataCount == 0) return;
@@ -1162,8 +1164,22 @@ namespace TomatoLib {
 
 		if (this->DisableDeptTest) glEnable(GL_DEPTH_TEST);
 
+		this->m_uiDrawnVertices += this->VerticeDataCount;
+		this->m_uiDrawnIndices += this->IndiceDataCount;
+
 		this->VerticeDataCount = 0;
 		this->IndiceDataCount = 0;
 		//checkGL;
+	}
+
+
+	void Render::GetDrawStats(size_t& vertices, size_t& indices) {
+		vertices = this->m_uiDrawnVertices;
+		indices = this->m_uiDrawnIndices;
+	}
+
+	void Render::ResetDrawStats() {
+		this->m_uiDrawnVertices = 0;
+		this->m_uiDrawnIndices = 0;
 	}
 }

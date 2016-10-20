@@ -34,6 +34,12 @@ inline T mthToDegrees(T rad)
 }
 
 #ifdef _DEBUG
+#ifdef _MSC_VER
+#define asmBreak __asm{int 3}
+#else
+#define asmBreak __asm("int $3")
+#endif
+
 #define TL_ASSERT(test) {if(!(test)) { printf("Assertion failed in file %s, on line %i\n", __FILE__, __LINE__); asmBreak; }}
 
 #ifndef assert
@@ -44,11 +50,6 @@ inline T mthToDegrees(T rad)
 #define ASSERT(test) {if(!(test)) printf("Assertion failed in file %s, on line %i\n", __FILE__, __LINE__);}
 #endif
 
-#ifdef _MSC_VER
-#define asmBreak __asm{int 3}
-#else
-#define asmBreak __asm("int $3")
-#endif
 
 #ifndef checkGL
 #define checkGL {int ret = glGetError(); if(ret != 0) {printf("GL failed in file %s, on line %i: err: %d, %s\n", __FILE__, __LINE__, ret, gluErrorString(ret)); asmBreak;}} /* asm yells at debugger to yell at you and break. easymode debugging :D */
