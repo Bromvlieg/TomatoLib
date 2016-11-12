@@ -2,6 +2,7 @@
 #ifndef __UIMAN_H__
 #define __UIMAN_H__
 
+#include <functional>
 #include "../Graphics/Render.h"
 #include "../Graphics/Texture.h"
 #include "../Graphics/Shader.h"
@@ -26,6 +27,12 @@ namespace TomatoLib {
 
 	class UIManager {
 	public:
+		// return true to prevent UI interactions
+		std::function<bool(int x, int y, int button, bool pressed, int mods)> OnBeforeMouseInteracton;
+		std::function<bool(int key, unsigned char pressed, int mods)> OnBeforeKeyboardInteracton;
+		std::function<bool(int x, int y)> OnBeforeScrollInteracton;
+		std::function<bool(int ch)> OnBeforeCharInteraction;
+
 		Render& Drawer;
 		std::vector<UIBase*> Children;
 

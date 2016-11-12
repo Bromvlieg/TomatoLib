@@ -90,6 +90,8 @@ namespace TomatoLib {
 	}
 
 	bool UIManager::HandleMouseInteraction(int x, int y, int button, bool pressed, int mods) {
+		if (this->OnBeforeMouseInteracton(x, y, button, pressed, mods)) return true;
+
 		if (this->ShowCursor) {
 			if (pressed) {
 				this->HoldPanel = null;
@@ -143,6 +145,8 @@ namespace TomatoLib {
 	}
 
 	bool UIManager::HandleKeyboardInteraction(int key, unsigned char pressed, int mods) {
+		if (this->OnBeforeKeyboardInteracton(key, pressed, mods)) return true;
+
 		if (pressed) {
 			if (this->FocusPanel != null) {
 				if (!this->FocusPanel->CanAcceptInput) {
@@ -188,6 +192,8 @@ namespace TomatoLib {
 	}
 
 	bool UIManager::HandleScrollInteraction(int scrollx, int scrolly) {
+		if (this->OnBeforeScrollInteracton(scrollx, scrolly)) return true;
+
 		if (this->ShowCursor) {
 			Vector2 mpos = this->LastMousePosition;
 			int x = (int)mpos.X;
@@ -221,6 +227,8 @@ namespace TomatoLib {
 	}
 
 	bool UIManager::HandleCharInteraction(int key) {
+		if (this->OnBeforeCharInteraction(key)) return true;
+
 		if (this->FocusPanel != null) {
 			if (!this->FocusPanel->CanAcceptInput) return true;
 			if (key == GLFW_KEY_GRAVE_ACCENT && this->Console != null && this->Console->HasFocus()) return true;
@@ -239,6 +247,11 @@ namespace TomatoLib {
 		this->ShowCursor = true;
 		this->OverrideShowCursor = true;
 		this->CurrentCursor = null;
+
+		this->OnBeforeMouseInteracton = [](int x, int y, int button, bool pressed, int mods) { return false; };
+		this->OnBeforeKeyboardInteracton = [](int key, unsigned char pressed, int mods) { return false; };
+		this->OnBeforeScrollInteracton = [](int x, int y) { return false; };
+		this->OnBeforeCharInteraction = [](int ch) { return false; };
 
 		TomatoLib::UIBase::DefaultUImanager = this;
 
