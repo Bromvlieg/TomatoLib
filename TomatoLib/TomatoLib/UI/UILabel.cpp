@@ -60,7 +60,7 @@ namespace TomatoLib {
 	}
 
 	void UILabel::ResizeToContents() {
-		Vector2 size = this->UIMan->Drawer.GetTextSize(this->Text);
+		Vector2 size = this->UIMan->Drawer.GetTextSize(this->Font, this->Text);
 		this->SetSize((int)size.X, (int)size.Y);
 	}
 

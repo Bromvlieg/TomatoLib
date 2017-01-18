@@ -280,11 +280,11 @@ namespace TomatoLib {
 			memset((void*)str, this->MaskChar, this->Text.size());
 			str[this->Text.size()] = 0;
 
-			p.Text(str, this->WideScroll * -1 + 3.0f, y, this->TextColor);
+			p.Text(this->Font, str, this->WideScroll * -1 + 3.0f, y, this->TextColor);
 
 			delete[] str;
 		} else {
-			p.Text(this->Text, this->WideScroll * -1 + 3.0f, y, this->TextColor);
+			p.Text(this->Font, this->Text, this->WideScroll * -1 + 3.0f, y, this->TextColor);
 		}
 		p.DisableClipping();
 

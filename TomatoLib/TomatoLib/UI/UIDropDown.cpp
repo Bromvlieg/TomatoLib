@@ -20,6 +20,7 @@ namespace TomatoLib {
 		this->BorderColor = Color(0, 0, 0, 255);
 		this->BackColor = Color(60, 60, 60, 255);
 		this->HoverColor = Color::Green;
+		this->SetText("");
 
 		this->Spacing = 2;
 		this->SelectedIndex = -1;
