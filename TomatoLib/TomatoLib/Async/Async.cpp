@@ -24,6 +24,7 @@ namespace TomatoLib {
 
 		std::vector<std::function<void()>> CallsToDoOnMainThread;
 		std::vector<std::function<void()>> CallsToDoOnAsyncThread;
+		Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
 
 		std::mutex ThreadCallsLock;
 		void RunMainThreadCalls() {
@@ -41,6 +42,27 @@ namespace TomatoLib {
 
 				func();
 			}
+		}
+
+
+		unsigned long GetThreadID() {
+#ifdef _MSC_VER
+			return GetCurrentThreadId();
+#else
+			return pthread_self();
+#endif
+		}
+
+		bool IsMainThread() {
+			return Async::MainThreadID == GetThreadID();
+		}
+
+		bool IsAsyncThread() {
+#ifdef _MSC_VER
+			return Async::AsyncThreadID == GetCurrentThreadId();
+#else
+			return Async::AsyncThreadID == pthread_self();
+#endif
 		}
 
 		void Init() {
@@ -97,20 +119,49 @@ namespace TomatoLib {
 			}
 		}
 
-		bool IsMainThread() {
-#ifdef _MSC_VER
-			return Async::MainThreadID == GetCurrentThreadId();
-#else
-			return Async::MainThreadID == pthread_self();
-#endif
+		std::mutex ThreadsSepCallsLock;
+		void RunOnThread(std::function<void()> func, unsigned long threadid, bool isblocking, bool forcequeue) {
+			if (Async::GetThreadID() == threadid && !forcequeue) {
+				func();
+				return;
+			}
+
+			if (!isblocking) {
+				ThreadsSepCallsLock.lock();
+				Async::CallsToDoOnThreads.Add(threadid, func);
+				ThreadsSepCallsLock.unlock();
+			} else {
+				bool isdone = false;
+
+				ThreadsSepCallsLock.lock();
+				Async::CallsToDoOnThreads.Add(threadid, [&isdone, func]() {
+					func();
+					isdone = true;
+				});
+				ThreadsSepCallsLock.unlock();
+
+				while (!isdone) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				}
+			}
 		}
 
-		bool IsAsyncThread() {
-#ifdef _MSC_VER
-			return Async::AsyncThreadID == GetCurrentThreadId();
-#else
-			return Async::AsyncThreadID == pthread_self();
-#endif
+		void RunThreadCalls() {
+			unsigned long tid = Async::GetThreadID();
+			unsigned int i = 0;
+
+			ThreadsSepCallsLock.lock();
+			for (int i = 0; i < Async::CallsToDoOnThreads.Count; i++) {
+				if (Async::CallsToDoOnThreads.Keys[i] != tid) continue;
+
+				std::function<void()>& func = Async::CallsToDoOnThreads.RemoveAt(i);
+				ThreadsSepCallsLock.unlock();
+
+				func();
+
+				ThreadsSepCallsLock.lock();
+			}
+			ThreadsSepCallsLock.unlock();
 		}
 
 		std::mutex ThreadasyncCallsLock;

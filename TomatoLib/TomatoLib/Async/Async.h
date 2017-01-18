@@ -9,6 +9,8 @@
 #include <pthread.h>
 #endif
 
+#include "../Utilities/Dictonary.h"
+
 namespace TomatoLib {
 	namespace Async {
 #ifdef _MSC_VER
@@ -22,12 +24,15 @@ namespace TomatoLib {
 		extern unsigned int CallsToDoOnAsyncThreadIndex;
 		extern std::vector<std::function<void()>> CallsToDoOnMainThread;
 		extern std::vector<std::function<void()>> CallsToDoOnAsyncThread;
+		extern Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
 
+		void RunOnThread(std::function<void()> func, unsigned long threadid = 0, bool isblocking = false, bool forcequeue = false);
 		void RunOnMainThread(std::function<void()> func, bool isblocking = false, bool forcequeue = false);
 		void RunOnAsyncThread(std::function<void()> func, bool isblocking = false, bool forcequeue = false);
 		void ClearAsyncThreadCalls();
 		void RunMainThreadCalls();
 		void RunAsyncThreadCalls();
+		void RunThreadCalls();
 		bool IsMainThread();
 		bool IsAsyncThread();
 		void Init();
