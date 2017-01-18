@@ -254,7 +254,10 @@ namespace TomatoLib {
 			return elems;
 		}
 
-		std::string GetConsoleVar(std::string name) { return TomatoLib::UIBase::DefaultUImanager->Console->GetConsoleVar(name); }
+		std::string GetConsoleVar(std::string name) {
+			return TomatoLib::UIBase::DefaultUImanager->Console->GetConsoleVar(name);
+		}
+
 		void Print(std::string format, ...) {
 			int buffsize = 512;
 			char* szBuffer = new char[buffsize];
