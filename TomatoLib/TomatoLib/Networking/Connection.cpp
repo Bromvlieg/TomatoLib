@@ -24,7 +24,9 @@ namespace TomatoLib {
 		this->PIDType = ConnectionPacketIDType::Byte;
 		this->DataLengthType = ConnectionPacketDataLengthType::Int;
 		this->HitTheBrakes = false;
+		this->m_bBufferPackets = true;
 
+		this->Callback = nullptr;
 		this->CallbacksSize = 256;
 		this->Callbacks = new IncommingPacketCallback[this->CallbacksSize];
 		memset(this->Callbacks, 0, this->CallbacksSize * sizeof(IncommingPacketCallback));
@@ -256,9 +258,46 @@ namespace TomatoLib {
 				continue;
 			}
 
-			this->RecvMutex.lock();
-			this->ToRecv.Add(buffer);
-			this->RecvMutex.unlock();
+			if (!this->m_bBufferPackets) {
+				Packet p;
+				p.InBuffer = buffer + 4;
+				p.InSize = *(int*)buffer;
+
+				int pid;
+				switch (this->PIDType) {
+					case ConnectionPacketIDType::Byte: pid = p.ReadByte(); break;
+					case ConnectionPacketIDType::Short: pid = p.ReadShort(); break;
+					case ConnectionPacketIDType::Int: pid = p.ReadInt(); break;
+				}
+
+				this->LastReceivedPacket = time(nullptr);
+
+				if (this->Callback != nullptr) {
+					bool ret = this->Callback(this->m_pTag, p);
+					if (!ret) {
+						this->Disconnect();
+						this->RecvMutex.lock();
+						while (this->ToRecv.Count > 0) delete this->ToRecv.RemoveAt(this->ToRecv.Count - 1);
+						this->RecvMutex.unlock();
+					}
+
+					if (p.InPos != p.InSize) {
+						Utilities::Print("[col=%s]WARNING: Packet 0x%.4X(%d) was only read till %d, while the size is %d", Color::Orange.ToString().c_str(), pid, pid, p.InPos, p.InSize);
+					}
+				} else {
+					Utilities::Print("[col=%s]No packet callback for non-buffered: 0x%.4X(%d), size %d", Color::Red.ToString().c_str(), pid, pid, p.InSize);
+				}
+
+				p.InBuffer = nullptr;
+				p.InSize = 0;
+				p.Clear();
+
+				delete[] buffer;
+			} else {
+				this->RecvMutex.lock();
+				this->ToRecv.Add(buffer);
+				this->RecvMutex.unlock();
+			}
 
 			this->LastReceivedPacket = time(nullptr);
 		}

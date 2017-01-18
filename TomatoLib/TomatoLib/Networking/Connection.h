@@ -31,6 +31,7 @@ namespace TomatoLib {
 
 		int CallbacksSize;
 		IncommingPacketCallback* Callbacks;
+		IncommingPacketCallback Callback;
 
 		List<unsigned char*> ToSend;
 		List<unsigned char*> ToRecv;
@@ -53,6 +54,7 @@ namespace TomatoLib {
 		time_t LastReceivedPacket;
 		ConnectionPacketIDType PIDType;
 		ConnectionPacketDataLengthType DataLengthType;
+		bool m_bBufferPackets; // false makes packet callbacks run on TL::Async::main thread
 
 		Connection();
 		~Connection();
