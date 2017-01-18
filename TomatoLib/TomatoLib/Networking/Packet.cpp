@@ -291,14 +291,7 @@ namespace TomatoLib {
 		this->InPos += len;
 		if (startpos == this->InPos) return "";
 
-		// make sure there's a 0 byte behind it, and then let std::string do the rest for us
-		char oldchar = this->InBuffer[this->InPos];
-		this->InBuffer[this->InPos] = 0;
-
-		std::string ret((char*)this->InBuffer + startpos);
-
-		this->InBuffer[this->InPos] = oldchar;
-		return ret;
+		return std::string((char*)this->InBuffer + startpos, len);
 	}
 
 	std::string Packet::ReadStringAll() {
@@ -308,14 +301,7 @@ namespace TomatoLib {
 		this->InPos += len;
 		if (startpos == this->InPos) return "";
 
-		// make sure there's a 0 byte behind it, and then let std::string do the rest for us
-		char oldchar = this->InBuffer[this->InPos];
-		this->InBuffer[this->InPos ] = 0;
-
-		std::string ret((char*)this->InBuffer + startpos);
-
-		this->InBuffer[this->InPos] = oldchar;
-		return ret;
+		return std::string((char*)this->InBuffer + startpos, len);
 	}
 
 	std::string Packet::ReadStringNT() {
@@ -331,14 +317,7 @@ namespace TomatoLib {
 
 		if (startpos == this->InPos) return "";
 
-		// make sure there's a 0 byte behind it, and then let std::string do the rest for us
-		char oldchar = this->InBuffer[this->InPos];
-		this->InBuffer[this->InPos] = 0;
-
-		std::string ret((char*)this->InBuffer + startpos);
-
-		this->InBuffer[this->InPos] = oldchar;
-		return ret;
+		return std::string((char*)this->InBuffer + startpos);
 	}
 
 	std::string Packet::ReadUntil(const std::string& seq) {
