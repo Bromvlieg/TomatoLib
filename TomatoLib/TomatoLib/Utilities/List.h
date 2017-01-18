@@ -27,6 +27,11 @@ public:
 		return this->Count++;
 	}
 
+	inline Type& Push() {
+		this->push_back(Type());
+		return (*this)[this->Count++];
+	}
+
 	inline Type RemoveAt(int index) {
 		Type object = (*this)[index];
 
@@ -38,7 +43,7 @@ public:
 
 	inline void Set(int index, const Type& object) { (*this)[index] = object; }
 	inline Type& Get(int index) { return (*this)[index]; }
-	inline Type* Buffer() { return &(*this)[0]; }
+	inline Type* Buffer() { return this->Count == 0 ? nullptr : &(*this)[0]; }
 	inline void Reserve(int num) { this->reserve(num); }
 	inline bool Contains(const Type& object) {
 		for (int i = 0; i < this->Count; i++) {
