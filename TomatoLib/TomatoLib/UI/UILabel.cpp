@@ -24,7 +24,7 @@ namespace TomatoLib {
 	}
 
 	void UILabel::Draw(Render& p) {
-		Vector2 size = p.GetTextSize(this->Text);
+		Vector2 size = p.GetTextSize(this->Font, this->Text);
 
 		int x = 0;
 		int y = 0;
@@ -41,7 +41,7 @@ namespace TomatoLib {
 				int lastindex = 0;
 				for (unsigned int i = 0; i < this->Text.size(); i++) {
 					if (this->Text[i] == '\n') {
-						size = p.GetTextSize(this->Text.substr(lastindex, i - lastindex));
+						size = p.GetTextSize(this->Font, this->Text.substr(lastindex, i - lastindex));
 						p.Box(x, y + (int)size.Y - 1, (int)size.X, 1, this->TextColor);
 						lastindex = i + 1;
 
@@ -50,7 +50,7 @@ namespace TomatoLib {
 				}
 
 				if (lastindex < (int)this->Text.size()) {
-					size = p.GetTextSize(this->Text.substr(lastindex, (int)this->Text.size() - lastindex));
+					size = p.GetTextSize(this->Font, this->Text.substr(lastindex, (int)this->Text.size() - lastindex));
 					p.Box(x, y + (int)size.Y - 1, (int)size.X, 1, this->TextColor);
 				}
 			} else {
