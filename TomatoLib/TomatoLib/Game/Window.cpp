@@ -255,10 +255,12 @@ namespace TomatoLib {
 		const GLFWvidmode* mode = glfwGetVideoMode(mon);
 
 		if (fullscreen) {
-			w = mode->width;
-			h = mode->height;
-		} else if (w == mode->width && h == mode->height) {
+			w = (unsigned int)mode->width;
+			h = (unsigned int)mode->height;
+		} else if (w >= (unsigned int)mode->width || h >= (unsigned int)mode->height) {
 			fullscreen = true;
+			w = (unsigned int)mode->width;
+			h = (unsigned int)mode->height;
 		}
 
 		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
