@@ -1,5 +1,4 @@
 #include "Rectangle.h"
-#include "Defines.h"
 #include "Matrix.h"
 #include <math.h>
 #include <algorithm>
@@ -70,9 +69,7 @@ namespace TomatoLib {
 
 	void Rectangle::GetRotatedPosArray(Vector2* pArray) const
 	{
-		TL_ASSERT(pArray != NULL);
-
-		Matrix mat = Matrix::CreateRotationZ(mthToRadians(rotation));
+		Matrix mat = Matrix::CreateRotationZ(rotation * 3.14159265f / 180);
 
 		Vector2 &topLeft = pArray[0];
 		Vector2 &topRight = pArray[1];

@@ -13,11 +13,10 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <unistd.h>
-#endif
-
-#ifdef _MSC_VER
-#include < time.h >
-#include < windows.h >
+#else
+#include <winsock.h>
+#include <time.h>
+#include <windows.h>
 
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
@@ -43,7 +42,7 @@ namespace TomatoLib {
 			unsigned __int64 tmpres = 0;
 			static int tzflag = 0;
 
-			if (NULL != tv) {
+			if (nullptr != tv) {
 				GetSystemTimeAsFileTime(&ft);
 
 				tmpres |= ft.dwHighDateTime;
@@ -57,7 +56,7 @@ namespace TomatoLib {
 				tv->tv_usec = (long)(tmpres % 1000000UL);
 			}
 
-			if (NULL != tz) {
+			if (nullptr != tz) {
 				if (!tzflag) {
 					_tzset();
 					tzflag++;
@@ -75,7 +74,7 @@ namespace TomatoLib {
 			if (!randinited) {
 				randinited = true;
 
-				srand((unsigned int)time(NULL));
+				srand((unsigned int)time(nullptr));
 			}
 
 			return rand() % (max - min) + min;
@@ -87,7 +86,7 @@ namespace TomatoLib {
 
 			time_t mtime, seconds, useconds;
 
-			gettimeofday(&start, NULL);
+			gettimeofday(&start, nullptr);
 
 			seconds  = start.tv_sec;
 			useconds = start.tv_usec;
@@ -108,7 +107,7 @@ namespace TomatoLib {
 
 			time_t mtime, seconds, useconds;
 
-			gettimeofday(&start, NULL);
+			gettimeofday(&start, nullptr);
 
 			seconds = start.tv_sec;
 			useconds = start.tv_usec;
@@ -209,7 +208,7 @@ namespace TomatoLib {
 		std::string GetNumberPadded(int value, int padding, char letter) {
 			char* unpadded = new char[12];
 			char* padded = new char[padding + 1];
-			char* unpadbegin = NULL;
+			char* unpadbegin = nullptr;
 			int   unpadlength;
 
 #ifdef _MSC_VER

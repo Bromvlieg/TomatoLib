@@ -29,11 +29,17 @@ namespace TomatoLib {
 #endif
 	}
 
-	Font::Font(const ftgl::texture_font_t& fontdata) {
+	Font::Font(ftgl::texture_font_t& fontdata) {
 		this->FontHandle = &fontdata;
 
+#ifdef TL_ENABLE_FTGL
+		unsigned char* data = (unsigned char*)this->FontHandle->atlas->data;
+		Texture newtex(this->FontHandle->atlas->width, this->FontHandle->atlas->height);
+#else
 		unsigned char* data = (unsigned char*)this->FontHandle->tex_data;
 		Texture newtex(this->FontHandle->tex_width, this->FontHandle->tex_height);
+#endif
+
 		for (size_t i = 0; i < newtex.Width * newtex.Height; i++) {
 			newtex.PixelData[i * 4 + 0] = 255;
 			newtex.PixelData[i * 4 + 1] = 255;
@@ -74,7 +80,7 @@ namespace TomatoLib {
 
 			this->FontHandle = (texture_font_t*)data;
 		} else {
-			texture_font_load_glyphs(this->FontHandle, L"~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][”“’\n");
+			texture_font_load_glyphs(this->FontHandle, L" ~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][”“’\n");
 		}
 
 		unsigned char* data = Font::Atlas->data;

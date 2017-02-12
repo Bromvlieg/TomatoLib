@@ -60,14 +60,14 @@ extern "C" {
 namespace TomatoLib {
 	class Font {
 	public:
-		const ftgl::texture_font_t* FontHandle;
+		ftgl::texture_font_t* FontHandle;
 
 		Font(const std::string &file, float size);
-		Font(const ftgl::texture_font_t& persistant_data);
+		Font(ftgl::texture_font_t& persistant_data);
 		Font();
 		~Font();
 		
-		 unsigned int TexID;
+		unsigned int TexID;
 
 		bool Load(const std::string &file, float size);
 		void AddChars(const wchar_t* chars);

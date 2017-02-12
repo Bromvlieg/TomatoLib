@@ -22,8 +22,8 @@ namespace TomatoLib {
 #endif
 
 		extern unsigned int CallsToDoOnAsyncThreadIndex;
-		extern std::vector<std::function<void()>> CallsToDoOnMainThread;
-		extern std::vector<std::function<void()>> CallsToDoOnAsyncThread;
+		extern List<std::function<void()>> CallsToDoOnMainThread;
+		extern List<std::function<void()>> CallsToDoOnAsyncThread;
 		extern Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
 
 		void RunOnThread(std::function<void()> func, unsigned long threadid = 0, bool isblocking = false, bool forcequeue = false);
@@ -35,7 +35,7 @@ namespace TomatoLib {
 		void RunThreadCalls();
 		bool IsMainThread();
 		bool IsAsyncThread();
-		void Init();
+		void Init(int workers = 1);
 		void Shutdown();
 	}
 }

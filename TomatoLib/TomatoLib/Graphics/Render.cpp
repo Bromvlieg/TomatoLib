@@ -646,12 +646,21 @@ namespace TomatoLib {
 	}
 
 	Vector2 Render::GetTextSize(const Font* font, char letter) {
+#ifndef TL_ENABLE_FTGL
 		for (size_t i = 0; i < font->FontHandle->glyphs_count; i++) {
 			const ftgl::texture_glyph_t& glyph = font->FontHandle->glyphs[i];
 			if (glyph.charcode == letter) {
 				return Vector2((float)glyph.width, (float)glyph.height);
 			}
 		}
+#else
+		for (size_t i = 0; i < font->FontHandle->glyphs->size; i++) {
+			const ftgl::texture_glyph_t& glyph = *((const ftgl::texture_glyph_t**)font->FontHandle->glyphs->items)[i];
+			if (glyph.charcode == letter) {
+				return Vector2((float)glyph.width, (float)glyph.height);
+			}
+	}
+#endif
 
 		return Vector2::Zero;
 	}
@@ -676,16 +685,33 @@ namespace TomatoLib {
 			char l = text[i];
 
 			const ftgl::texture_glyph_t* glyph = nullptr;
+#ifndef TL_ENABLE_FTGL
 			for (size_t i2 = 0; i2 < font.FontHandle->glyphs_count; i2++) {
-				glyph = &font.FontHandle->glyphs[i2];
-				if (glyph->charcode == l) {
+				const ftgl::texture_glyph_t* curglyph = &font.FontHandle->glyphs[i2];
+#else
+			for (size_t i2 = 0; i2 < font.FontHandle->glyphs->size; i2++) {
+				const ftgl::texture_glyph_t* curglyph = ((const ftgl::texture_glyph_t**)font.FontHandle->glyphs->items)[i2];
+#endif
+
+				if (curglyph->charcode == l) {
+					glyph = curglyph;
 					break;
 				}
 			}
 
+			if (glyph == nullptr) {
+				continue;
+			}
+
 			if (i > 0) {
+#ifndef TL_ENABLE_FTGL
 				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
 					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
+#else
+				for (size_t i2 = 0; i2 < glyph->kerning->size; ++i2) {
+					const ftgl::kerning_t* kerning = ((const ftgl::kerning_t**)glyph->kerning->items)[i2];
+#endif
+
 					if (kerning->charcode == text[i - 1]) {
 						cx += kerning->kerning;
 						break;
@@ -785,21 +811,33 @@ namespace TomatoLib {
 			char l = text[i];
 
 			const ftgl::texture_glyph_t* glyph = nullptr;
+#ifndef TL_ENABLE_FTGL
 			for (size_t i2 = 0; i2 < font->FontHandle->glyphs_count; i2++) {
-				glyph = &font->FontHandle->glyphs[i2];
-				if (glyph->charcode == l) {
+				const ftgl::texture_glyph_t* curglyph = &font->FontHandle->glyphs[i2];
+#else
+			for (size_t i2 = 0; i2 < font->FontHandle->glyphs->size; ++i2) {
+				const ftgl::texture_glyph_t* curglyph = ((const ftgl::texture_glyph_t**)font->FontHandle->glyphs->items)[i2];
+#endif
+
+				if (curglyph->charcode == l) {
+					glyph = curglyph;
 					break;
 				}
 			}
 
-			if (glyph == null) {
-				TL_ASSERT(false);
-				return;
+			if (glyph == nullptr) {
+				continue;
 			}
 
 			if (i > 0) {
+#ifndef TL_ENABLE_FTGL
 				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
 					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
+#else
+				for (size_t i2 = 0; i2 < glyph->kerning->size; ++i2) {
+					const ftgl::kerning_t* kerning = &((const ftgl::kerning_t*)glyph->kerning->items)[i2];
+#endif
+
 					if( kerning->charcode == text[i - 1] ){
 						cx += kerning->kerning;
 						break;
@@ -826,8 +864,13 @@ namespace TomatoLib {
 			float y1 = glyph->t0;
 			float y2 = glyph->t1;
 
+#ifndef TL_ENABLE_FTGL
 			float pixelWidth = 1.0f / font->FontHandle->tex_width;
 			float pixelHeight = 1.0f / font->FontHandle->tex_height;
+#else
+			float pixelWidth = 1.0f / font->FontHandle->atlas->width;
+			float pixelHeight = 1.0f / font->FontHandle->atlas->height;
+#endif
 
 			a.Location.X = lw;
 			a.Location.Y = lh;

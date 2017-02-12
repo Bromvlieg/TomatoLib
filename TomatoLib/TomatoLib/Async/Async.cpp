@@ -22,8 +22,8 @@ namespace TomatoLib {
 
 		unsigned int CallsToDoOnAsyncThreadIndex = 0;
 
-		std::vector<std::function<void()>> CallsToDoOnMainThread;
-		std::vector<std::function<void()>> CallsToDoOnAsyncThread;
+		List<std::function<void()>> CallsToDoOnMainThread;
+		List<std::function<void()>> CallsToDoOnAsyncThread;
 		Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
 
 		std::mutex ThreadCallsLock;
@@ -65,7 +65,7 @@ namespace TomatoLib {
 #endif
 		}
 
-		void Init() {
+		void Init(int workers) {
 			if (Inited) return;
 			Inited = true;
 
@@ -75,18 +75,20 @@ namespace TomatoLib {
 			Async::MainThreadID = pthread_self();
 #endif
 
-			new std::thread([]() {
+			while (workers-- > 0) {
+				new std::thread([]() {
 #ifdef _MSC_VER
-				Async::AsyncThreadID = GetCurrentThreadId();
+					Async::AsyncThreadID = GetCurrentThreadId();
 #else
-				Async::AsyncThreadID = pthread_self();
+					Async::AsyncThreadID = pthread_self();
 #endif
 
-				while (!Async::ShouldShutdown) {
-					Async::RunAsyncThreadCalls();
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
-			});
+					while (!Async::ShouldShutdown) {
+						Async::RunAsyncThreadCalls();
+						std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					}
+				});
+			}
 		}
 
 		void Shutdown() {
@@ -165,30 +167,28 @@ namespace TomatoLib {
 		}
 
 		std::mutex ThreadasyncCallsLock;
-		bool doingAsyncCall = false;
+		int doingAsyncCall = 0;
 		void RunAsyncThreadCalls() {
 			Async::CallsToDoOnAsyncThreadIndex = 0;
 			while (true) {
 				ThreadasyncCallsLock.lock();
 
-				if (Async::CallsToDoOnAsyncThreadIndex >= (unsigned int)Async::CallsToDoOnAsyncThread.size()) {
-					if (Async::CallsToDoOnAsyncThreadIndex > 0) {
-						Async::CallsToDoOnAsyncThread.clear();
-						Async::CallsToDoOnAsyncThreadIndex = 0;
-					}
-
+				if ((unsigned int)Async::CallsToDoOnAsyncThread.size() == 0) {
 					ThreadasyncCallsLock.unlock();
+
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					break;
 				}
 
-				std::function<void()> func = Async::CallsToDoOnAsyncThread[Async::CallsToDoOnAsyncThreadIndex++];
-				doingAsyncCall = true;
+				std::function<void()> func = Async::CallsToDoOnAsyncThread.RemoveAt(0);
+
+				doingAsyncCall++;
 				ThreadasyncCallsLock.unlock();
 
 				func();
 
 				ThreadasyncCallsLock.lock();
-				doingAsyncCall = false;
+				doingAsyncCall--;
 				ThreadasyncCallsLock.unlock();
 			}
 		}

@@ -2,6 +2,8 @@
 #include "Packet.h"
 
 #ifdef _MSC_VER
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #pragma comment(lib,"wsock32.lib")
 typedef int socklen_t;
 #else
