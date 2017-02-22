@@ -264,7 +264,7 @@ namespace TomatoLib {
 			int newgrabhx = (int)((this->W - (this->UpX->W + this->DownX->W)) / mulx);
 			if (newgrabhx < this->GrabX->W / 2) newgrabhx = this->GrabX->W / 2;
 
-			this->GrabX->SetSize(newgrabhx, 20);
+			this->GrabX->SetWidth(newgrabhx);
 			this->GrabX->SetPos(this->UpX->W, this->H - this->GrabX->H);
 
 			this->DownX->SetSize(20, 10);
@@ -278,7 +278,7 @@ namespace TomatoLib {
 				subx = this->GrabX->H;
 			} else {
 				if (this->AlwaysShowBar) {
-					this->GrabX->SetSize((int)((this->W - (this->UpX->W + this->DownX->W))), 20);
+					this->GrabX->SetWidth((int)((this->W - (this->UpX->W + this->DownX->W))));
 					this->GrabX->SetPos(this->UpX->W, this->H - this->GrabX->H);
 					this->Back->Y = 0;
 
@@ -309,7 +309,7 @@ namespace TomatoLib {
 			int newgrabhy = (int)((this->H - (this->UpY->H + this->DownY->W)) / muly);
 			if (newgrabhy < this->GrabY->H / 2) newgrabhy = this->GrabY->H / 2;
 
-			this->GrabY->SetSize(20, newgrabhy);
+			this->GrabY->SetHeight(newgrabhy);
 			this->GrabY->SetPos(this->W - this->GrabY->W, this->UpY->H);
 
 			if (muly > 1.0f || this->AlwaysShowBar) {
@@ -319,7 +319,7 @@ namespace TomatoLib {
 				suby = this->GrabY->W;
 			} else {
 				if (this->AlwaysShowBar) {
-					this->GrabY->SetSize(20, (int)((this->H - (this->UpY->H + this->DownY->W))));
+					this->GrabY->SetHeight((int)((this->H - (this->UpY->H + this->DownY->W))));
 					this->GrabY->SetPos(this->W - this->GrabY->W, this->UpY->H);
 					this->Back->Y = 0;
 
