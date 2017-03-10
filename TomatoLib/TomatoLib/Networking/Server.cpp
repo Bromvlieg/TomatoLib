@@ -68,17 +68,24 @@ namespace TomatoLib {
 	}
 
 	void Server::ConAcceptorThreadFunc() {
-		Connection* mcon = new Connection();
+		Connection* mcon = nullptr;
 
 		while (!this->Sock.IsError()) {
+			mcon = new Connection();
+
 			bool ret = this->Sock.accept(&mcon->Sock);
-			if (!ret) continue;
+			if (!ret) {
+				delete mcon;
+				continue;
+			}
 
 			bool handled = this->m_NewConCallback(*this, mcon);
-			if (!handled) delete mcon;
+			if (!handled) {
+				delete mcon;
+				continue;
+			}
 
 			mcon->StartThreads();
-			mcon = new Connection();
 		}
 	}
 }
