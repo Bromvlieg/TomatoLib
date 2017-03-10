@@ -6,9 +6,24 @@
 #include <mutex>
 #include <cstring>
 
+#define WINDOWS
 
 #ifdef TL_ENABLE_GLFW
+#ifdef WINDOWS
+#ifndef GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
+#endif
+#ifndef GLFW_EXPOSE_NATIVE_WGL
+#define GLFW_EXPOSE_NATIVE_WGL
+#endif
+#endif
+
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+#endif
+
+#ifdef WINDOWS
+#include <windows.h>
 #endif
 
 namespace TomatoLib {
@@ -275,6 +290,18 @@ namespace TomatoLib {
 			printf("glfwCreateWindow failed!\n");
 			return false;
 		}
+
+#ifdef WINDOWS
+		HANDLE hIcon = LoadIconW(GetModuleHandleW(NULL), L"GLFW_ICON");
+		if (!hIcon) {
+			// No user-provided icon found, load default icon
+			hIcon = LoadIconW(NULL, IDI_WINLOGO);
+		}
+
+		HWND hwnd = glfwGetWin32Window(this->Handle);
+		::SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		::SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+#endif
 
 		this->SetCallbacks();
 
