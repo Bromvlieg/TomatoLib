@@ -257,6 +257,12 @@ namespace TomatoLib {
 			return TomatoLib::UIBase::DefaultUImanager->Console->GetConsoleVar(name);
 		}
 
+		std::string loglocation;
+		void SetLogLocation(const std::string& filepath) {
+			loglocation = filepath;
+		}
+
+
 		void Print(std::string format, ...) {
 			int buffsize = 512;
 			char* szBuffer = new char[buffsize];
@@ -283,6 +289,22 @@ namespace TomatoLib {
 			}
 
 			printf("%s\n", szBuffer);
+
+			if (loglocation.size() > 0) {
+				FILE* log = fopen(loglocation.c_str(), "a");
+				if (log != nullptr) {
+					char timebuff[100];
+					time_t now = time(nullptr);
+					
+					int len = strftime(timebuff, 100, "[%Y-%m-%d %H:%M:%S] ", localtime(&now));
+
+					fwrite(timebuff, 1, len, log);
+					fwrite(szBuffer, 1, iPrintSize, log);
+					fwrite("\n", 1, 1, log);
+
+					fclose(log);
+				}
+			}
 
 			delete[] szBuffer;
 		}

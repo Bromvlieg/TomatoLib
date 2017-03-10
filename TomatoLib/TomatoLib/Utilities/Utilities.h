@@ -12,6 +12,8 @@
 
 namespace TomatoLib {
 	namespace Utilities {
+		void SetLogLocation(const std::string& filepath);
+
 		int GetRandom(int min, int max);
 		std::string GetNumberPadded(int value, int padding, char letter);
 		std::string GetDurationFormated(time_t seconds, int secondMode = TL_DURATIONF_GTHNZ, int minuteMode = TL_DURATIONF_GTHNZ, int hourMode = TL_DURATIONF_GTHNZ, int dayMode = TL_DURATIONF_GTHNZ, int weekMode = TL_DURATIONF_GTHNZ, int monthMode = TL_DURATIONF_GTHNZ, int yearMode = TL_DURATIONF_GTHNZ);
