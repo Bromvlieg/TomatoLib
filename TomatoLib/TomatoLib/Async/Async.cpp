@@ -156,7 +156,7 @@ namespace TomatoLib {
 			for (int i = 0; i < Async::CallsToDoOnThreads.Count; i++) {
 				if (Async::CallsToDoOnThreads.Keys[i] != tid) continue;
 
-				std::function<void()>& func = Async::CallsToDoOnThreads.RemoveAt(i);
+				std::function<void()> func = Async::CallsToDoOnThreads.RemoveAt(i);
 				ThreadsSepCallsLock.unlock();
 
 				func();
