@@ -38,11 +38,14 @@ namespace TomatoLib {
 		for (int i = 0; i < 3; i++) listfps.push_back(0);
 		for (int i = 0; i < 120; i++) listtime.push_back(0);
 
-		float lasttick = TL_GET_TIME_MS;
+		float msperfps = 1000.0f / this->m_fTargetFPS;
+		float lasttick = TL_GET_TIME_MS - msperfps - 1;
 		float lastfpssecond = lasttick; // ms
+
+		int debug = 0;
 		while (!this->ShouldShutdown) {
 			float curtime = TL_GET_TIME_MS;
-			float msperfps = 1000.0f / this->m_fTargetFPS;
+			msperfps = 1000.0f / this->m_fTargetFPS;
 
 			if (curtime - lasttick < msperfps) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -60,14 +63,16 @@ namespace TomatoLib {
 			}
 
 			Async::RunMainThreadCalls();
-			if (this->ShouldShutdown) break;
+			if (this->ShouldShutdown) {
+				break;
+			}
 
 			this->Update();
-			if (this->ShouldShutdown) break;
+			if (this->ShouldShutdown) {
+				break;
+			}
 
-			//checkGL;
 			this->Draw(this->RenderObject);
-			//checkGL;
 
 			listfps[0]++;
 			if (curtime - lastfpssecond >= 1000) {
