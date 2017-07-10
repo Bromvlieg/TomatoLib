@@ -684,6 +684,12 @@ namespace TomatoLib {
 		for (unsigned long i = 0; i < len; i++) {
 			char l = text[i];
 
+			if (l == '\n') {
+				cy += font.FontHandle->height;
+				cx = 0;
+				continue;
+			}
+
 			const ftgl::texture_glyph_t* glyph = nullptr;
 #ifndef TL_ENABLE_FTGL
 			for (size_t i2 = 0; i2 < font.FontHandle->glyphs_count; i2++) {
@@ -717,12 +723,6 @@ namespace TomatoLib {
 						break;
 					}
 				}
-			}
-
-			if (l == '\n') {
-				cy += font.FontHandle->height;
-				cx = 0;
-				continue;
 			}
 
 			cx += glyph->advance_x;
@@ -810,6 +810,12 @@ namespace TomatoLib {
 		for (int i = 0; i < len; i++) {
 			char l = text[i];
 
+			if (l == '\n') {
+				cy += font->FontHandle->height;
+				cx = x;
+				continue;
+			}
+
 			const ftgl::texture_glyph_t* glyph = nullptr;
 #ifndef TL_ENABLE_FTGL
 			for (size_t i2 = 0; i2 < font->FontHandle->glyphs_count; i2++) {
@@ -843,12 +849,6 @@ namespace TomatoLib {
 						break;
 					}
 				}
-			}
-
-			if (l == '\n') {
-				cy += font->FontHandle->height;
-				cx = x;
-				continue;
 			}
 
 			float w = (float)glyph->width;
