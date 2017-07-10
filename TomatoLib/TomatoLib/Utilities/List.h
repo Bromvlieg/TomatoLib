@@ -45,7 +45,7 @@ public:
 	inline Type& Get(int index) { return (*this)[index]; }
 	inline Type* Buffer() { return this->Count == 0 ? nullptr : &(*this)[0]; }
 	inline void Reserve(int num) { this->reserve(num); }
-	inline bool Contains(const Type& object) {
+	inline bool Contains(const Type& object) const {
 		for (int i = 0; i < this->Count; i++) {
 			if ((*this)[i] == object) {
 				return true;
