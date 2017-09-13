@@ -224,6 +224,8 @@ namespace TomatoLib {
 	}
 
 	void UIDropDown::SetSelectedIndex(int i) {
+		if (i >= this->Options.Keys.Count) return;
+
 		this->SelectedIndex = i;
 		this->SetText(this->Options.Keys[this->SelectedIndex]);
 		if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
