@@ -106,11 +106,18 @@ namespace TomatoLib {
 				path = "/";
 			}
 
+			unsigned short port = 80;
+			size_t portindex = url.find(":");
+			if (portindex != std::string::npos) {
+				host = url.substr(0, portindex);
+				port = (unsigned short)atoi(url.substr(portindex + 1).c_str());
+			}
+
 			EzSock sock;
 			Packet p(&sock);
 
 			sock.create();
-			if (sock.connect(host.c_str(), 80) != 0) {
+			if (sock.connect(host.c_str(), port) != 0) {
 				callback(false, headers, 0, 0);
 				return;
 			}
@@ -151,6 +158,8 @@ namespace TomatoLib {
 				std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 
 				std::string value = line.substr(splitter + 2, -2);
+
+				std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 				headers[key] = value;
 
 				curpos += 2;
