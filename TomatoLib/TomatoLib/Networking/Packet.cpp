@@ -611,7 +611,16 @@ namespace TomatoLib {
 		FILE* f = fopen(path.c_str(), "wb");
 		if (f == nullptr) return false;
 
-		fwrite(this->InBuffer, 1, this->InSize, f);
+		int curpos = 0;
+		while (curpos != this->InSize) {
+			int ret = fwrite(this->InBuffer + curpos, 1, this->InSize - curpos, f);
+			if (ret <= 0) {
+				fclose(f);
+				return false;
+			}
+
+			curpos += ret;
+		}
 
 		fclose(f);
 		return true;
@@ -625,7 +634,16 @@ namespace TomatoLib {
 			return false;
 		}
 
-		fwrite(this->OutBuffer, 1, this->OutPos, f);
+		int curpos = 0;
+		while (curpos != this->OutPos) {
+			int ret = fwrite(this->OutBuffer + curpos, 1, this->OutPos - curpos, f);
+			if (ret <= 0) {
+				fclose(f);
+				return false;
+			}
+
+			curpos += ret;
+		}
 
 		fclose(f);
 		return true;
