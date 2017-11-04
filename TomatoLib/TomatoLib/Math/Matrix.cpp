@@ -1,6 +1,7 @@
 #include "Matrix.h"
 #define _SCL_SECURE_NO_WARNINGS
 #define _USE_MATH_DEFINES
+#include <stdio.h>
 #include <math.h>
 #include <algorithm>
 
