@@ -6,8 +6,6 @@
 #include <mutex>
 #include <cstring>
 
-#define WINDOWS
-
 #ifdef TL_ENABLE_GLFW
 #ifdef WINDOWS
 #ifndef GLFW_EXPOSE_NATIVE_WIN32
@@ -162,6 +160,8 @@ namespace TomatoLib {
 	void Window::SwapBuffer() {
 #ifdef TL_ENABLE_GLFW
 		glfwSwapBuffers(this->Handle);
+#else
+		printf("SwapBuffer called, but no GLFW to do anything\n");
 #endif
 	}
 
