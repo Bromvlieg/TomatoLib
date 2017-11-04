@@ -71,7 +71,7 @@ namespace TomatoLib {
 	
 	bool firstcreate = true;
 	Texture Render::DefaultTexture(1, 1);
-	Font* Render::DefaultFont = null;
+	Font* Render::DefaultFont = nullptr;
 
 	Render::Render() {
 		this->DisableDeptTest = true;
@@ -79,14 +79,14 @@ namespace TomatoLib {
 		this->VerticeDataCount = 0;
 		this->IndiceDataCount = 0;
 
-		this->VerticeData = null;
-		this->IndiceData = null;
+		this->VerticeData = nullptr;
+		this->IndiceData = nullptr;
 
 		this->VerticeDataSize = 0;
 		this->IndiceDataSize = 0;
 
 		this->ClippingEnabled = false;
-		this->CaptureBuffer = null;
+		this->CaptureBuffer = nullptr;
 
 #ifndef TL_OPENGL_OLD
 		checkGL;
@@ -126,8 +126,8 @@ namespace TomatoLib {
 
 	Render::~Render() {
 		checkGL;
-		if (this->VerticeData != null) delete[] this->VerticeData;
-		if (this->IndiceData != null) delete[] this->IndiceData;
+		if (this->VerticeData != nullptr) delete[] this->VerticeData;
+		if (this->IndiceData != nullptr) delete[] this->IndiceData;
 
 #ifndef TL_OPENGL_OLD
 		glDeleteBuffers(1, &this->ebo);
@@ -1068,7 +1068,7 @@ namespace TomatoLib {
 		if (this->VerticeDataCount + vcount >= this->VerticeDataSize) {
 			_vertexData* tmp = new _vertexData[this->VerticeDataSize + bufferincreese];
 
-			if (this->VerticeData != null) {
+			if (this->VerticeData != nullptr) {
 				memcpy(tmp, this->VerticeData, this->VerticeDataCount * sizeof(_vertexData));
 				delete[] this->VerticeData;
 			}
@@ -1080,7 +1080,7 @@ namespace TomatoLib {
 		if (this->IndiceDataCount + icount >= this->IndiceDataSize) {
 			GLuint* tmp = new GLuint[this->IndiceDataSize + bufferincreese];
 
-			if (this->IndiceData != null) {
+			if (this->IndiceData != nullptr) {
 				memcpy(tmp, this->IndiceData, this->IndiceDataCount * sizeof(GLuint));
 				delete[] this->IndiceData;
 			}
