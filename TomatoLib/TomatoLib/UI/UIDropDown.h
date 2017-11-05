@@ -39,6 +39,7 @@ namespace TomatoLib {
 		virtual void Update() override;
 
 		virtual void InvalidateLayout() override;
+		virtual void Kill() override;
 
 		void* GetSelectedValue();
 		void SetSelectedIndex(int i);

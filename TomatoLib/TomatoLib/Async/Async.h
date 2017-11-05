@@ -21,6 +21,7 @@ namespace TomatoLib {
 		extern pthread_t AsyncThreadID;
 #endif
 
+		extern bool IsInited();
 		extern unsigned int CallsToDoOnAsyncThreadIndex;
 		extern List<std::function<void()>> CallsToDoOnMainThread;
 		extern List<std::function<void()>> CallsToDoOnAsyncThread;

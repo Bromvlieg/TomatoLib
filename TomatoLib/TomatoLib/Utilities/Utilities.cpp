@@ -2,6 +2,7 @@
 #include "../Config.h"
 #include "../UI/UIManager.h"
 #include "../UI/Menus/UIConsole.h"
+#include "../Async/Async.h"
 
 #include <chrono>
 #include <string>
@@ -284,7 +285,14 @@ namespace TomatoLib {
 
 			if (TomatoLib::UIBase::DefaultUImanager != nullptr) {
 				if (TomatoLib::UIBase::DefaultUImanager->Console != nullptr) {
-					TomatoLib::UIBase::DefaultUImanager->Console->Print(szBuffer);
+					if (TomatoLib::Async::IsMainThread()) {
+						TomatoLib::UIBase::DefaultUImanager->Console->Print(szBuffer);
+					} else if (Async::IsInited()) {
+						std::string strcopy = szBuffer;
+						Async::RunOnMainThread([strcopy]() {
+							TomatoLib::UIBase::DefaultUImanager->Console->Print(strcopy);
+						}, true);
+					}
 				}
 			}
 

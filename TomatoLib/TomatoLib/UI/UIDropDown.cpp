@@ -159,10 +159,11 @@ namespace TomatoLib {
 		this->DrawPanel->OnFocus = this->MainPanel->OnFocus;
 
 		this->ExtendButton->OnClick = this->OnClick;
+	}
 
-		this->OnKill = [this]() {
-			this->MainPanel->Kill();
-		};
+	void UIDropDown::Kill() {
+		this->MainPanel->Kill();
+		UIBase::Kill();
 	}
 
 	void UIDropDown::Draw(Render& p) {

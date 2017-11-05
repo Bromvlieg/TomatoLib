@@ -44,6 +44,10 @@ namespace TomatoLib {
 			}
 		}
 
+		bool IsInited() {
+			return Inited;
+		}
+
 
 		unsigned long GetThreadID() {
 #ifdef _MSC_VER

@@ -87,7 +87,7 @@ namespace TomatoLib {
 		void SetHeight(int h);
 		int GetHeight();
 
-		void Kill();
+		virtual void Kill();
 		void OnTop();
 
 		void GenerateTabIndexes();

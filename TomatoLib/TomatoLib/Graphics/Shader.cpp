@@ -103,7 +103,7 @@ namespace TomatoLib {
 #endif
 		return true;
 	}
-
+	
 	void Shader::AttachRaw(std::string text, GLint mode) {
 #ifndef TL_OPENGL_OLD
 		checkGL;
