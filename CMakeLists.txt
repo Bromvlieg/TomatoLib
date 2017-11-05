@@ -87,6 +87,7 @@ add_library(tomato
 	${presrc}/Game/Game.cpp
 	${presrc}/Game/Camera.cpp
 	${presrc}/Game/Window.cpp
+	${presrc}/Game/Content.cpp
 	${presrc}/Libaries/LodePNG/lodepng_util.cpp
 	${presrc}/Libaries/LodePNG/lodepng.cpp
 	${presrc}/Libaries/md5/md5.cpp
