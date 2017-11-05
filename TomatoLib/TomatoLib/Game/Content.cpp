@@ -175,7 +175,7 @@ namespace TomatoLib {
 						sptr->Attach(internalname + ".sf", GL_FRAGMENT_SHADER);
 						sptr->Attach(internalname + ".sg", GL_GEOMETRY_SHADER);
 					} catch (std::string err) {
-						UTill::InstancePtr->Log(LogLevelType::Error, "CONTENT: Failed to load '%s':\n%s", internalname.c_str(), err.c_str());
+						Utilities::Print("CONTENT: Failed to load '%s':\n%s", internalname.c_str(), err.c_str());
 
 						return;
 					}
@@ -190,7 +190,7 @@ namespace TomatoLib {
 					checkGL;
 
 					ScannedFiles.Add(internalname, 0);
-					UTill::InstancePtr->Log(LogLevelType::Info, "CONTENT: Loaded '%s' as shader", internalname.c_str());
+					Utilities::Print("CONTENT: Loaded '%s' as shader", internalname.c_str());
 				});
 #endif
 				return true;
