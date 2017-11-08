@@ -291,7 +291,7 @@ namespace TomatoLib {
 						std::string strcopy = szBuffer;
 						Async::RunOnMainThread([strcopy]() {
 							TomatoLib::UIBase::DefaultUImanager->Console->Print(strcopy);
-						}, true);
+						});
 					}
 				}
 			}
