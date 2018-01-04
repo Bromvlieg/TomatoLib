@@ -90,7 +90,7 @@ namespace TomatoLib {
 			return *FontDatas[buff];
 		}
 
-		bool LoadFile(const std::string& path) {
+		bool LoadFile(const std::string& path, bool forcenow = false) {
 			if (path.find(".") == std::string::npos) return false;
 
 			size_t i = path.find_last_of('.');
@@ -143,14 +143,14 @@ namespace TomatoLib {
 				Font* f = new Font();
 				Async::RunOnMainThread([internalname, f]() {
 					FontDatas.Add(internalname, f);
-				});
+				}, forcenow);
 
 				Utilities::Print("CONTENT: Loaded '%s' as font", internalname.c_str());
 			} else if (ext == "png") {
 				Texture* t = new Texture(path.c_str());
 				Async::RunOnMainThread([internalname, t]() {
 					TextureDatas.Add(internalname, t);
-				});
+				}, forcenow);
 
 				Utilities::Print("CONTENT: Loaded '%s' as texture", internalname.c_str());
 			} else if (ext == "sv") {
@@ -191,7 +191,7 @@ namespace TomatoLib {
 
 					ScannedFiles.Add(internalname, 0);
 					Utilities::Print("CONTENT: Loaded '%s' as shader", internalname.c_str());
-				});
+				}, forcenow);
 #endif
 				return true;
 			} else if (ext == "objbin") {
@@ -218,7 +218,7 @@ namespace TomatoLib {
 
 				Async::RunOnMainThread([internalname, rmd]() {
 					ModelDatas.Add(internalname, rmd);
-				});
+				}, forcenow);
 				Utilities::Print("CONTENT: Loaded '%s' as model", internalname.c_str());
 			} else {
 				Utilities::Print("CONTENT: No handler for type '%s'", internalname.c_str());
@@ -227,13 +227,13 @@ namespace TomatoLib {
 
 			Async::RunOnMainThread([internalname]() {
 				ScannedFiles.Add(internalname, 0);
-			});
+			}, forcenow);
 
 			return true;
 		}
 
 		bool Preload(const std::string& path) {
-			if (!LoadFile(path)) {
+			if (!LoadFile(path, true)) {
 				Utilities::Print("ERROR: could not preload %s\n", path.c_str());
 				return false;
 			}
