@@ -99,7 +99,7 @@ namespace TomatoLib {
 					this->MainPanel->Hide();
 					this->SetFocus();
 
-					if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+					if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 					return;
 				}
 			}
@@ -125,13 +125,13 @@ namespace TomatoLib {
 				if (this->SelectedIndex > 0) {
 					this->SelectedIndex--;
 					this->SetText(this->Options.Keys[this->SelectedIndex]);
-					if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+					if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 				}
 			} else if (key == GLFW_KEY_DOWN) {
 				if (this->SelectedIndex < this->Options.Count - 1) {
 					this->SelectedIndex++;
 					this->SetText(this->Options.Keys[this->SelectedIndex]);
-					if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+					if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 				}
 			}
 		};
@@ -141,13 +141,13 @@ namespace TomatoLib {
 				if (this->SelectedIndex > 0) {
 					this->SelectedIndex--;
 					this->SetText(this->Options.Keys[this->SelectedIndex]);
-					if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+					if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 				}
 			} else if (y < 0) {
 				if (this->SelectedIndex < this->Options.Count - 1) {
 					this->SelectedIndex++;
 					this->SetText(this->Options.Keys[this->SelectedIndex]);
-					if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+					if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 				}
 			}
 		};
@@ -194,11 +194,11 @@ namespace TomatoLib {
 		this->DrawPanel->SetSize(this->ScrollPanel->W, this->MainPanel->H);
 		this->ScrollPanel->InvalidateLayout();
 
-		if (oldi != -1 && this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+		if (oldi != -1 && this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 	}
 
 	void* UIDropDown::GetSelectedValue() {
-		if (this->SelectedIndex == -1) return null;
+		if (this->SelectedIndex == -1) return nullptr;
 		return this->Options.Values[this->SelectedIndex];
 	}
 
@@ -220,7 +220,7 @@ namespace TomatoLib {
 		if (this->Options.Count == 1) {
 			this->SetText(key);
 			this->SelectedIndex = 0;
-			if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+			if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 		}
 	}
 
@@ -229,7 +229,7 @@ namespace TomatoLib {
 
 		this->SelectedIndex = i;
 		this->SetText(this->Options.Keys[this->SelectedIndex]);
-		if (this->OnSelectedIndexChanged != null) this->OnSelectedIndexChanged();
+		if (this->OnSelectedIndexChanged != nullptr) this->OnSelectedIndexChanged();
 	}
 
 	void UIDropDown::InvalidateLayout() {
