@@ -33,6 +33,7 @@ namespace TomatoLib {
 
 		std::vector<unsigned char> image;
 		unsigned error = lodepng::decode(image, this->Width, this->Height, fileName);
+		ASSERT(error == 0);
 		if (error != 0) return;
 
 		this->Filename = fileName;
@@ -45,6 +46,36 @@ namespace TomatoLib {
 	}
 
 	void Texture::BindGL() {
+		if (this->RegisteredInGL) return;
+
+		unsigned int wpow = this->Width;
+		unsigned int hpow = this->Height;
+
+		if (wpow != 0 && (wpow & (wpow - 1)) != 0) {
+			wpow--;
+			wpow |= wpow >> 1;
+			wpow |= wpow >> 2;
+			wpow |= wpow >> 4;
+			wpow |= wpow >> 8;
+			wpow |= wpow >> 16;
+			wpow++;
+		}
+
+		if (hpow != 0 && (hpow & (hpow - 1)) != 0) {
+			hpow--;
+			hpow |= hpow >> 1;
+			hpow |= hpow >> 2;
+			hpow |= hpow >> 4;
+			hpow |= hpow >> 8;
+			hpow |= hpow >> 16;
+			hpow++;
+		}
+
+
+		if (wpow != this->Width || hpow != this->Height) {
+			this->Resize(wpow, hpow);
+		}
+
 		glGenTextures(1, &this->GLHandle);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, this->GLHandle);
