@@ -42,7 +42,7 @@ extern "C" {
 			size_t tex_width;
 			size_t tex_height;
 			size_t tex_depth;
-			char tex_data[TL_FONT_STATICSIZE_INTERNAL];
+			unsigned char tex_data[TL_FONT_STATICSIZE_INTERNAL];
 			float size;
 			float height;
 			float linegap;
