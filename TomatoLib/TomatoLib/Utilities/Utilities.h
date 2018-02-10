@@ -17,13 +17,24 @@ namespace TomatoLib {
 		int GetRandom(int min, int max);
 		std::string GetNumberPadded(int value, int padding, char letter);
 		std::string GetDurationFormated(time_t seconds, int secondMode = TL_DURATIONF_GTHNZ, int minuteMode = TL_DURATIONF_GTHNZ, int hourMode = TL_DURATIONF_GTHNZ, int dayMode = TL_DURATIONF_GTHNZ, int weekMode = TL_DURATIONF_GTHNZ, int monthMode = TL_DURATIONF_GTHNZ, int yearMode = TL_DURATIONF_GTHNZ);
-		std::string GetDateFormated(int unixtime, std::string format);
+		std::string GetDateFormated(int unixtime, const std::string& format);
 		std::string StringReplace(const std::string& haystack, const std::string& needle, const std::string& replacement);
 
-		std::string GetFormatted(std::string format, ...);
+		void PrintImpl(const char* format, ...);
+		std::string GetFormattedImlp(const char* format, ...);
+
+		template<typename... Args>
+		std::string GetFormatted(const std::string& format, Args... args) {
+			return GetFormattedImlp(format.c_str(), args...);
+		}
+
+		template<typename... Args>
+		void Print(const std::string& format, Args... args) {
+			PrintImpl(format.c_str(), args...);
+		}
+
 		List<std::string> Split(const std::string &s, char delim);
-		void Print(std::string format, ...);
-		std::string GetConsoleVar(std::string name);
+		std::string GetConsoleVar(const std::string& name);
 
 		void ResetTime();
 		float GetTimeMS();

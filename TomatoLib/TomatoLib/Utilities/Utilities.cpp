@@ -122,29 +122,29 @@ namespace TomatoLib {
 		float Clamp(float val, float min, float max) { return val < min ? min : val > max ? max : val; }
 		double Clamp(double val, double min, double max) { return val < min ? min : val > max ? max : val; }
 
-		std::string GetFormatted(std::string format, ...) {
-			int size = 512;
-			char* buffer = new char[size];
-			const char* fbuff = format.c_str();
+		std::string GetFormattedImlp(const char* format, ...) {
+			static const int initial_buf_size = 128;
 
-			va_list vl;
-			va_start(vl, format);
+			va_list arglist;
+			va_start(arglist, format);
+			char buf1[initial_buf_size];
+			const int len = vsnprintf(buf1, initial_buf_size, format, arglist) + 1;
+			va_end(arglist);
 
-			int nsize = vsnprintf(buffer, size, fbuff, vl);
-			while (nsize == -1 || size <= nsize) { //fail delete buffer and try again
-				delete[] buffer;
+			if (len < initial_buf_size) {
+				return buf1;
+			} else {
+				char* buf2 = new char[len];
 
-				if (nsize == -1) size *= 2;
+				va_start(arglist, format);
+				vsnprintf(buf2, len, format, arglist);
+				va_end(arglist);
 
-				buffer = new char[size + 1]; //+1 for /0
-				nsize = vsnprintf(buffer, size, fbuff, vl);
+				std::string ret = buf2;
+				delete[] buf2;
+
+				return ret;
 			}
-
-			va_end(vl);
-
-			std::string ret = buffer;
-			delete[] buffer;
-			return ret;
 		}
 
 		std::string GetDurationFormated(time_t seconds, int secondMode, int minuteMode, int hourMode, int dayMode, int weekMode, int monthMode, int yearMode) {
@@ -192,7 +192,7 @@ namespace TomatoLib {
 			return ret;
 		}
 
-		std::string GetDateFormated(int unixtimeraw, std::string format) {
+		std::string GetDateFormated(int unixtimeraw, const std::string& format) {
 			time_t unixtime = (time_t)unixtimeraw;
 			struct tm ltime;
 			ltime = *localtime(&unixtime);
@@ -254,7 +254,7 @@ namespace TomatoLib {
 			return elems;
 		}
 
-		std::string GetConsoleVar(std::string name) {
+		std::string GetConsoleVar(const std::string& name) {
 			return TomatoLib::UIBase::DefaultUImanager->Console->GetConsoleVar(name);
 		}
 
@@ -264,7 +264,7 @@ namespace TomatoLib {
 		}
 
 
-		void Print(std::string format, ...) {
+		void PrintImpl(const char* format, ...) {
 			int buffsize = 512;
 			char* szBuffer = new char[buffsize];
 
@@ -273,13 +273,13 @@ namespace TomatoLib {
 			va_start(vL, format);
 
 			// Make sure we don't overflow the buffer by checking against result length
-			int iPrintSize = vsnprintf(szBuffer, buffsize, format.c_str(), vL);
+			int iPrintSize = vsnprintf(szBuffer, buffsize, format, vL);
 			while (iPrintSize == -1 || buffsize <= iPrintSize) { //fail delete buffer and try again
 				if (iPrintSize == -1) buffsize *= 2;
 				delete[] szBuffer;
 
 				szBuffer = new char[buffsize + 1]; // +1 for \0
-				iPrintSize = vsnprintf(szBuffer, buffsize + 1, format.c_str(), vL);
+				iPrintSize = vsnprintf(szBuffer, buffsize + 1, format, vL);
 			}
 			va_end(vL);
 
