@@ -333,6 +333,7 @@ namespace TomatoLib {
 		this->HasFocus = true;
 		return true;
 #else
+		printf("not compiled with GLFW\n");
 		return false;
 #endif
 	}
