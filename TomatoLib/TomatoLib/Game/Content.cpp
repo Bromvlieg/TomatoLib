@@ -41,7 +41,7 @@ namespace TomatoLib {
 
 		RawModelData& GetModel(const std::string& path) {
 			if (!ModelDatas.ContainsKey(path)) {
-				throw "Model not found :(";
+				throw std::runtime_error("Model not found");
 			}
 
 			return ModelDatas[path];
@@ -49,7 +49,7 @@ namespace TomatoLib {
 
 		Shader& GetShader(const std::string& path) {
 			if (!ShaderDatas.ContainsKey(path)) {
-				throw "Shader not found :(";
+				throw std::runtime_error("Shader not found");
 			}
 
 			Shader& ptr = *ShaderDatas[path];
@@ -66,7 +66,7 @@ namespace TomatoLib {
 
 		Texture& GetTexture(const std::string& path) {
 			if (!TextureDatas.ContainsKey(path)) {
-				throw "Texture not found :(";
+				throw std::runtime_error("Texture not found");
 			}
 
 			return *TextureDatas[path];
@@ -74,7 +74,7 @@ namespace TomatoLib {
 
 		Font& GetFont(const std::string& path, float size) {
 			if (!FontDatas.ContainsKey(path)) {
-				throw "Font not found :(";
+				throw std::runtime_error("Font not found");
 			}
 
 			char buff[256];
@@ -257,7 +257,7 @@ namespace TomatoLib {
 
 		void LoadFolder(const std::string& path, int& asyncprogress, char* forasyncprogresscurfile) {
 			DIR* d = opendir(path.c_str());
-			if (d == nullptr) throw "Invalid path";
+			if (d == nullptr) throw std::runtime_error("Invalid path");
 
 			struct dirent *ent;
 
@@ -281,7 +281,7 @@ namespace TomatoLib {
 			int ret = 0;
 
 			DIR* d = opendir(path.c_str());
-			if (d == nullptr) throw "Invalid path";
+			if (d == nullptr) throw std::runtime_error("Invalid path");
 
 			struct dirent *ent;
 
