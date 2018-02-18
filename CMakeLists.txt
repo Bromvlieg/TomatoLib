@@ -93,11 +93,40 @@ add_library(tomato
 	${presrc}/Libaries/md5/md5.cpp
 )
 
-add_definitions(-DLINUX -std=c++11)
+add_definitions(-DTL_ENABLE_FTGL)
 
-message(${tomato_INCLUDES})
+CHECK_INCLUDE_FILE(/opt/vc/include/bcm_host.h RPI)
+
+if(WIN32)
+	add_definitions(-DWINDOWS)
+elseif(APPLE)
+	add_definitions(-DMAC)
+else()
+	add_definitions(-DLINUX)
+	
+	add_definitions(-DGLFW_EXPOSE_NATIVE_X11)
+	add_definitions(-DGLFW_EXPOSE_NATIVE_GLX)
+	
+	if (RPI)
+		add_definitions(-DUSE_OPENGL_ES -DTL_ENABLE_EGL -DTL_OPENGL_OLD)
+	else
+		add_definitions(-DTL_ENABLE_GLFW)
+	endif()
+endif()
+
+add_definitions(-std=c++11)
 
 include_directories(${tomato_INCLUDES})
+
+if (RPI)
+	include_directories(${tomato_INCLUDES}
+		"/opt/vc/include"
+		"/opt/vc/include/interface/vcos"
+		"/opt/vc/include/interface/vmcs_host/linux"
+		"/opt/vc/include/interface/vcos/pthreads"
+	)
+endif()
+	
 target_link_libraries(tomato
 	${tomato_LIBRARIES}
 )
