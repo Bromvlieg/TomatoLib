@@ -109,7 +109,7 @@ else()
 	
 	if (RPI)
 		add_definitions(-DUSE_OPENGL_ES -DTL_ENABLE_EGL -DTL_OPENGL_OLD)
-	else
+	else()
 		add_definitions(-DTL_ENABLE_GLFW)
 	endif()
 endif()
