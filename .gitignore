@@ -279,3 +279,6 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Vim and linux tools
+tags
