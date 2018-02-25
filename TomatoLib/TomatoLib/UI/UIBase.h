@@ -5,6 +5,7 @@
 #include <functional>
 #include "../Graphics/Render.h"
 #include "../Utilities/List.h"
+#include "UIManager.h"
 
 namespace TomatoLib {
 	class UIManager;
