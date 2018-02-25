@@ -45,7 +45,7 @@ namespace TomatoLib {
 		this->MarkForFullRedraw();
 	}
 
-	TomatoLib::Font UIButton::GetFont() {
+	TomatoLib::Font& UIButton::GetFont() {
 		return this->Font;
 	}
 

@@ -30,7 +30,7 @@ namespace TomatoLib {
 		std::string GetText();
 
 		void SetFont(const TomatoLib::Font& str);
-		TomatoLib::Font GetFont();
+		TomatoLib::Font& GetFont();
 	};
 }
 

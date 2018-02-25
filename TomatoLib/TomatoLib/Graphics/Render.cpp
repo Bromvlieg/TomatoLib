@@ -715,7 +715,7 @@ namespace TomatoLib {
 					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
 #else
 				for (size_t i2 = 0; i2 < glyph->kerning->size; ++i2) {
-					const ftgl::kerning_t* kerning = ((const ftgl::kerning_t**)glyph->kerning->items)[i2];
+					const ftgl::kerning_t* kerning = &((const ftgl::kerning_t*)glyph->kerning->items)[i2];
 #endif
 
 					if (kerning->charcode == text[i - 1]) {
