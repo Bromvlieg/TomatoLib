@@ -122,6 +122,8 @@ namespace TomatoLib {
 		float Clamp(float val, float min, float max) { return val < min ? min : val > max ? max : val; }
 		double Clamp(double val, double min, double max) { return val < min ? min : val > max ? max : val; }
 
+		float Lerp(float val, float val2, float time){ return val + time * (val2 - val); }
+
 		std::string GetFormattedImlp(const char* format, ...) {
 			static const int initial_buf_size = 128;
 
