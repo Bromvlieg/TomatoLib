@@ -47,6 +47,8 @@ namespace TomatoLib {
 
 		UIBase* AddChild(UIBase* obj);
 		void RemoveChild(UIBase* obj);
+		void KillChildren();
+
 		bool HandleMouseInteraction(int x, int y, int button, bool pressed, int mods);
 		bool HandleKeyboardInteraction(int key, unsigned char pressed, int mods);
 		bool HandleScrollInteraction(int x, int y);

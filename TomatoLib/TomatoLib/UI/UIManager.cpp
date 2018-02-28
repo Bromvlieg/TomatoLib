@@ -31,6 +31,12 @@ namespace TomatoLib {
 		return obj;
 	}
 
+	void UIManager::KillChildren(){
+		while (!this->Children.empty()){
+			this->Children[0]->Kill();
+		}
+	}
+
 	void UIManager::RemoveChild(UIBase* child) {
 		for (unsigned int i = 0; i < this->Children.size(); i++) {
 			if (this->Children[i] == child) {
@@ -150,7 +156,7 @@ namespace TomatoLib {
 		if (pressed) {
 			if (this->FocusPanel != null) {
 				if (!this->FocusPanel->CanAcceptInput) {
-					if (key == GLFW_KEY_GRAVE_ACCENT && this->Console != null) {
+					if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null) {
 						if (this->Console->ShouldRender == false) {
 							this->Console->Show();
 						} else {
@@ -161,7 +167,7 @@ namespace TomatoLib {
 					return true;
 				}
 
-				if (key == GLFW_KEY_GRAVE_ACCENT && this->Console != null && this->Console->HasFocus()) {
+				if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null && this->Console->HasFocus()) {
 					this->Console->Hide();
 					return true;
 				}
@@ -171,7 +177,7 @@ namespace TomatoLib {
 				return true;
 			}
 
-			if (key == GLFW_KEY_GRAVE_ACCENT) {
+			if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1)) {
 				if (this->Console != null) {
 					if (this->Console->ShouldRender == false) {
 						this->Console->Show();

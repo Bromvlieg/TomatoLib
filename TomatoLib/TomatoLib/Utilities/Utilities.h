@@ -42,6 +42,8 @@ namespace TomatoLib {
 		int Clamp(int val, int min, int max);
 		float Clamp(float val, float min, float max);
 		double Clamp(double val, double min, double max);
+
+		float Lerp(float val, float val2, float time);
 	}
 }
 
