@@ -48,6 +48,8 @@ namespace TomatoLib {
 		void AddZ(float z);
 
 		void AddPos(float x, float y, float z);
+		Vector3 GetPos();
+		Vector3 GetForward();
 
 		float GetPitch();
 		float GetYaw();

@@ -103,6 +103,18 @@ namespace TomatoLib {
 		this->projmat = m;
 	}
 
+	Vector3 Camera::GetPos() {
+		return {x, y, z};
+	}
+
+	Vector3 Camera::GetForward() {
+		return {
+			sin(pitch) * cos(yaw),
+			sin(pitch) * sin(yaw),
+			cos(pitch)
+		};
+	}
+
 	Matrix& Camera::GetView() {
 		return this->mat;
 	}
