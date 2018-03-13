@@ -95,6 +95,10 @@ namespace TomatoLib {
 
 
 
+	void Camera::SetSpeed(float speed) {
+		this->movespeed = speed;
+	}
+
 	void Camera::SetProjection(const Matrix& m) {
 		this->projmat = m;
 	}
@@ -108,7 +112,7 @@ namespace TomatoLib {
 	}
 
 	void Camera::HandleRawInput(const Window& w) {
-		float speed = w.KeysIn[GLFW_KEY_LEFT_SHIFT] ? 60.0f : 25.0f;
+		float speed = w.KeysIn[GLFW_KEY_LEFT_SHIFT] ? this->movespeed * 2 : this->movespeed;
 
 		Vector3 movement;
 		if (w.KeysIn[GLFW_KEY_W]) {

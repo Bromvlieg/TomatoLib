@@ -59,7 +59,7 @@ namespace TomatoLib {
 		Model();
 
 		void SetMatrix(const Matrix& m);
-		Matrix GetMatrix();
+		Matrix& GetMatrix();
 
 		void SetShader(const Shader& s);
 		void SetTexture(Texture& tex);

@@ -168,7 +168,7 @@ namespace TomatoLib {
 		this->m_Matrix = m;
 	}
 
-	Matrix Model::GetMatrix() {
+	Matrix& Model::GetMatrix() {
 		return this->m_Matrix;
 	}
 
@@ -191,6 +191,7 @@ namespace TomatoLib {
 			glBindTexture(GL_TEXTURE_2D, this->m_TextureHandle);
 
 			cam.InsertViewMatrix(s_viewMatrixLocation);
+			glUniformMatrix4fv(s_projMatrixLocation, 1, GL_TRUE, this->s_mProj.values);
 			glUniformMatrix4fv(s_worldMatrixLocation, 1, GL_TRUE, this->m_Matrix.values);
 		}
 

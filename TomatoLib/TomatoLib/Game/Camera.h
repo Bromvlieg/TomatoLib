@@ -28,6 +28,7 @@ namespace TomatoLib {
 
 		Matrix mat;
 		Matrix projmat;
+		float movespeed = 0.5f;
 
 	public:
 		float GetX() const;
@@ -39,6 +40,8 @@ namespace TomatoLib {
 		void SetZ(float z);
 
 		void SetPos(float x, float y, float z);
+
+		void SetSpeed(float speed);
 
 		void AddX(float x);
 		void AddY(float y);
