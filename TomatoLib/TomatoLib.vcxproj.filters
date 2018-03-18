@@ -147,7 +147,7 @@
     <ClCompile Include="TomatoLib\UI\UIColorPicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TomatoLib\Math\Rectangle.cpp">
+    <ClCompile Include="TomatoLib\Game\Content.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -299,8 +299,11 @@
     <ClInclude Include="TomatoLib\UI\UIColorPicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TomatoLib\Math\Rectangle.h">
+    <ClInclude Include="TomatoLib\Game\Content.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

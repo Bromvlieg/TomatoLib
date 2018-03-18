@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TomatoLib\Async\Async.cpp" />
+    <ClCompile Include="TomatoLib\Game\Content.cpp" />
     <ClCompile Include="TomatoLib\Game\Game.cpp" />
     <ClCompile Include="TomatoLib\Graphics\Font.cpp" />
     <ClCompile Include="TomatoLib\Graphics\Model.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="TomatoLib\Async\Async.h" />
     <ClInclude Include="TomatoLib\Config.h" />
     <ClInclude Include="TomatoLib\Defines.h" />
+    <ClInclude Include="TomatoLib\Game\Content.h" />
     <ClInclude Include="TomatoLib\Game\Game.h" />
     <ClInclude Include="TomatoLib\Graphics\Font.h" />
     <ClInclude Include="TomatoLib\Graphics\Model.h" />
@@ -107,6 +109,9 @@
     <ClInclude Include="TomatoLib\Utilities\Utilities.h" />
     <ClInclude Include="TomatoLib\Utilities\zip_uncompressed.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F7F38EB5-77D0-49C8-8298-77535554D4E8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -136,7 +141,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup>
+    <NuGetPackageImportStamp>7ef248c4</NuGetPackageImportStamp>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
@@ -144,7 +151,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;D:\TomatoLib\TomatoLib\TomatoLib\Libaries\freetype-gl;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -175,5 +182,16 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\ItsAbsolutelySafe\packages\glew.redist.1.9.0.1\build\native\glew.redist.targets" Condition="Exists('..\..\ItsAbsolutelySafe\packages\glew.redist.1.9.0.1\build\native\glew.redist.targets')" />
+    <Import Project="..\..\ItsAbsolutelySafe\packages\glew.1.9.0.1\build\native\glew.targets" Condition="Exists('..\..\ItsAbsolutelySafe\packages\glew.1.9.0.1\build\native\glew.targets')" />
+    <Import Project="..\..\ItsAbsolutelySafe\packages\glfw.3.2.1.5\build\native\glfw.targets" Condition="Exists('..\..\ItsAbsolutelySafe\packages\glfw.3.2.1.5\build\native\glfw.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\ItsAbsolutelySafe\packages\glew.redist.1.9.0.1\build\native\glew.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ItsAbsolutelySafe\packages\glew.redist.1.9.0.1\build\native\glew.redist.targets'))" />
+    <Error Condition="!Exists('..\..\ItsAbsolutelySafe\packages\glew.1.9.0.1\build\native\glew.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ItsAbsolutelySafe\packages\glew.1.9.0.1\build\native\glew.targets'))" />
+    <Error Condition="!Exists('..\..\ItsAbsolutelySafe\packages\glfw.3.2.1.5\build\native\glfw.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ItsAbsolutelySafe\packages\glfw.3.2.1.5\build\native\glfw.targets'))" />
+  </Target>
 </Project>
