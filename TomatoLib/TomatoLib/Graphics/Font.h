@@ -70,7 +70,8 @@ namespace TomatoLib {
 		unsigned int TexID;
 
 		bool Load(const std::string &file, float size);
-		void AddChars(const wchar_t* chars);
+		void AddChars(const std::wstring& chars);
+		void ReuploadTexture();
 
 #ifdef TL_ENABLE_FTGL
 		static texture_atlas_t* Atlas;

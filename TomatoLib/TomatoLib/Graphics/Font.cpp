@@ -19,14 +19,16 @@ namespace TomatoLib {
 	}
 
 	Font::~Font() {
-#ifdef TL_ENABLE_FTGL
 		if(this->FontHandle == 0) {
 			return;
 		}
-		texture_font_delete(this->FontHandle);
 
+#ifdef TL_ENABLE_FTGL
 		glDeleteTextures(1, &this->TexID);
+		texture_font_delete(this->FontHandle);
 #endif
+
+		this->FontHandle = nullptr;
 	}
 
 	Font::Font(ftgl::texture_font_t& fontdata) {
@@ -83,6 +85,15 @@ namespace TomatoLib {
 			texture_font_load_glyphs(this->FontHandle, L" ~!@#$%^&*()_+`1234567890-=QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm|\\<>?,./:;\"'}{][”“’\n");
 		}
 
+		this->ReuploadTexture();
+#else
+		throw "TomatoLib was build without FTGL support";
+#endif
+
+		return true;
+	}
+
+	void Font::ReuploadTexture() {
 		unsigned char* data = Font::Atlas->data;
 		Texture newtex(Font::Atlas->width, Font::Atlas->height);
 		for (size_t i = 0; i < newtex.Width * newtex.Height; i++) {
@@ -92,23 +103,46 @@ namespace TomatoLib {
 			newtex.PixelData[i * 4 + 3] = data[i];
 		}
 
-		newtex.BindGL();
+		if (this->TexID != 0) {
+			newtex.GLHandle = this->TexID;
+			newtex.RegisteredInGL = true;
+		} else {
+			newtex.BindGL();
+		}
+
 		newtex.Upload();
 
 		this->TexID = newtex.GLHandle;
 
 		newtex.RegisteredInGL = false;
 		newtex.GLHandle = 0;
-#else
-		throw "TomatoLib was build without FTGL support";
-#endif
-
-		return true;
 	}
 
-	void Font::AddChars(const wchar_t* chars) {
+	void Font::AddChars(const std::wstring& chars) {
 #ifdef TL_ENABLE_FTGL
-		texture_font_load_glyphs(this->FontHandle, chars);
+		std::wstring notfound;
+		for (auto letter : chars) {
+			bool found = false;
+
+			const ftgl::texture_glyph_t** glyphs = reinterpret_cast<const ftgl::texture_glyph_t**>(this->FontHandle->glyphs->items);
+			for (size_t i = 0; i < this->FontHandle->glyphs->size; i++) {
+				const ftgl::texture_glyph_t& glyph = *glyphs[i];
+
+				if (glyph.charcode == letter) {
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				notfound += letter;
+			}
+		}
+
+		if (notfound.empty()) return;
+		texture_font_load_glyphs(this->FontHandle, notfound.c_str());
+
+		this->ReuploadTexture();
 #else
 		throw "TomatoLib was build without FTGL support";
 #endif

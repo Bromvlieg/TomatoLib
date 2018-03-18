@@ -25,8 +25,7 @@ namespace TomatoLib {
 
 		GLint isLinked = 0;
 		glGetProgramiv(s.ProgramHandle, GL_LINK_STATUS, &isLinked);
-		if(isLinked == GL_FALSE)
-		{
+		if (isLinked == GL_FALSE) {
 			GLint maxLength = 0;
 			glGetProgramiv(s.ProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
 
@@ -68,7 +67,7 @@ namespace TomatoLib {
 
 	}
 #endif
-	
+
 	bool firstcreate = true;
 	Texture Render::DefaultTexture(1, 1);
 	Font* Render::DefaultFont = nullptr;
@@ -309,7 +308,7 @@ namespace TomatoLib {
 		vda.Location = a + this->_DrawOffset;
 		vdb.Location = b + this->_DrawOffset;
 		vdc.Location = c + this->_DrawOffset;
-		
+
 		if (this->ClippingEnabled) {
 			Vector2& min = this->_ClippingPos;
 			Vector2 max = min + this->_ClippingSize;
@@ -637,6 +636,103 @@ namespace TomatoLib {
 		this->Line(points[0].X, points[0].Y, points[len - 1].X, points[len - 1].Y, w, color);
 	}
 
+	Vector2 Render::GetTextSize(wchar_t letter) {
+		return this->GetTextSize(Render::DefaultFont, letter);
+	}
+
+	Vector2 Render::GetTextSize(const Font& font, wchar_t letter) {
+		return this->GetTextSize(&font, letter);
+	}
+
+	Vector2 Render::GetTextSize(const Font* font, wchar_t letter) {
+#ifndef TL_ENABLE_FTGL
+		for (size_t i = 0; i < font->FontHandle->glyphs_count; i++) {
+			const ftgl::texture_glyph_t& glyph = font->FontHandle->glyphs[i];
+			if (glyph.charcode == letter) {
+				return Vector2((float)glyph.width, (float)glyph.height);
+			}
+		}
+#else
+		for (size_t i = 0; i < font->FontHandle->glyphs->size; i++) {
+			const ftgl::texture_glyph_t& glyph = *((const ftgl::texture_glyph_t**)font->FontHandle->glyphs->items)[i];
+			if (glyph.charcode == letter) {
+				return Vector2((float)glyph.width, (float)glyph.height);
+			}
+		}
+#endif
+
+		return Vector2::Zero;
+	}
+
+	Vector2 Render::GetTextSize(const std::wstring& text) {
+		return this->GetTextSize(*Render::DefaultFont, text);
+	}
+
+	Vector2 Render::GetTextSize(const Font* font, const std::wstring& text) {
+		return this->GetTextSize(*font, text);
+	}
+
+	Vector2 Render::GetTextSize(const Font& font, const std::wstring& text) {
+		float totalW = 0;
+		float totalH = 0;
+
+		float cx = 0;
+		float cy = 0;
+		size_t len = text.size();
+
+		for (size_t i = 0; i < len; i++) {
+			wchar_t l = text[i];
+
+			if (l == L'\n') {
+				cy += font.FontHandle->height;
+				cx = 0;
+				continue;
+			}
+
+			const ftgl::texture_glyph_t* glyph = nullptr;
+#ifndef TL_ENABLE_FTGL
+			for (size_t i2 = 0; i2 < font.FontHandle->glyphs_count; i2++) {
+				const ftgl::texture_glyph_t* curglyph = &font.FontHandle->glyphs[i2];
+#else
+			for (size_t i2 = 0; i2 < font.FontHandle->glyphs->size; i2++) {
+				const ftgl::texture_glyph_t* curglyph = ((const ftgl::texture_glyph_t**)font.FontHandle->glyphs->items)[i2];
+#endif
+
+				if (curglyph->charcode == l) {
+					glyph = curglyph;
+					break;
+				}
+			}
+
+			if (glyph == nullptr) {
+				continue;
+			}
+
+			if (i > 0) {
+#ifndef TL_ENABLE_FTGL
+				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
+					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
+#else
+				for (size_t i2 = 0; i2 < glyph->kerning->size; ++i2) {
+					const ftgl::kerning_t* kerning = &((const ftgl::kerning_t*)glyph->kerning->items)[i2];
+#endif
+
+					if (kerning->charcode == text[i - 1]) {
+						cx += kerning->kerning;
+						break;
+					}
+				}
+			}
+
+			cx += glyph->advance_x;
+
+			if (cx > totalW) totalW = cx;
+			if (cy + font.FontHandle->height > totalH) totalH = cy + font.FontHandle->height;
+		}
+
+		return Vector2(totalW, totalH);
+	}
+
 	Vector2 Render::GetTextSize(char letter) {
 		return this->GetTextSize(Render::DefaultFont, letter);
 	}
@@ -659,7 +755,7 @@ namespace TomatoLib {
 			if (glyph.charcode == letter) {
 				return Vector2((float)glyph.width, (float)glyph.height);
 			}
-	}
+		}
 #endif
 
 		return Vector2::Zero;
@@ -844,7 +940,233 @@ namespace TomatoLib {
 					const ftgl::kerning_t* kerning = &((const ftgl::kerning_t*)glyph->kerning->items)[i2];
 #endif
 
-					if( kerning->charcode == text[i - 1] ){
+					if (kerning->charcode == text[i - 1]) {
+						cx += kerning->kerning;
+						break;
+					}
+				}
+			}
+
+			float w = (float)glyph->width;
+			float h = (float)font->FontHandle->height;
+
+			_vertexData a, b, c, d;
+
+			float lw = cx + glyph->offset_x;
+			float lh = cy + h - glyph->offset_y;
+
+			float x1 = glyph->s0;
+			float x2 = glyph->s1;
+			float y1 = glyph->t0;
+			float y2 = glyph->t1;
+
+#ifndef TL_ENABLE_FTGL
+			float pixelWidth = 1.0f / font->FontHandle->tex_width;
+			float pixelHeight = 1.0f / font->FontHandle->tex_height;
+#else
+			float pixelWidth = 1.0f / font->FontHandle->atlas->width;
+			float pixelHeight = 1.0f / font->FontHandle->atlas->height;
+#endif
+
+			a.Location.X = lw;
+			a.Location.Y = lh;
+
+			b.Location.X = lw + w;
+			b.Location.Y = lh;
+
+			c.Location.X = lw;
+			c.Location.Y = lh + glyph->height;
+
+			d.Location.X = lw + w;
+			d.Location.Y = lh + glyph->height;
+
+			a.TextureLocation.X = x1;
+			a.TextureLocation.Y = y1;
+
+			b.TextureLocation.X = x2;
+			b.TextureLocation.Y = y1;
+
+			c.TextureLocation.X = x1;
+			c.TextureLocation.Y = y2;
+
+			d.TextureLocation.X = x2;
+			d.TextureLocation.Y = y2;
+
+
+			if (this->ClippingEnabled) {
+				if (lw < this->_ClippingPos.X) {
+					// if the sign is fully outside of the clipping, then just skip it.
+					if (lw + w < this->_ClippingPos.X) {
+						cx += glyph->advance_x;
+						continue;
+					} else {
+						// calculate the new screen and texture location
+						float offset = this->_ClippingPos.X - lw;
+
+						a.Location.X += offset;
+						c.Location.X += offset;
+
+						a.TextureLocation.X += offset * pixelWidth;
+						c.TextureLocation.X += offset * pixelWidth;
+					}
+				}
+
+				if (lw + w > this->_ClippingPos.X + this->_ClippingSize.X) {
+					if (cx > this->_ClippingPos.X + this->_ClippingSize.X) {
+						cx += glyph->advance_x;
+						continue;
+					} else {
+						float offset = lw + w - this->_ClippingPos.X - this->_ClippingSize.X;
+
+						b.Location.X -= offset;
+						d.Location.X -= offset;
+
+						b.TextureLocation.X -= offset * pixelWidth;
+						d.TextureLocation.X -= offset * pixelWidth;
+					}
+				}
+
+				if (a.Location.Y < this->_ClippingPos.Y) {
+					if (d.Location.Y < this->_ClippingPos.Y) {
+						cx += glyph->advance_x;
+						continue;
+					} else {
+						float offset = this->_ClippingPos.Y - a.Location.Y;
+
+						a.Location.Y += offset;
+						b.Location.Y += offset;
+
+						a.TextureLocation.Y += offset * pixelHeight;
+						b.TextureLocation.Y += offset * pixelHeight;
+					}
+				}
+
+				if (d.Location.Y > this->_ClippingPos.Y + this->_ClippingSize.Y) {
+					if (b.Location.Y > this->_ClippingPos.Y + this->_ClippingSize.Y) {
+						cx += glyph->advance_x;
+						continue;
+					} else {
+						float offset = d.Location.Y - this->_ClippingPos.Y - this->_ClippingSize.Y;
+
+						c.Location.Y -= offset;
+						d.Location.Y -= offset;
+
+						c.TextureLocation.Y -= offset * pixelHeight;
+						d.TextureLocation.Y -= offset * pixelHeight;
+					}
+				}
+			}
+
+			a.Color = color;
+			b.Color = color;
+			c.Color = color;
+			d.Color = color;
+
+			unsigned int curVertices = this->VerticeDataCount;
+
+			VERTICE_PUSH(a);
+			VERTICE_PUSH(b);
+			VERTICE_PUSH(c);
+			VERTICE_PUSH(d);
+
+			INDICE_PUSH(curVertices + 0);
+			INDICE_PUSH(curVertices + 1);
+			INDICE_PUSH(curVertices + 2);
+
+			INDICE_PUSH(curVertices + 1);
+			INDICE_PUSH(curVertices + 3);
+			INDICE_PUSH(curVertices + 2);
+
+			cx += glyph->advance_x;
+		}
+	}
+
+	void Render::Text(const std::wstring& text, int x, int y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		this->Text(text, (float)x, (float)y, color, alignx, aligny);
+	}
+
+	void Render::Text(const std::wstring& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		if (this->DefaultFont == nullptr) return;
+		if (color.A == 0) return;
+
+		this->Text(this->DefaultFont, text, x, y, color, alignx, aligny);
+	}
+
+	void Render::Text(const Font* font, const std::wstring& text, int x, int y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		this->Text(font, text, (float)x, (float)y, color, alignx, aligny);
+	}
+
+	void Render::Text(const Font* font, const std::wstring& text, float x, float y, const Color& color, RenderAlignment alignx, RenderAlignment aligny) {
+		if (color.A == 0 || text.size() == 0) return;
+
+		this->SetTexture(font->TexID);
+		this->SetShader(this->DefaultShaderText.ProgramHandle);
+		if (alignx != RenderAlignment::Left || aligny != RenderAlignment::Left) {
+			Vector2 tsize = this->GetTextSize(font, text);
+
+			switch (alignx) {
+				case RenderAlignment::Left: break;
+				case RenderAlignment::Center: x -= tsize.X / 2; break;
+				case RenderAlignment::Right: x -= tsize.X; break;
+			}
+
+			switch (aligny) {
+				case RenderAlignment::Left: break;
+				case RenderAlignment::Center: y -= tsize.Y / 2; break;
+				case RenderAlignment::Right: y -= tsize.Y; break;
+			}
+		}
+
+		x += this->_DrawOffset.X;
+		y += this->_DrawOffset.Y;
+
+		y -= font->FontHandle->height / 4;
+
+		float cx = x;
+		float cy = y;
+		size_t len = text.size();
+
+		this->CheckSpace(len * 4, len * 6); // per square, 4 vertices and 6 indices
+
+		float currentMaxLineHeight = 0;
+		for (size_t i = 0; i < len; i++) {
+			wchar_t l = text[i];
+
+			if (l == L'\n') {
+				cy += font->FontHandle->height;
+				cx = x;
+				continue;
+			}
+
+			const ftgl::texture_glyph_t* glyph = nullptr;
+#ifndef TL_ENABLE_FTGL
+			for (size_t i2 = 0; i2 < font->FontHandle->glyphs_count; i2++) {
+				const ftgl::texture_glyph_t* curglyph = &font->FontHandle->glyphs[i2];
+#else
+			for (size_t i2 = 0; i2 < font->FontHandle->glyphs->size; ++i2) {
+				const ftgl::texture_glyph_t* curglyph = ((const ftgl::texture_glyph_t**)font->FontHandle->glyphs->items)[i2];
+#endif
+
+				if (curglyph->charcode == l) {
+					glyph = curglyph;
+					break;
+				}
+			}
+
+			if (glyph == nullptr) {
+				continue;
+			}
+
+			if (i > 0) {
+#ifndef TL_ENABLE_FTGL
+				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
+					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
+#else
+				for (size_t i2 = 0; i2 < glyph->kerning->size; ++i2) {
+					const ftgl::kerning_t* kerning = &((const ftgl::kerning_t*)glyph->kerning->items)[i2];
+#endif
+
+					if (kerning->charcode == text[i - 1]) {
 						cx += kerning->kerning;
 						break;
 					}
@@ -1169,19 +1491,19 @@ namespace TomatoLib {
 
 		for (unsigned long i = 0; i < this->IndiceDataCount; i++) {
 			auto& v = this->VerticeData[this->IndiceData[i]];
-			
+
 			colors.Add(v.Color.R / 255.0f);
 			colors.Add(v.Color.G / 255.0f);
 			colors.Add(v.Color.B / 255.0f);
 			colors.Add(v.Color.A / 255.0f);
-			
+
 			texcoords.Add(v.TextureLocation.X);
 			texcoords.Add(v.TextureLocation.Y);
-			
+
 			vertices.Add(v.Location.X / this->ScreenSize.X * 2 - 1);
 			vertices.Add((v.Location.Y / this->ScreenSize.Y * 2 - 1) * -1);
 		}
-		
+
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -1189,13 +1511,13 @@ namespace TomatoLib {
 
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_COLOR_MATERIAL);
-	
+
 		glVertexPointer(2, GL_FLOAT, 0, &vertices[0]);
 		glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
 		glColorPointer(4, GL_FLOAT, 0, &colors[0]);
-		
+
 		glDrawArrays(GL_TRIANGLES, 0, vertices.Count / 2);
-		
+
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_COLOR_ARRAY);

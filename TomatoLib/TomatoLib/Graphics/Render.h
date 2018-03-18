@@ -136,10 +136,17 @@ namespace TomatoLib {
 		void Triangle(const Vector2& a, const Vector2& b, const Vector2& c, const Color& colora, const Color& colorb, const Color& colorc);
 		void Poly(Vector2* points, int len, const Color& color);
 		void PolyOutlined(Vector2* points, int len, float linew, const Color& color);
+
 		void Text(const std::string& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
 		void Text(const std::string& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
 		void Text(const Font* font, const std::string& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
 		void Text(const Font* font, const std::string& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+
+		void Text(const std::wstring& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+		void Text(const std::wstring& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+		void Text(const Font* font, const std::wstring& text, int x, int y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+		void Text(const Font* font, const std::wstring& text, float x, float y, const Color& color, RenderAlignment alignx = RenderAlignment::Left, RenderAlignment aligny = RenderAlignment::Left);
+
 		void PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color);
 		void PutTexture(Texture& tex, float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, const Color& color);
 		void PutTexture(float x, float y, float w, float h, float tex_x_start, float tex_y_start, float tex_x_end, float tex_y_end, float rotation, const Color& color);
@@ -156,6 +163,13 @@ namespace TomatoLib {
 		Vector2 GetTextSize(const std::string& text);
 		Vector2 GetTextSize(const Font& font, const std::string& text);
 		Vector2 GetTextSize(const Font* font, const std::string& text);
+
+		Vector2 GetTextSize(wchar_t text);
+		Vector2 GetTextSize(const Font& font, wchar_t text);
+		Vector2 GetTextSize(const Font* font, wchar_t text);
+		Vector2 GetTextSize(const std::wstring& text);
+		Vector2 GetTextSize(const Font& font, const std::wstring& text);
+		Vector2 GetTextSize(const Font* font, const std::wstring& text);
 
 		void SetDrawingOffset(int x, int y);
 		Vector2 GetDrawingOffset();
