@@ -2,6 +2,7 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
 
+#include "Vector4.h"
 #include "Vector3.h"
 #include "Vector2.h"
 
@@ -19,6 +20,7 @@ namespace TomatoLib {
 		static Matrix CreateLookAt(const Vector3& eyePos, const Vector3& targetPos, const Vector3& up);
 		static Matrix CreatePerspective(float fovy, float aspect, float zNear, float zFar);
 
+
 		~Matrix();
 		Matrix();
 		Matrix(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44);
@@ -30,6 +32,9 @@ namespace TomatoLib {
 		Matrix& operator= (const Matrix& rhs);
 
 		void DebugPrint();
+
+		Vector4 Translate(float x, float y, float z, float w) const;
+		Vector4 Translate(const Vector4& input) const;
 
 		Vector3 Translate(float x, float y, float z) const;
 		Vector3 Translate(const Vector3& input) const;

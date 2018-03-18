@@ -225,6 +225,19 @@ namespace TomatoLib {
 		return retVal;
 	}
 
+	Vector4 Matrix::Translate(float x, float y, float z, float w) const {
+		Vector4 retVal;
+		retVal.X = values[ 0] * x + values[ 1] * y + values[ 2] * z + values[ 3] * w;
+		retVal.Y = values[ 4] * x + values[ 5] * y + values[ 6] * z + values[ 7] * w;
+		retVal.Z = values[ 8] * x + values[ 9] * y + values[10] * z + values[11] * w;
+		retVal.W = values[12] * x + values[13] * y + values[14] * z + values[15] * w;
+		return retVal;
+	}
+
+	Vector4 Matrix::Translate(const Vector4& input) const {
+		return Translate(input.X, input.Y, input.Z, input.W);
+	}
+
 	Vector3 Matrix::Translate(float x, float y, float z) const {
 		Vector3 retVal = Vector3();
 		retVal.X = values[0] * x + values[1] * y + values[2] * z + values[3];
