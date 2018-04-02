@@ -8,7 +8,8 @@ namespace TomatoLib {
 	class UIButton : public UIBase {
 		bool WasHovering;
 		std::string Text;
-		TomatoLib::Font Font;
+		TomatoLib::Font* Font = nullptr;
+
 	public:
 		UIButton(UIBase* parent);
 
@@ -29,7 +30,7 @@ namespace TomatoLib {
 		void SetText(const std::string& str);
 		std::string GetText();
 
-		void SetFont(const TomatoLib::Font& str);
+		void SetFont(TomatoLib::Font& str);
 		TomatoLib::Font& GetFont();
 	};
 }
