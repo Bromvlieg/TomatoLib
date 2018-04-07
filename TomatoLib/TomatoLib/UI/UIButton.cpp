@@ -38,26 +38,26 @@ namespace TomatoLib {
 		return this->Text;
 	}
 
-	void UIButton::SetFont(const TomatoLib::Font& font) {
-		if (this->Font.FontHandle == font.FontHandle) return;
+	void UIButton::SetFont(TomatoLib::Font& font) {
+		if (this->Font == &font) return;
 
-		this->Font = font;
+		this->Font = &font;
 		this->MarkForFullRedraw();
 	}
 
 	TomatoLib::Font& UIButton::GetFont() {
-		return this->Font;
+		return *this->Font;
 	}
 
 	void UIButton::ResizeToContents() {
-		TomatoLib::Font* fontused = this->Font.FontHandle == nullptr ? Render::DefaultFont : &this->Font;
+		TomatoLib::Font* fontused = this->Font == nullptr ? Render::DefaultFont : this->Font;
 
 		Vector2 size = this->UIMan->Drawer.GetTextSize(fontused, this->Text);
 		this->SetSize((int)size.X + this->BorderSize * 2, (int)size.Y + this->BorderSize * 2);
 	}
 
 	void UIButton::Draw(Render& p) {
-		TomatoLib::Font* fontused = this->Font.FontHandle == nullptr ? Render::DefaultFont : &this->Font;
+		TomatoLib::Font* fontused = this->Font == nullptr ? Render::DefaultFont : this->Font;
 
 		p.Box(0, 0, this->W, this->H, this->BorderColor);
 		p.Box(this->BorderSize, this->BorderSize, this->W - this->BorderSize * 2, this->H - this->BorderSize * 2, this->CanClick ? this->IsHovering() ? this->HoverColor : this->BackColor : this->DisabledColor);

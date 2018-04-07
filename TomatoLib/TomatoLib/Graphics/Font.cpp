@@ -94,8 +94,14 @@ namespace TomatoLib {
 	}
 
 	void Font::ReuploadTexture() {
-		unsigned char* data = Font::Atlas->data;
-		Texture newtex(Font::Atlas->width, Font::Atlas->height);
+#ifdef TL_ENABLE_FTGL
+		unsigned char* data = (unsigned char*)this->FontHandle->atlas->data;
+		Texture newtex(this->FontHandle->atlas->width, this->FontHandle->atlas->height);
+#else
+		unsigned char* data = (unsigned char*)this->FontHandle->tex_data;
+		Texture newtex(this->FontHandle->tex_width, this->FontHandle->tex_height);
+#endif
+
 		for (size_t i = 0; i < newtex.Width * newtex.Height; i++) {
 			newtex.PixelData[i * 4 + 0] = 255;
 			newtex.PixelData[i * 4 + 1] = 255;
