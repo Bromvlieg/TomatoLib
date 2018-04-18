@@ -18,6 +18,8 @@
     <ClCompile Include="TomatoLib\Graphics\Model.cpp" />
     <ClCompile Include="TomatoLib\Libaries\md5\md5.cpp" />
     <ClCompile Include="TomatoLib\MapFormats\Bsp.cpp" />
+    <ClCompile Include="TomatoLib\Math\Rectangle.cpp" />
+    <ClCompile Include="TomatoLib\Math\Vector4.cpp" />
     <ClCompile Include="TomatoLib\ModelFormats\Obj.cpp" />
     <ClCompile Include="TomatoLib\Networking\Connection.cpp" />
     <ClCompile Include="TomatoLib\Networking\Server.cpp" />
@@ -67,6 +69,8 @@
     <ClInclude Include="TomatoLib\Graphics\Model.h" />
     <ClInclude Include="TomatoLib\Libaries\md5\md5.h" />
     <ClInclude Include="TomatoLib\MapFormats\Bsp.h" />
+    <ClInclude Include="TomatoLib\Math\Rectangle.h" />
+    <ClInclude Include="TomatoLib\Math\Vector4.h" />
     <ClInclude Include="TomatoLib\ModelFormats\Obj.h" />
     <ClInclude Include="TomatoLib\Networking\Connection.h" />
     <ClInclude Include="TomatoLib\Networking\Server.h" />
@@ -80,6 +84,7 @@
     <ClInclude Include="TomatoLib\UI\UITexture.h" />
     <ClInclude Include="TomatoLib\Utilities\Dictonary.h" />
     <ClInclude Include="TomatoLib\Networking\EzSock.h" />
+    <ClInclude Include="TomatoLib\Utilities\dirent.h" />
     <ClInclude Include="TomatoLib\Utilities\HTTP.h" />
     <ClInclude Include="TomatoLib\Utilities\List.h" />
     <ClInclude Include="TomatoLib\Math\AABB.h" />
@@ -116,18 +121,19 @@
     <ProjectGuid>{F7F38EB5-77D0-49C8-8298-77535554D4E8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TomatoLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
