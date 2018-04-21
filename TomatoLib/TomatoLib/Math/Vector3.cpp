@@ -37,6 +37,10 @@ namespace TomatoLib {
 		return (*this) / Length();
 	}
 
+	Vector2 Vector3::XY() const {
+		return Vector2(this->X, this->Y);
+	}
+
 	Vector3 Vector3::XZY() const {
 		return Vector3(this->X, this->Z, this->Y);
 	}

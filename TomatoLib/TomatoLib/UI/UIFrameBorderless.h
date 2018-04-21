@@ -11,6 +11,7 @@ namespace TomatoLib {
 	class UIFrameBorderless : public UIBase {
 		int ResizeBordersize;
 		bool MovingEnabled;
+		bool MovingEnabledBody;
 	public:
 		Vector2 OldSize;
 		Vector2 OldPos;
@@ -21,6 +22,7 @@ namespace TomatoLib {
 		int _OldX;
 		int _OldY;
 		int _ResizeMode;
+		int _DragYOffset;
 
 		UIFrameBorderless(UIBase* parent);
 
@@ -36,6 +38,7 @@ namespace TomatoLib {
 
 		virtual void InvalidateLayout() override;
 		void EnableMoving();
+		void EnableMovingBody();
 		void EnableControls();
 		void SetResizeBorderSize(int size);
 
