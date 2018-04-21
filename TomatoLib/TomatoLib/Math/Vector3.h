@@ -1,6 +1,9 @@
 #pragma once
 #ifndef __VECTOR3_H__
 #define __VECTOR3_H__
+
+#include "Vector2.h"
+
 namespace TomatoLib {
 	class Vector3 {
 	public:
@@ -42,6 +45,7 @@ namespace TomatoLib {
 		Vector3& operator/= (const Vector3& other);
 		Vector3& operator/= (const float& other);
 
+		Vector2 XY() const;
 		Vector3 XZY() const;
 
 		bool operator== (const Vector3& other) const;
