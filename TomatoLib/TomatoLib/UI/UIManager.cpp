@@ -108,11 +108,16 @@ namespace TomatoLib {
 					if (Pan->ShouldRender == false) continue;
 					if (Pan->PassTrough) continue;
 
+
 					if (Pan->X <= x && Pan->Y <= y && (Pan->X + Pan->W) > x && (Pan->Y + Pan->H) > y) {
 						if (!Pan->CanClick) continue;
+
+						Vector2 apos = Pan->GetAbsoluteLocation();
+						if (!Pan->OnCanClick(x - (int)apos.X, y - (int)apos.Y, button)) continue;
 						this->_CheckClick(Pan, x - Pan->X, y - Pan->Y);
 					}
 				}
+
 				if (this->HoldPanel != null) {
 					if (this->FocusPanel != this->HoldPanel) {
 						if (this->FocusPanel != null) {
@@ -155,6 +160,8 @@ namespace TomatoLib {
 
 		if (pressed) {
 			if (this->FocusPanel != null) {
+				if (!this->FocusPanel->OnCanPress(key)) return false;
+
 				if (!this->FocusPanel->CanAcceptInput) {
 					if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null) {
 						if (this->Console->ShouldRender == false) {
@@ -215,6 +222,9 @@ namespace TomatoLib {
 
 				if (Pan->X <= x && Pan->Y <= y && (Pan->X + Pan->W) > x && (Pan->Y + Pan->H) > y) {
 					if (!Pan->CanClick) break;
+
+					Vector2 apos = Pan->GetAbsoluteLocation();
+					if (!Pan->OnCanClick(x - (int)apos.X, y - (int)apos.Y, 0)) continue;
 					this->_CheckClick(Pan, x - Pan->X, y - Pan->Y);
 				}
 			}
@@ -238,6 +248,8 @@ namespace TomatoLib {
 		if (this->FocusPanel != null) {
 			if (!this->FocusPanel->CanAcceptInput) return true;
 			if (key == GLFW_KEY_GRAVE_ACCENT && this->Console != null && this->Console->HasFocus()) return true;
+
+			if (!this->FocusPanel->OnCanPress(key)) return false;
 
 			this->FocusPanel->OnCharInput(key);
 			return true;

@@ -59,6 +59,9 @@ namespace TomatoLib {
 		this->OnShow = [this]() { };
 		this->OnHide = [this]() {};
 
+		this->OnCanClick = [this](int x, int y, int mousebtn) { return true; };
+		this->OnCanPress= [this](int key) { return true; };
+
 		this->OnDraw = [this](Render& drawer) {
 			this->Draw(drawer);
 		};
@@ -131,9 +134,9 @@ namespace TomatoLib {
 	}
 
 	void UIBase::SetFocus() {
-		if (this->TopMost) {
+		//if (this->TopMost) {
 			this->OnTop();
-		}
+		//}
 
 		if (this->UIMan != nullptr) this->UIMan->FocusPanel = this;
 		this->OnFocus(true);

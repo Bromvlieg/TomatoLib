@@ -9,19 +9,19 @@ namespace TomatoLib {
 	public:
 		UITextEntry(UIBase* parent);
 
-		TomatoLib::Font* Font;
-		float WideScroll;
-		int Caret;
-		float CaretX;
-		int MaxInput;
-		char MaskChar;
-		bool OnlyNumbers;
-		bool OnlyLetters;
-		bool MultiLine;
-		bool m_blink;
+		TomatoLib::Font* Font = nullptr;
+		float WideScroll = 0;
+		int Caret = 0;
+		float CaretX = 0;
+		int MaxInput = 0;
+		char MaskChar = 0;
+		bool OnlyNumbers = false;
+		bool OnlyLetters = false;
+		bool MultiLine = false;
+		bool m_blink = false;
 
 		std::string Text;
-		int prevtime;
+		int prevtime = 0;
 
 		Color BackgroundColor;
 		Color BorderColor;
