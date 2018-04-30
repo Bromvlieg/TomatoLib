@@ -16,7 +16,15 @@
 
 #include <chrono>
 #include <thread>
-#include <GLFW/glfw3.h>
+
+#ifdef TL_ENABLE_SSL
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/crypto.h>
+#include <openssl/x509.h>
+#include <openssl/pem.h>
+#endif
 
 namespace TomatoLib {
 	Connection::Connection() {
@@ -33,6 +41,13 @@ namespace TomatoLib {
 
 		this->SendThread = nullptr;
 		this->RecvThread = nullptr;
+
+#ifdef TL_ENABLE_SSL
+		this->m_pSSL = nullptr;
+		this->m_pSSLCtx = nullptr;
+
+		this->VerifySSLCertificateCallback = nullptr;
+#endif
 	}
 
 	Connection::~Connection() {
@@ -75,12 +90,85 @@ namespace TomatoLib {
 		});
 	}
 
-	bool Connection::Connect(std::string ip, int port) {
+	bool Connection::Connect(std::string ip, int port, bool usessl) {
 		this->Disconnect();
 
 		this->Sock.create();
 
 		if (this->Sock.connect(ip.c_str(), port) > 0) return false;
+
+		if (usessl) {
+#ifndef TL_ENABLE_SSL
+			this->Sock.close();
+			return false;
+#else
+			static bool firstload = true;
+			if (firstload) {
+				OpenSSL_add_ssl_algorithms();
+				SSL_load_error_strings();
+				firstload = false;
+			}
+
+			const SSL_METHOD* meth = DTLS_client_method();
+			this->m_pSSLCtx = SSL_CTX_new(meth);
+
+			this->m_pSSL = SSL_new(this->m_pSSLCtx);
+			if (this->m_pSSL == nullptr) {
+				this->Sock.close();
+
+				SSL_free(this->m_pSSL);
+				SSL_CTX_free(this->m_pSSLCtx);
+
+				this->m_pSSL = nullptr;
+				this->m_pSSLCtx = nullptr;
+
+				return false;
+			}
+
+			SSL_set_fd(this->m_pSSL, this->Sock.sock);
+			if (SSL_connect(this->m_pSSL) == -1) {
+				this->Sock.close();
+
+				SSL_free(this->m_pSSL);
+				SSL_CTX_free(this->m_pSSLCtx);
+
+				this->m_pSSL = nullptr;
+				this->m_pSSLCtx = nullptr;
+
+				return false;
+			}
+
+			X509* server_cert = SSL_get_peer_certificate(this->m_pSSL);
+			if (server_cert == nullptr) {
+				this->Sock.close();
+
+				SSL_free(this->m_pSSL);
+				SSL_CTX_free(this->m_pSSLCtx);
+
+				this->m_pSSL = nullptr;
+				this->m_pSSLCtx = nullptr;
+
+				return false;
+			}
+
+			if (this->VerifySSLCertificateCallback != nullptr) {
+				if (!this->VerifySSLCertificateCallback(*this, *server_cert)) {
+					X509_free(server_cert);
+					this->Sock.close();
+
+					SSL_free(this->m_pSSL);
+					SSL_CTX_free(this->m_pSSLCtx);
+
+					this->m_pSSL = nullptr;
+					this->m_pSSLCtx = nullptr;
+
+					return false;
+				}
+			}
+
+			X509_free(server_cert);
+#endif
+		}
 
 		this->StartThreads();
 		this->LastReceivedPacket = time(nullptr);
@@ -91,7 +179,6 @@ namespace TomatoLib {
 		if (this->SendThread == nullptr) return;
 
 		this->HitTheBrakes = true;
-
 		this->Sock.close();
 
 		if (this->SendThread->joinable()) this->SendThread->join();
@@ -104,6 +191,19 @@ namespace TomatoLib {
 		this->RecvThread = nullptr;
 
 		this->HitTheBrakes = false;
+
+#ifdef TL_ENABLE_SSL
+		if (this->m_pSSL != nullptr) {
+			SSL_shutdown(this->m_pSSL);
+			SSL_free(this->m_pSSL);
+			this->m_pSSL = nullptr;
+		}
+
+		if (this->m_pSSLCtx != nullptr) {
+			SSL_CTX_free(this->m_pSSLCtx);
+			this->m_pSSLCtx = nullptr;
+		}
+#endif
 
 		// backwards delete is faster due no need to move elements forward
 		while (this->ToSend.Count > 0) delete[] this->ToSend.RemoveAt(this->ToSend.Count - 1);
@@ -159,6 +259,7 @@ namespace TomatoLib {
 				case ConnectionPacketIDType::Int: pid = p.ReadInt(); break;
 			}
 
+			//Utilities::Print("TL_CONNECTION: packet: 0x%.4X(%d), size %d", pid, pid, p.InSize);
 			if (pid < this->CallbacksSize && pid >= 0 && this->Callbacks[pid] != nullptr) {
 				bool ret = this->Callbacks[pid](this->m_pTag, p);
 				if (!ret) {
@@ -169,10 +270,10 @@ namespace TomatoLib {
 				}
 
 				if (p.InPos != p.InSize) {
-					Utilities::Print("[col=%s]WARNING: Packet 0x%.4X(%d) was only read till %d, while the size is %d", Color::Orange.ToString().c_str(), pid, pid, p.InPos, p.InSize);
+					Utilities::Print("TL_CONNECTION: WARNING: Packet 0x%.4X(%d) was only read till %d, while the size is %d", pid, pid, p.InPos, p.InSize);
 				}
 			} else {
-				Utilities::Print("[col=%s]Unknown packet: 0x%.4X(%d), size %d", Color::Red.ToString().c_str(), pid,  pid, p.InSize);
+				Utilities::Print("TL_CONNECTION: Unknown packet: 0x%.4X(%d), size %d", pid,  pid, p.InSize);
 			}
 
 			this->LastReceivedPacket = time(nullptr);
@@ -200,7 +301,16 @@ namespace TomatoLib {
 
 			if (!this->Sock.IsError()) {
 				int lenoffset = this->DataLengthType != ConnectionPacketDataLengthType::Int ? 4 - (int)this->DataLengthType : 0;
+				
+#ifdef TL_ENABLE_SSL
+				if (this->m_pSSL != nullptr) {
+					SSL_write(this->m_pSSL, buff + lenoffset, *(int*)buff - lenoffset + 4);
+				} else {
+					this->Sock.SendRaw(buff + lenoffset, *(int*)buff - lenoffset + 4);
+				}
+#else
 				this->Sock.SendRaw(buff + lenoffset, *(int*)buff - lenoffset + 4);
+#endif
 			}
 		}
 	}
@@ -217,7 +327,11 @@ namespace TomatoLib {
 			byte plenbytes[4];
 			int recamount = 0;
 			while (recamount != lensize) {
+#ifdef TL_ENABLE_SSL
+				int currec = this->m_pSSL != nullptr ? SSL_read(this->m_pSSL, plenbytes + recamount, lensize - recamount) : this->Sock.Receive(plenbytes, lensize - recamount, recamount);
+#else
 				int currec = this->Sock.Receive(plenbytes, lensize - recamount, recamount);
+#endif
 
 				if (currec == -1 || currec == 0) {
 					break;
@@ -228,6 +342,14 @@ namespace TomatoLib {
 
 			if (recamount != lensize) {
 				this->Sock.close();
+
+#ifdef TL_ENABLE_SSL
+				if (this->m_pSSL != nullptr) delete this->m_pSSL;
+				if (this->m_pSSLCtx != nullptr) delete this->m_pSSLCtx;
+
+				this->m_pSSL = nullptr;
+				this->m_pSSLCtx = nullptr;
+#endif
 				continue;
 			}
 
@@ -243,7 +365,11 @@ namespace TomatoLib {
 
 			recamount = 0;
 			while (recamount != psize) {
+#ifdef TL_ENABLE_SSL
+				int currec = this->m_pSSL != nullptr ? SSL_read(this->m_pSSL, buffer + 4 + recamount, psize - recamount) : this->Sock.Receive(buffer + 4, psize - recamount, recamount);
+#else
 				int currec = this->Sock.Receive(buffer + 4, psize - recamount, recamount);
+#endif
 
 				if (currec == -1 || currec == 0) {
 					break;
@@ -255,6 +381,14 @@ namespace TomatoLib {
 			if (recamount != psize) {
 				delete[] buffer;
 				this->Sock.close();
+
+#ifdef TL_ENABLE_SSL
+				if (this->m_pSSL != nullptr) delete this->m_pSSL;
+				if (this->m_pSSLCtx != nullptr) delete this->m_pSSLCtx;
+
+				this->m_pSSL = nullptr;
+				this->m_pSSLCtx = nullptr;
+#endif
 				continue;
 			}
 

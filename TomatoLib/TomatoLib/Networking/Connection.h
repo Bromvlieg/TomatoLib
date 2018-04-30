@@ -11,8 +11,15 @@
 #include <functional>
 #include <thread>
 
+#include "../Config.h"
+
+#ifdef TL_ENABLE_SSL
+#include <openssl/x509.h>
+#endif
+
 namespace TomatoLib {
 	class Packet;
+	class Connection;
 
 	typedef bool(*IncommingPacketCallback)(void* Tag, Packet& p);
 
@@ -51,6 +58,13 @@ namespace TomatoLib {
 	public:
 		EzSock Sock;
 
+#ifdef TL_ENABLE_SSL
+		SSL_CTX* m_pSSLCtx;
+		SSL*     m_pSSL;
+
+		std::function<bool(Connection& con, X509& cert)> VerifySSLCertificateCallback;
+#endif
+
 		time_t LastReceivedPacket;
 		ConnectionPacketIDType PIDType;
 		ConnectionPacketDataLengthType DataLengthType;
@@ -62,7 +76,7 @@ namespace TomatoLib {
 		void StartThreads();
 
 		bool IsConnected();
-		bool Connect(std::string ip, int port);
+		bool Connect(std::string ip, int port, bool usessl = false);
 		void ConnectThreaded(std::string ip, int port, std::function<void(bool)> callback);
 		void Update();
 		void Disconnect();
