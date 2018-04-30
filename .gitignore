@@ -282,3 +282,8 @@ FakesAssemblies/
 
 # Vim and linux tools
 tags
+
+#cmake
+CMakeFiles/*
+cmake_install.cmake
+MakeFile
