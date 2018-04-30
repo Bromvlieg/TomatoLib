@@ -93,6 +93,22 @@ namespace TomatoLib {
 		return sp;
 	}
 
+	Vector3 Camera::ScreenToWorld(const Vector2& screen_pos, const Vector2& winsize) {
+		Matrix& view = this->mat;
+		Matrix& proj = this->projmat;
+
+		Matrix viewproj_inv = (proj * view).Inverted();
+
+		float screenx_clip = 2 * (screen_pos.X / winsize.X) - 1;
+		float screeny_clip = -(1 - 2 * (screen_pos.Y) / winsize.Y);
+
+		Vector4 screen_clip = {screenx_clip, screeny_clip, -1, 1};
+		Vector4 world_pos = viewproj_inv.Translate(screen_clip);
+
+		world_pos /= world_pos.W;
+
+		return {world_pos.X, world_pos.Y, world_pos.Z};
+	}
 
 
 	void Camera::SetSpeed(float speed) {
@@ -109,9 +125,9 @@ namespace TomatoLib {
 
 	Vector3 Camera::GetForward() {
 		return {
-			sin(pitch) * cos(yaw),
-			sin(pitch) * sin(yaw),
-			cos(pitch)
+			sinf(pitch) * cosf(yaw),
+			sinf(pitch) * sinf(yaw),
+			cosf(pitch)
 		};
 	}
 
@@ -129,33 +145,33 @@ namespace TomatoLib {
 		Vector3 movement;
 		if (w.KeysIn[GLFW_KEY_W]) {
 			movement += Vector3(
-				cos(this->GetYaw()) * speed,
-				sin(this->GetYaw()) * speed,
-				cos(this->GetPitch()) * speed
+				cosf(this->GetYaw()) * speed,
+				sinf(this->GetYaw()) * speed,
+				cosf(this->GetPitch()) * speed
 				);
 		}
 
 		if (w.KeysIn[GLFW_KEY_S]) {
 			movement += Vector3(
-				-cos(this->GetYaw()) * speed,
-				-sin(this->GetYaw()) * speed,
-				-cos(this->GetPitch()) * speed
+				-cosf(this->GetYaw()) * speed,
+				-sinf(this->GetYaw()) * speed,
+				-cosf(this->GetPitch()) * speed
 				);
 		}
 
 		//left/right motion
 		if (w.KeysIn[GLFW_KEY_A]) {
 			movement += Vector3(
-				cos(float(this->GetYaw() + (M_PI / 180) * -90)) * speed,
-				sin(float(this->GetYaw() + (M_PI / 180) * -90)) * speed,
+				cosf(float(this->GetYaw() + (M_PI / 180) * -90)) * speed,
+				sinf(float(this->GetYaw() + (M_PI / 180) * -90)) * speed,
 				0
 				);
 		}
 
 		if (w.KeysIn[GLFW_KEY_D]) {
 			movement += Vector3(
-				cos(float(this->GetYaw() + (M_PI / 180) * 90)) * speed,
-				sin(float(this->GetYaw() + (M_PI / 180) * 90)) * speed,
+				cosf(float(this->GetYaw() + (M_PI / 180) * 90)) * speed,
+				sinf(float(this->GetYaw() + (M_PI / 180) * 90)) * speed,
 				0
 				);
 		}
