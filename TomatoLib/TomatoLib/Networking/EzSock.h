@@ -42,7 +42,7 @@ namespace TomatoLib {
 		unsigned long fromAddr_len = 0;
 
 		SockState state = skDISCONNECTED;
-		int sock = INVALID_SOCKET;
+		int sock = -1;
 
 		int lastCode = 0;
 
