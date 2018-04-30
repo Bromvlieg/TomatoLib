@@ -11,19 +11,19 @@ typedef int socklen_t;
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <string.h>
+#include <cstring.h>
 #endif
 
 #if !defined(SOCKET_ERROR)
-#define SOCKET_ERROR -1
+#define SOCKET_ERROR (-1)
 #endif
 
 #if !defined(SOCKET_NONE)
-#define SOCKET_NONE 0
+#define SOCKET_NONE (0)
 #endif
 
 #if !defined(INVALID_SOCKET)
-#define INVALID_SOCKET -1
+#define INVALID_SOCKET (-1)
 #endif
 
 namespace TomatoLib {
@@ -35,15 +35,10 @@ namespace TomatoLib {
 		WSAStartup(MAKEWORD(1, 1), &wsda);
 #endif
 
-		this->sock = INVALID_SOCKET;
-		this->blocking = true;
-		this->Valid = false;
 		this->scks = new fd_set;
 		this->times = new timeval;
 		this->times->tv_sec = 0;
 		this->times->tv_usec = 0;
-		this->state = skDISCONNECTED;
-		this->totaldata = 0;
 	}
 
 	EzSock::~EzSock() {
@@ -87,9 +82,9 @@ namespace TomatoLib {
 		addr.sin_family = AF_INET;
 		addr.sin_addr.s_addr = htonl(INADDR_ANY);
 		addr.sin_port = htons(port);
-		lastCode = ::bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+		lastCode = ::bind(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr));
 
-		return !lastCode;
+		return this->lastCode > 0 ? false : true;
 	}
 
 	bool EzSock::listen() {
@@ -105,7 +100,7 @@ namespace TomatoLib {
 		if (!blocking && !CanRead()) return false;
 
 		int length = sizeof(socket->addr);
-		socket->sock = ::accept(sock, (struct sockaddr*) &socket->addr, (socklen_t*)&length);
+		socket->sock = ::accept(sock, reinterpret_cast<struct sockaddr*>(&socket->addr), reinterpret_cast<socklen_t*>(&length));
 
 		lastCode = socket->sock;
 		if (socket->sock == SOCKET_ERROR)
@@ -128,7 +123,7 @@ namespace TomatoLib {
 		sock = INVALID_SOCKET;
 	}
 
-	long EzSock::uAddr() {
+	uint64_t EzSock::uAddr() {
 		return addr.sin_addr.s_addr;
 	}
 
@@ -138,7 +133,7 @@ namespace TomatoLib {
 
 		struct hostent* phe;
 		phe = gethostbyname(host);
-		if (phe == NULL)
+		if (phe == nullptr)
 			return 2;
 
 		memcpy(&addr.sin_addr, phe->h_addr, sizeof(struct in_addr));
@@ -146,7 +141,7 @@ namespace TomatoLib {
 		addr.sin_family = AF_INET;
 		addr.sin_port = htons(port);
 
-		if (::connect(sock, (struct sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
+		if (::connect(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) == SOCKET_ERROR)
 			return 3;
 
 		state = skCONNECTED;
@@ -156,9 +151,9 @@ namespace TomatoLib {
 
 	bool EzSock::CanRead() {
 		FD_ZERO(scks);
-		FD_SET((unsigned)sock, scks);
+		FD_SET(static_cast<unsigned>(sock), scks);
 
-		return select(sock + 1, scks, NULL, NULL, times) > 0;
+		return select(sock + 1, scks, nullptr, nullptr, times) > 0;
 	}
 
 	bool EzSock::IsError() {
@@ -166,9 +161,9 @@ namespace TomatoLib {
 			return true;
 
 		FD_ZERO(scks);
-		FD_SET((unsigned)sock, scks);
+		FD_SET(static_cast<unsigned>(sock), scks);
 
-		if (select(sock + 1, NULL, NULL, scks, times) >= 0)
+		if (select(sock + 1, nullptr, nullptr, scks, times) >= 0)
 			return false;
 
 		state = skERROR;
@@ -177,23 +172,23 @@ namespace TomatoLib {
 
 	int EzSock::ReceiveUDP(unsigned char* buffer, int size, sockaddr_in* from) {
 #ifdef _MSC_VER
-		int client_length = (int)sizeof(struct sockaddr_in);
-		return recvfrom(this->sock, (char*)buffer, size, 0, (struct sockaddr*)from, &client_length);
+		int client_length = static_cast<int>(sizeof(struct sockaddr_in));
+		return recvfrom(this->sock, reinterpret_cast<char*>(buffer), size, 0, reinterpret_cast<struct sockaddr*>(from), &client_length);
 #else
-		unsigned int client_length = (unsigned int)sizeof(struct sockaddr_in);
-		return recvfrom(this->sock, (char*)buffer, size, 0, (struct sockaddr*)from, &client_length);
+		unsigned int client_length = static_cast<unsigned int>(sizeof(struct sockaddr_in));
+		return recvfrom(this->sock, reinterpret_cast<char*>(buffer), size, 0, reinterpret_cast<struct sockaddr*>(from), &client_length);
 #endif
 	}
 
 	int EzSock::Receive(unsigned char* buffer, int size, int spos) {
-		return recv(this->sock, (char*)buffer + spos, size, 0);
+		return recv(this->sock, reinterpret_cast<char*>(buffer) + spos, size, 0);
 	}
 
 	int EzSock::SendUDP(unsigned char* buffer, int size, sockaddr_in* to) {
-		return sendto(this->sock, (char*)buffer, size, 0, (struct sockaddr *)&to, sizeof(struct sockaddr_in));
+		return sendto(this->sock, reinterpret_cast<char*>(buffer), size, 0, reinterpret_cast<struct sockaddr*>(&to), sizeof(struct sockaddr_in));
 	}
 
 	int EzSock::SendRaw(unsigned char* data, int dataSize) {
-		return send(this->sock, (char*)data, dataSize, 0);
+		return send(this->sock, reinterpret_cast<char*>(data), dataSize, 0);
 	}
 }

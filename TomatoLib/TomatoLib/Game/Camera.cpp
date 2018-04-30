@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "../Math/Matrix.h"
 #include "../Defines.h"
+#include "../Math/Vector4.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
