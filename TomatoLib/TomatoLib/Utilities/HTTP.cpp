@@ -1,4 +1,4 @@
-﻿#include "HTTP.h"
+#include "HTTP.h"
 
 #include "../Networking/Packet.h"
 #include "../Networking/EzSock.h"
@@ -82,12 +82,12 @@ namespace TomatoLib {
 		return ret;
 	}
 
-	void HTTP::Request(std::string url, std::string method, const std::string& body, const std::string& bodytype, std::function<void(bool success, Dictonary<std::string, std::string>& headers, unsigned char* body, unsigned int bodysize)> callback) {
+	void HTTP::Request(std::string url, std::string method, const std::string body, const std::string bodytype, std::function<void(bool success, Dictonary<std::string, std::string>& headers, unsigned char* body, unsigned int bodysize)> callback) {
 		Dictonary<std::string, std::string> headers;
 		HTTP::Request(url, method, body, bodytype, headers, callback);
 	}
 
-	void HTTP::Request(std::string url, std::string method, const std::string& body, const std::string& bodytype, Dictonary<std::string, std::string>& reqheaders, std::function<void(bool success, Dictonary<std::string, std::string>& headers, unsigned char* body, unsigned int bodysize)> callback) {
+	void HTTP::Request(std::string url, std::string method, const std::string body, const std::string bodytype, Dictonary<std::string, std::string> reqheaders, std::function<void(bool success, Dictonary<std::string, std::string>& headers, unsigned char* body, unsigned int bodysize)> callback) {
 		if (url.find("http://") == 0) {
 			url = url.substr(7);
 		}

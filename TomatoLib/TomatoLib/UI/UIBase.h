@@ -54,6 +54,8 @@ namespace TomatoLib {
 		std::function<void()> OnKill;
 		std::function<void()> OnShow;
 		std::function<void()> OnHide;
+		std::function<bool(int x, int y, int mousebtn)> OnCanClick;
+		std::function<bool(int key)> OnCanPress;
 
 		void _InternalDraw(Render& drawer);
 		void _InternalUpdate();

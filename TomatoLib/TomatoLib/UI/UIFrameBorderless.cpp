@@ -16,7 +16,9 @@ namespace TomatoLib {
 		this->MaxButton = nullptr;
 		this->_ResizeMode = 0;
 		this->MovingEnabled = false;
+		this->MovingEnabledBody = false;
 
+		this->_DragYOffset = 20;
 		this->_GrabX = -1;
 		this->_GrabY = -1;
 
@@ -27,8 +29,9 @@ namespace TomatoLib {
 		int& gx = this->_GrabX;
 		int& gy = this->_GrabY;
 		int& rm = this->_ResizeMode;
+		int& dry = this->_DragYOffset;
 
-		this->OnPress = [this, &gx, &gy, &ow, &oh, &ox, &oy, &rm](int x, int y, int button) {
+		this->OnPress = [this, &gx, &gy, &ow, &oh, &ox, &oy, &rm, &dry](int x, int y, int button) {
 			if (button != GLFW_MOUSE_BUTTON_LEFT) return;
 
 			gx = x;
@@ -49,7 +52,15 @@ namespace TomatoLib {
 				if (y > this->H - bs) rm |= 8;
 			}
 
-			if (this->MovingEnabled && rm == 0) rm = 16;
+			if (this->MovingEnabled && rm == 0) {
+				if (this->MovingEnabledBody) {
+					rm = 16;
+				} else {
+					if (y - dry < 0) {
+						rm = 16;
+					}
+				}
+			}
 		};
 
 		this->OnRelease = [this, &gx, &gy, &rm](int x, int y, int button) {
@@ -186,6 +197,10 @@ namespace TomatoLib {
 
 	void UIFrameBorderless::EnableMoving() {
 		this->MovingEnabled = true;
+	}
+
+	void UIFrameBorderless::EnableMovingBody() {
+		this->MovingEnabledBody = true;
 	}
 
 	void UIFrameBorderless::SetResizeBorderSize(int size) {
