@@ -5,6 +5,7 @@ cmake_policy(VERSION 3.0)
 
 set(tomato_INCLUDES "")
 set(tomato_LIBRARIES "")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory("TomatoLib/TomatoLib/Libaries")
 
