@@ -11,7 +11,7 @@ typedef int socklen_t;
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <cstring.h>
+#include <cstring>
 #endif
 
 #if !defined(SOCKET_ERROR)
