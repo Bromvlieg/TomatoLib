@@ -285,5 +285,6 @@ tags
 
 #cmake
 CMakeFiles/*
+TomatoLib/TomatoLib/Libaries/*
 cmake_install.cmake
 MakeFile
