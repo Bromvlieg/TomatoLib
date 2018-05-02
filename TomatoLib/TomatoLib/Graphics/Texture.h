@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __TEXTURELOADER_H__
 #define __TEXTURELOADER_H__
-
+ 
 #include <vector>
 #include "Color.h"
 

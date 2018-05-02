@@ -1,5 +1,5 @@
 #include "Texture.h"
-
+ 
 #include "../Libaries/LodePNG/lodepng.h"
 #include "../Defines.h"
 
