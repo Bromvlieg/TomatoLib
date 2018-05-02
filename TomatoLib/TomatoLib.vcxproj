@@ -11,12 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TomatoLib\Game\Content.cpp" />
     <ClCompile Include="TomatoLib\Async\Async.cpp" />
     <ClCompile Include="TomatoLib\Game\Game.cpp" />
     <ClCompile Include="TomatoLib\Graphics\Font.cpp" />
     <ClCompile Include="TomatoLib\Graphics\Model.cpp" />
     <ClCompile Include="TomatoLib\Libaries\md5\md5.cpp" />
     <ClCompile Include="TomatoLib\MapFormats\Bsp.cpp" />
+    <ClCompile Include="TomatoLib\Math\Rectangle.cpp" />
+    <ClCompile Include="TomatoLib\Math\Vector4.cpp" />
     <ClCompile Include="TomatoLib\ModelFormats\Obj.cpp" />
     <ClCompile Include="TomatoLib\Networking\Connection.cpp" />
     <ClCompile Include="TomatoLib\Networking\Server.cpp" />
@@ -59,12 +62,15 @@
   <ItemGroup>
     <ClInclude Include="TomatoLib\Async\Async.h" />
     <ClInclude Include="TomatoLib\Config.h" />
+    <ClInclude Include="TomatoLib\Game\Content.h" />
     <ClInclude Include="TomatoLib\Defines.h" />
     <ClInclude Include="TomatoLib\Game\Game.h" />
     <ClInclude Include="TomatoLib\Graphics\Font.h" />
     <ClInclude Include="TomatoLib\Graphics\Model.h" />
     <ClInclude Include="TomatoLib\Libaries\md5\md5.h" />
     <ClInclude Include="TomatoLib\MapFormats\Bsp.h" />
+    <ClInclude Include="TomatoLib\Math\Rectangle.h" />
+    <ClInclude Include="TomatoLib\Math\Vector4.h" />
     <ClInclude Include="TomatoLib\ModelFormats\Obj.h" />
     <ClInclude Include="TomatoLib\Networking\Connection.h" />
     <ClInclude Include="TomatoLib\Networking\Server.h" />
@@ -78,6 +84,7 @@
     <ClInclude Include="TomatoLib\UI\UITexture.h" />
     <ClInclude Include="TomatoLib\Utilities\Dictonary.h" />
     <ClInclude Include="TomatoLib\Networking\EzSock.h" />
+    <ClInclude Include="TomatoLib\Utilities\dirent.h" />
     <ClInclude Include="TomatoLib\Utilities\HTTP.h" />
     <ClInclude Include="TomatoLib\Utilities\List.h" />
     <ClInclude Include="TomatoLib\Math\AABB.h" />
@@ -111,6 +118,7 @@
     <ProjectGuid>{F7F38EB5-77D0-49C8-8298-77535554D4E8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TomatoLib</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -143,10 +151,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINDOWS;WIN32;_DEBUG;_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\OpenSSL\include;E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,8 +171,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;RELEASE;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINDOWS;WIN32;RELEASE;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\AutoSync\Programming\Libs\OpenSSL\include;E:\AutoSync\Programming\Libs\glew-1.10.0\include;E:\AutoSync\Programming\Libs\vtflib\lib;E:\AutoSync\Programming\Libs\FreeTypeGL;E:\AutoSync\Programming\Libs\glfw-3.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4049;4099</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>

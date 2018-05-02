@@ -7,6 +7,7 @@
 #include <vector>
 #include <fcntl.h>
 #include <ctype.h>
+#include <cinttypes>
 
 #ifdef _MSC_VER
 #include <winsock2.h>
@@ -33,16 +34,17 @@ namespace TomatoLib {
 			skERROR
 		};
 
-		bool blocking;
-		bool Valid;
+		bool blocking = true;
+		bool Valid = false;
 
 		struct sockaddr_in addr;
 		struct sockaddr_in fromAddr;
-		unsigned long fromAddr_len;
+		unsigned long fromAddr_len = 0;
 
-		SockState state;
+		SockState state = skDISCONNECTED;
+		int sock = -1;
 
-		int lastCode;
+		int lastCode = 0;
 
 		EzSock();
 		~EzSock();
@@ -56,12 +58,11 @@ namespace TomatoLib {
 		int connect(const char* host, unsigned short port);
 		void close();
 
-		long uAddr();
+		uint64_t uAddr();
 		bool IsError();
 
 		bool CanRead();
 
-		int sock;
 		int Receive(unsigned char* buffer, int size, int spos = 0);
 		int SendRaw(unsigned char* data, int dataSize);
 		int SendUDP(unsigned char* buffer, int size, sockaddr_in* to);

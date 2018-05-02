@@ -79,8 +79,9 @@ add_library(tomato
 	${presrc}/Math/Matrix.cpp
 	${presrc}/Math/AABB.cpp
 	${presrc}/Math/Rectangle.cpp
-	${presrc}/Math/Vector3.cpp
 	${presrc}/Math/Vector2.cpp
+	${presrc}/Math/Vector3.cpp
+	${presrc}/Math/Vector4.cpp
 	${presrc}/ModelFormats/Obj.cpp
 	${presrc}/Utilities/Utilities.cpp
 	${presrc}/Utilities/HTTP.cpp

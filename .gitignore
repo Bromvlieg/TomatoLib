@@ -282,3 +282,9 @@ FakesAssemblies/
 
 # Vim and linux tools
 tags
+
+#cmake
+CMakeFiles/*
+TomatoLib/TomatoLib/Libaries/*
+cmake_install.cmake
+MakeFile
