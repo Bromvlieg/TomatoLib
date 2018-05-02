@@ -1,4 +1,4 @@
-# TomatoLib
+# Better than brom - TomatoLib
 
 XNA-inspired rendering engine built on OpenGL and SFML.
 
