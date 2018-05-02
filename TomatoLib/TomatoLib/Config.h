@@ -23,7 +23,4 @@
 //#define TL_ENABLE_EGL
 #endif
 
-#define TL_ENABLE_FTGL
-#define TL_ENABLE_GLFW
-
 #endif

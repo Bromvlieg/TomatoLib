@@ -9,7 +9,7 @@
 #include "../Defines.h"
 
 
-#if _WIN32
+#if WINDOWS
 #include "../Utilities/dirent.h"
 #else
 // For memcpy()

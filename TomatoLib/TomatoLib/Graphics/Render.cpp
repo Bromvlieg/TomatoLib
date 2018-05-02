@@ -805,7 +805,7 @@ namespace TomatoLib {
 				continue;
 			}
 
-			if (i > 0 && glyph->kerning) {
+			if (i > 0) {
 #ifndef TL_ENABLE_FTGL
 				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
 					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
@@ -931,7 +931,7 @@ namespace TomatoLib {
 				continue;
 			}
 
-			if (i > 0 && glyph->kerning) {
+			if (i > 0) {
 #ifndef TL_ENABLE_FTGL
 				for (size_t i2 = 0; i2 < glyph->kerning_count; ++i2) {
 					const ftgl::kerning_t* kerning = &glyph->kerning[i2];
