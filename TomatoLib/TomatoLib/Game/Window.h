@@ -59,7 +59,7 @@ namespace TomatoLib {
 		virtual void SetMouse(int x, int y);
 		virtual void SetMouse(const Vector2& pos);
 
-		virtual bool Create(unsigned int w, unsigned int h, bool fullscreen = false, bool resizable = false);
+		virtual bool Create(unsigned int w, unsigned int h, bool fullscreen = false, bool resizable = false, int monitorid = -1);
 		virtual void SwapBuffer();
 		virtual void PollEvents();
 		virtual void Close();
