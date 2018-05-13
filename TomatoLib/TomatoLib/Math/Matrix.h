@@ -19,6 +19,7 @@ namespace TomatoLib {
 		static Matrix CreateLookAt(float eyex, float eyey, float eyez, float targetx, float targety, float targetz, float upx, float upy, float upz);
 		static Matrix CreateLookAt(const Vector3& eyePos, const Vector3& targetPos, const Vector3& up);
 		static Matrix CreatePerspective(float fovy, float aspect, float zNear, float zFar);
+		static Matrix CreateOrthographic(float l, float r, float t, float b, float n, float f);
 
 
 		~Matrix();
