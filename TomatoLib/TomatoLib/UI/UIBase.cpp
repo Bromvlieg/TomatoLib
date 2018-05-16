@@ -99,6 +99,7 @@ namespace TomatoLib {
 
 	void UIBase::Show() {
 		this->GenerateTabIndexes();
+		this->InvalidateLayoutWithChilds();
 
 		this->ShouldRender = true;
 		this->SetFocus();
@@ -348,10 +349,26 @@ namespace TomatoLib {
 	}
 
 	void UIBase::InvalidateLayoutWithChilds() {
+		bool old = this->_ProtectedScopeFlag;
+		this->_ProtectedScopeFlag = true;
+
 		this->InvalidateLayout();
+		this->OnInvalidateLayout();
+		if (this->_ProtectedRemoveFlag) { delete this; return; };
+
+		this->_ProtectedScopeFlag = old;
 
 		for (unsigned int i = 0; i < this->Children.size(); i++) {
+			old = this->Children[i]->_ProtectedScopeFlag;
+			this->Children[i]->_ProtectedScopeFlag = true;
+
 			this->Children[i]->InvalidateLayoutWithChilds();
+			if (this->Children[i]->_ProtectedRemoveFlag) {
+				delete this->Children[i];
+				i--;
+			};
+
+			this->Children[i]->_ProtectedScopeFlag = old;
 		}
 	}
 
