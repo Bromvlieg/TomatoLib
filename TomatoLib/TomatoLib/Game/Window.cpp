@@ -252,7 +252,7 @@ namespace TomatoLib {
 #endif
 	}
 
-	bool Window::Create(unsigned int w, unsigned int h, bool fullscreen, bool resizable) {
+	bool Window::Create(unsigned int w, unsigned int h, bool fullscreen, bool resizable, int monitorid) {
 #ifdef TL_ENABLE_GLFW
 		if (glfwInit() != GL_TRUE) {
 			printf("glfwInit failed!\n");
@@ -261,7 +261,22 @@ namespace TomatoLib {
 
 		glfwSetErrorCallback(error_callback);
 
-		GLFWmonitor* mon = glfwGetPrimaryMonitor();
+		GLFWmonitor* mon = nullptr;
+		bool isborderless = this->Hints.ContainsKey(GLFW_DECORATED) || this->Hints[GLFW_DECORATED];
+		
+		if (monitorid >= 0) {
+			int monitorscount = 0;
+			auto monitors = glfwGetMonitors(&monitorscount);
+			if (monitorid < monitorscount) {
+				mon = monitors[monitorid];
+				this->Hints[GLFW_VISIBLE] = 0;
+			}
+		}
+
+		if (mon == nullptr) {
+			mon = glfwGetPrimaryMonitor();
+		}
+
 		if (mon == nullptr) {
 			printf("glfwGetPrimaryMonitor failed!\n");
 			return false;
@@ -272,8 +287,11 @@ namespace TomatoLib {
 		if (fullscreen) {
 			w = (unsigned int)mode->width;
 			h = (unsigned int)mode->height;
-		} else if (w >= (unsigned int)mode->width || h >= (unsigned int)mode->height) {
-			fullscreen = true;
+			if (isborderless) {
+				fullscreen = false;
+			}
+		} else if ((w >= (unsigned int)mode->width || h >= (unsigned int)mode->height)) {
+			if (!isborderless) fullscreen = true;
 			w = (unsigned int)mode->width;
 			h = (unsigned int)mode->height;
 		}
@@ -291,6 +309,17 @@ namespace TomatoLib {
 			return false;
 		}
 
+		if (!fullscreen) {
+			int monx = 0;
+			int mony = 0;
+			int monw = 0;
+			int monh = 0;
+
+			glfwGetMonitorPos(mon, &monx, &mony);
+			glfwSetWindowPos(this->Handle, monx + mode->width / 2 - w / 2, mony + mode->height / 2 - h / 2);
+			glfwShowWindow(this->Handle);
+		}
+
 #ifdef WINDOWS
 		HANDLE hIcon = LoadIconW(GetModuleHandleW(NULL), L"GLFW_ICON");
 		if (!hIcon) {
@@ -304,8 +333,6 @@ namespace TomatoLib {
 #endif
 
 		this->SetCallbacks();
-
-		if (!fullscreen) glfwSetWindowPos(this->Handle, mode->width / 2 - w / 2, mode->height / 2 - h / 2);
 
 		glfwMakeContextCurrent(this->Handle);
 		glViewport(0, 0, w, h);

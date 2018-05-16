@@ -225,6 +225,22 @@ namespace TomatoLib {
 		return retVal;
 	}
 
+	Matrix Matrix::CreateOrthographic(float l, float r, float t, float b, float n, float f) {
+		Matrix retVal;
+
+		retVal.values[0] = 2 / (r - l);
+		retVal.values[5] = 2 / (t - b);
+		retVal.values[10] = -2 / (f - n);
+		//retVal.values[10] = -2 / (f - n);
+		retVal.values[15] = 1;
+
+		/*retVal.values[12] = -((r + l) / (r - l));
+		retVal.values[13] = -((t + b) / (t - b));
+		retVal.values[14] = -((f + n) / (f - n));*/
+
+		return retVal;
+	}
+
 	Vector4 Matrix::Translate(float x, float y, float z, float w) const {
 		Vector4 retVal;
 		retVal.X = values[ 0] * x + values[ 1] * y + values[ 2] * z + values[ 3] * w;

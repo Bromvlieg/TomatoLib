@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __TEXTURELOADER_H__
 #define __TEXTURELOADER_H__
-
+ 
 #include <vector>
 #include "Color.h"
 
@@ -11,7 +11,7 @@ namespace TomatoLib {
 		Texture();
 		Texture(const Texture& t);
 		Texture(unsigned int w, unsigned int h);
-		Texture(const char* fileName);
+		Texture(const std::string& fileName);
 		~Texture();
 
 		bool RegisteredInGL;
@@ -43,6 +43,7 @@ namespace TomatoLib {
 		void Use();
 		void Clear();
 		void Resize(int neww, int newh);
+		bool FromFile(const std::string& filename);
 	};
 }
 

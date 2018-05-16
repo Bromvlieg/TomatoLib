@@ -26,11 +26,11 @@ namespace TomatoLib {
 	}
 
 	float Vector3::Distance(const Vector3& other) const {
-		return sqrt(((this->X - other.X) * (this->X - other.X)) + ((this->Y - other.Y) * (this->Y - other.Y)) + ((this->Z - other.Z) * (this->Z - other.Z)));
+		return sqrtf(((this->X - other.X) * (this->X - other.X)) + ((this->Y - other.Y) * (this->Y - other.Y)) + ((this->Z - other.Z) * (this->Z - other.Z)));
 	}
 
 	float Vector3::Length() const {
-		return sqrt(pow(X, 2) + pow(Y, 2) + pow(Z, 2));
+		return sqrtf(pow(X, 2) + pow(Y, 2) + pow(Z, 2));
 	}
 
 	Vector3 Vector3::Normalized() const {
@@ -164,9 +164,9 @@ namespace TomatoLib {
 
 	Vector3 Vector3::FromAngles(float pitch, float yaw) {
 		return Vector3(
-			(float)(sin(pitch) * cos(yaw)),
-			(float)(sin(pitch) * sin(yaw)),
-			(float)(cos(pitch))
-			);
+			sinf(pitch) * cosf(yaw),
+			sinf(pitch) * sinf(yaw),
+			cosf(pitch)
+		);
 	}
 }

@@ -1,5 +1,5 @@
 #include "Texture.h"
-
+ 
 #include "../Libaries/LodePNG/lodepng.h"
 #include "../Defines.h"
 
@@ -26,18 +26,22 @@ namespace TomatoLib {
 		this->PixelData = std::vector<unsigned char>(w * h * 4);
 	}
 
-	Texture::Texture(const char* fileName) {
+	Texture::Texture(const std::string& fileName) {
 		this->RegisteredInGL = false;
 		this->GLHandle = -1;
-		this->Filename = fileName;
 
+		this->FromFile(fileName);
+	}
+
+	bool Texture::FromFile(const std::string& filename) {
 		std::vector<unsigned char> image;
-		unsigned error = lodepng::decode(image, this->Width, this->Height, fileName);
-		ASSERT(error == 0);
-		if (error != 0) return;
+		unsigned error = lodepng::decode(image, this->Width, this->Height, filename);
+		if (error != 0) return false;
 
-		this->Filename = fileName;
+		this->Filename = filename;
 		this->PixelData = image;
+
+		return true;
 	}
 
 	Texture::~Texture() {
