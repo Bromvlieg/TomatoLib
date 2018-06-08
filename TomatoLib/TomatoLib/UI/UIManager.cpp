@@ -152,10 +152,10 @@ namespace TomatoLib {
 
 		}
 
-		return false;
+		return this->OnAfterMouseInteracton(x, y, button, pressed, mods);
 	}
 
-	bool UIManager::HandleKeyboardInteraction(int key, unsigned char pressed, int mods) {
+	bool UIManager::HandleKeyboardInteraction(int key, bool pressed, int mods) {
 		if (this->OnBeforeKeyboardInteracton(key, pressed, mods)) return true;
 
 		if (pressed) {
@@ -201,7 +201,7 @@ namespace TomatoLib {
 			}
 		}
 
-		return false;
+		return this->OnAfterKeyboardInteracton(key, pressed, mods);
 	}
 
 	bool UIManager::HandleScrollInteraction(int scrollx, int scrolly) {
@@ -239,7 +239,8 @@ namespace TomatoLib {
 				return true;
 			}
 		}
-		return false;
+
+		return this->OnAfterScrollInteracton(scrollx, scrolly);
 	}
 
 	bool UIManager::HandleCharInteraction(int key) {
@@ -255,7 +256,7 @@ namespace TomatoLib {
 			return true;
 		}
 
-		return false;
+		return this->OnAfterCharInteraction(key);
 	}
 
 	UIManager::UIManager(Render& drawer) : Drawer(drawer) {
@@ -265,11 +266,6 @@ namespace TomatoLib {
 		this->ShowCursor = true;
 		this->OverrideShowCursor = true;
 		this->CurrentCursor = null;
-
-		this->OnBeforeMouseInteracton = [](int x, int y, int button, bool pressed, int mods) { return false; };
-		this->OnBeforeKeyboardInteracton = [](int key, unsigned char pressed, int mods) { return false; };
-		this->OnBeforeScrollInteracton = [](int x, int y) { return false; };
-		this->OnBeforeCharInteraction = [](int ch) { return false; };
 
 		TomatoLib::UIBase::DefaultUImanager = this;
 

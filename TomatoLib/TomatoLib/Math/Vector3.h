@@ -2,9 +2,9 @@
 #ifndef __VECTOR3_H__
 #define __VECTOR3_H__
 
-#include "Vector2.h"
-
 namespace TomatoLib {
+	class Vector2;
+
 	class Vector3 {
 	public:
 		float X, Y, Z;
