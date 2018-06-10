@@ -3,6 +3,7 @@
 #define __TL__ASYNC_H_
 
 #include <vector>
+#include <thread>
 #include <functional>
 
 #ifndef _MSC_VER
@@ -38,6 +39,9 @@ namespace TomatoLib {
 		bool IsAsyncThread();
 		void Init(int workers = 1);
 		void Shutdown();
+
+		void SetThreadName(std::thread* thread, const std::string& threadName);
+		void SetThreadName(const std::string& threadName);
 	}
 }
 

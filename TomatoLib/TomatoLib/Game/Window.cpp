@@ -32,7 +32,7 @@ namespace TomatoLib {
 		if (key < 0 || key > GLFW_KEY_LAST) return; // filter out hardware that wants to be special and has special keys.
 		if (CurrentWindow == nullptr) return;
 
-		bool ret = CurrentWindow->UIMan != nullptr && CurrentWindow->UIMan->HandleKeyboardInteraction(key, action, mods);
+		bool ret = CurrentWindow->UIMan != nullptr && CurrentWindow->UIMan->HandleKeyboardInteraction(key, action > 0, mods);
 		if (CurrentWindow == nullptr) return;
 
 		if (action == GLFW_REPEAT) return;

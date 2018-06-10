@@ -19,16 +19,13 @@ namespace TomatoLib {
 
 	void Shader::Cleanup() {
 #ifndef TL_OPENGL_OLD
-		checkGL;
 		if (this->ProgramHandle == -1) return;
 
 		for (int i = 0; i < this->Attached.Count; i++) {
 			glDeleteShader(this->Attached[i]);
-			checkGL;
 		}
 
 		glDeleteProgram(this->ProgramHandle);
-		checkGL;
 
 		this->ProgramHandle = -1;
 		this->Attached.Clear();
@@ -37,8 +34,6 @@ namespace TomatoLib {
 
 	bool Shader::Attach(std::string file, GLint mode) {
 #ifndef TL_OPENGL_OLD
-		checkGL;
-
 		std::ifstream infile;
 		infile.open( file, std::ifstream::binary );
 
@@ -98,21 +93,15 @@ namespace TomatoLib {
 		glAttachShader(this->ProgramHandle, handle);
 
 		this->Attached.Add(handle);
-
-		checkGL;
 #endif
 		return true;
 	}
 	
 	void Shader::AttachRaw(std::string text, GLint mode) {
 #ifndef TL_OPENGL_OLD
-		checkGL;
-
 		if (this->ProgramHandle == -1) {
 			this->ProgramHandle = glCreateProgram();
 		}
-
-		checkGL;
 
 		//Create new shader, set the source, and compile it
 		GLuint handle = glCreateShader(mode);
@@ -142,8 +131,6 @@ namespace TomatoLib {
 		glAttachShader(this->ProgramHandle, handle);
 
 		this->Attached.Add(handle);
-
-		checkGL;
 #endif
 	}
 

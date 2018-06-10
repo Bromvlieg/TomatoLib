@@ -2,6 +2,7 @@
 
 #include "../Networking/Packet.h"
 #include "../Networking/EzSock.h"
+#include "../Async/Async.h"
 
 #include <thread>
 #include <vector>
@@ -93,6 +94,8 @@ namespace TomatoLib {
 		}
 
 		new std::thread([url, method, callback, body, bodytype, reqheaders]() {
+			TomatoLib::Async::SetThreadName("TL:http_request");
+
 			Dictonary<std::string, std::string > headers;
 			std::string host;
 			std::string path;

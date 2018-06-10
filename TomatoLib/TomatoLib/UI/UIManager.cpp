@@ -158,46 +158,48 @@ namespace TomatoLib {
 	bool UIManager::HandleKeyboardInteraction(int key, bool pressed, int mods) {
 		if (this->OnBeforeKeyboardInteracton(key, pressed, mods)) return true;
 
-		if (pressed) {
-			if (this->FocusPanel != null) {
-				if (!this->FocusPanel->OnCanPress(key)) return false;
+		if (this->ShowCursor) {
+			if (pressed) {
+				if (this->FocusPanel != null) {
+					if (!this->FocusPanel->OnCanPress(key)) return false;
 
-				if (!this->FocusPanel->CanAcceptInput) {
-					if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null) {
+					if (!this->FocusPanel->CanAcceptInput) {
+						if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null) {
+							if (this->Console->ShouldRender == false) {
+								this->Console->Show();
+							} else {
+								this->Console->Hide();
+							}
+						}
+
+						return true;
+					}
+
+					if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null && this->Console->HasFocus()) {
+						this->Console->Hide();
+						return true;
+					}
+
+					this->FocusPanel->OnKeyDown(key);
+					if (this->FocusPanel != null) this->FocusPanel->OnInput(key, mods);
+					return true;
+				}
+
+				if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1)) {
+					if (this->Console != null) {
 						if (this->Console->ShouldRender == false) {
 							this->Console->Show();
 						} else {
 							this->Console->Hide();
 						}
+						return true;
 					}
-
+				}
+			} else {
+				if (this->FocusPanel != null && this->FocusPanel->CanAcceptInput) {
+					this->FocusPanel->OnKeyUp(key);
 					return true;
 				}
-
-				if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null && this->Console->HasFocus()) {
-					this->Console->Hide();
-					return true;
-				}
-
-				this->FocusPanel->OnKeyDown(key);
-				if (this->FocusPanel != null) this->FocusPanel->OnInput(key, mods);
-				return true;
-			}
-
-			if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1)) {
-				if (this->Console != null) {
-					if (this->Console->ShouldRender == false) {
-						this->Console->Show();
-					} else {
-						this->Console->Hide();
-					}
-					return true;
-				}
-			}
-		} else {
-			if (this->FocusPanel != null && this->FocusPanel->CanAcceptInput) {
-				this->FocusPanel->OnKeyUp(key);
-				return true;
 			}
 		}
 
