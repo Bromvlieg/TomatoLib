@@ -261,7 +261,7 @@ namespace TomatoLib {
 
 			struct dirent *ent;
 
-			while ((ent = readdir(d)) != NULL) {
+			while ((ent = readdir(d)) != nullptr) {
 				if (ent->d_name[0] == '.') continue;
 
 				if (ent->d_type == DT_DIR) {

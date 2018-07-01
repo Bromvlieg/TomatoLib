@@ -39,7 +39,7 @@ namespace TomatoLib {
 			this->MaxShownOptions = 5;
 			this->Align = TextAlign::MidLeft;
 
-			this->MainPanel = new UIPanel(null);
+			this->MainPanel = new UIPanel(nullptr);
 			this->MainPanel->SetPos(0, 0);
 			this->MainPanel->TopMost = true;
 			this->MainPanel->Hide();

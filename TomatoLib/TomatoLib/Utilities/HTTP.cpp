@@ -184,7 +184,7 @@ namespace TomatoLib {
 				while (true) {
 					std::string chunklendata = p.ReadUntil("\r\n");
 					chunklendata[chunklendata.size() - 2] = 0;
-					int toreceive = (int)strtol(chunklendata.c_str(), NULL, 16);
+					int toreceive = (int)strtol(chunklendata.c_str(), nullptr, 16);
 
 					if (toreceive == 0) break;
 					unsigned char* chunkdata = p.ReadBytes(toreceive + 2);
@@ -480,7 +480,7 @@ namespace TomatoLib {
 																 NAMED_ENTITIES, sizeof NAMED_ENTITIES / sizeof *NAMED_ENTITIES,
 																 sizeof *NAMED_ENTITIES, cmp);
 
-		return entity ? entity[1] : NULL;
+		return entity ? entity[1] : nullptr;
 	}
 
 	static size_t putc_utf8(unsigned long cp, char *buffer) {
@@ -521,7 +521,7 @@ namespace TomatoLib {
 		if (!end) return 0;
 
 		if (current[1] == '#') {
-			char *tail = NULL;
+			char *tail = nullptr;
 			int errno_save = errno;
 			bool hex = current[2] == 'x' || current[2] == 'X';
 

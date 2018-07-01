@@ -9,7 +9,7 @@
 #include <GLFW/glfw3.h>
 
 namespace TomatoLib {
-	UIContextMenu::UIContextMenu() : UIBase(null) {
+	UIContextMenu::UIContextMenu() : UIBase(nullptr) {
 		this->CanAcceptInput = true;
 		this->BorderColor = Color(0, 0, 0, 255);
 		this->BackColor = Color(60, 60, 60, 255);

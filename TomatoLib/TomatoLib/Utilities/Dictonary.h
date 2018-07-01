@@ -3,10 +3,6 @@
 
 #include "List.h"
 
-#ifndef null
-#define null 0
-#endif
-
 template<class KeyType, class ValueType>
 class Dictonary {
 public:
