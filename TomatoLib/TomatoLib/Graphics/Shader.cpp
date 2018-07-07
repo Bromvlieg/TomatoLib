@@ -97,7 +97,7 @@ namespace TomatoLib {
 		return true;
 	}
 	
-	void Shader::AttachRaw(std::string text, GLint mode) {
+	bool Shader::AttachRaw(std::string text, GLint mode) {
 #ifndef TL_OPENGL_OLD
 		if (this->ProgramHandle == -1) {
 			this->ProgramHandle = glCreateProgram();
@@ -125,13 +125,16 @@ namespace TomatoLib {
 			glDeleteShader(handle);
 
 			printf("Shader compile error: %s\n", log.c_str());
-			throw log.c_str();
+			return false;
 		}
 
 		glAttachShader(this->ProgramHandle, handle);
 
 		this->Attached.Add(handle);
+		return true;
 #endif
+
+		return false;
 	}
 
 	void Shader::Use() {
