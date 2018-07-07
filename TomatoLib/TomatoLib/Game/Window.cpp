@@ -119,6 +119,19 @@ namespace TomatoLib {
 #endif
 	}
 
+	bool Window::Destroy() {
+#ifdef TL_ENABLE_GLFW
+		if (this->Handle == nullptr) return true;
+
+		glfwDestroyWindow(this->Handle);
+		this->Handle = nullptr;
+
+		glGetError();
+#endif
+
+		return true;
+	}
+
 	void Window::SetTitle(std::string title) {
 #ifdef TL_ENABLE_GLFW
 		glfwSetWindowTitle(this->Handle, title.c_str());
@@ -189,8 +202,7 @@ namespace TomatoLib {
 		checkGL;
 
 #ifdef TL_ENABLE_GLFW
-		glfwDestroyWindow(this->Handle);
-		glGetError();
+		this->Destroy();
 
 		glfwTerminate();
 		glGetError();
