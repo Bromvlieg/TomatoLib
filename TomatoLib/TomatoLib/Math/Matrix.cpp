@@ -163,6 +163,14 @@ namespace TomatoLib {
 		return retVal;
 	}
 
+	Matrix Matrix::CreateScale(const Vector3& scale) {
+		Matrix retVal;
+		retVal.values[0] = scale.X;
+		retVal.values[5] = scale.Y;
+		retVal.values[10] = scale.Z;
+		return retVal;
+	}
+
 	Matrix Matrix::CreateTranslation(float x, float y, float z) {
 		Matrix retVal;
 		retVal.values[3] = x;
