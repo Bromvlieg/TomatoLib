@@ -24,9 +24,9 @@ namespace TomatoLib {
 
 		unsigned int CallsToDoOnAsyncThreadIndex = 0;
 
-		ringbuffer CallsToDoOnMainThread{32};
-		List<std::function<void()>> CallsToDoOnAsyncThread;
-		Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
+		ringbuffer<std::function<void()>> CallsToDoOnMainThread{64};
+		ringbuffer<std::function<void()>> CallsToDoOnAsyncThread{64};
+		std::map<unsigned long, ringbuffer<std::function<void()>>> CallsToDoOnThreads;
 
 		std::mutex ThreadCallsLock;
 		void RunMainThreadCalls() {
@@ -131,13 +131,15 @@ namespace TomatoLib {
 
 			if (!isblocking) {
 				ThreadsSepCallsLock.lock();
-				Async::CallsToDoOnThreads.Add(threadid, func);
+				if (Async::CallsToDoOnThreads.find(threadid) == Async::CallsToDoOnThreads.end()) Async::CallsToDoOnThreads[threadid].reserve(64);
+				Async::CallsToDoOnThreads[threadid].push(func);
 				ThreadsSepCallsLock.unlock();
 			} else {
 				bool isdone = false;
 
 				ThreadsSepCallsLock.lock();
-				Async::CallsToDoOnThreads.Add(threadid, [&isdone, func]() {
+				if (Async::CallsToDoOnThreads.find(threadid) == Async::CallsToDoOnThreads.end()) Async::CallsToDoOnThreads[threadid].reserve(64);
+				Async::CallsToDoOnThreads[threadid].push([&isdone, func]() {
 					func();
 					isdone = true;
 				});
@@ -150,60 +152,28 @@ namespace TomatoLib {
 		}
 
 		void RunThreadCalls() {
-			unsigned long tid = Async::GetThreadID();
-			unsigned int i = 0;
-
 			ThreadsSepCallsLock.lock();
-			for (int i = 0; i < Async::CallsToDoOnThreads.Count; i++) {
-				if (Async::CallsToDoOnThreads.Keys[i] != tid) continue;
-
-				std::function<void()> func = Async::CallsToDoOnThreads.RemoveAt(i);
+			auto& calls = Async::CallsToDoOnThreads[Async::GetThreadID()];
+			while (Async::CallsToDoOnThreads[Async::GetThreadID()].available()) {
 				ThreadsSepCallsLock.unlock();
-
-				func();
-
+				calls.pop()();
 				ThreadsSepCallsLock.lock();
 			}
 			ThreadsSepCallsLock.unlock();
 		}
 
-		std::mutex ThreadasyncCallsLock;
-		int doingAsyncCall = 0;
 		void RunAsyncThreadCalls() {
 			Async::CallsToDoOnAsyncThreadIndex = 0;
-			while (true) {
-				ThreadasyncCallsLock.lock();
-
-				if ((unsigned int)Async::CallsToDoOnAsyncThread.size() == 0) {
-					ThreadasyncCallsLock.unlock();
-
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-					break;
-				}
-
-				std::function<void()> func = Async::CallsToDoOnAsyncThread.RemoveAt(0);
-
-				doingAsyncCall++;
-				ThreadasyncCallsLock.unlock();
-
-				func();
-
-				ThreadasyncCallsLock.lock();
-				doingAsyncCall--;
-				ThreadasyncCallsLock.unlock();
+			while (Async::CallsToDoOnAsyncThread.available()) {
+				Async::CallsToDoOnAsyncThread.pop()();
 			}
+
 		}
 
 		void ClearAsyncThreadCalls() {
-			ThreadasyncCallsLock.lock();
-			while (doingAsyncCall || Async::CallsToDoOnAsyncThread.size() > 0) {
-				ThreadasyncCallsLock.unlock();
-
+			while (Async::CallsToDoOnAsyncThread.available()) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
-				ThreadasyncCallsLock.lock();
 			}
-			ThreadasyncCallsLock.unlock();
 		}
 		
 		void RunOnAsyncThread(const std::function<void()>& func, bool isblocking, bool forcequeue) {
@@ -213,18 +183,14 @@ namespace TomatoLib {
 			}
 
 			if (!isblocking) {
-				ThreadasyncCallsLock.lock();
-				Async::CallsToDoOnAsyncThread.push_back(func);
-				ThreadasyncCallsLock.unlock();
+				Async::CallsToDoOnAsyncThread.push(func);
 			} else {
 				bool isdone = false;
 
-				ThreadasyncCallsLock.lock();
-				Async::CallsToDoOnAsyncThread.push_back([&isdone, func]() {
+				Async::CallsToDoOnAsyncThread.push([&isdone, func]() {
 					func();
 					isdone = true;
 				});
-				ThreadasyncCallsLock.unlock();
 
 				while (!isdone) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(1));

@@ -317,5 +317,8 @@
     <ClInclude Include="TomatoLib\Math\Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TomatoLib\Utilities\ringbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
