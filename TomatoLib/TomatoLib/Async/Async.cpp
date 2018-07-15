@@ -103,7 +103,7 @@ namespace TomatoLib {
 			Async::ShouldShutdown = true;
 		}
 
-		void RunOnMainThread(std::function<void()> func, bool isblocking, bool forcequeue) {
+		void RunOnMainThread(const std::function<void()>& func, bool isblocking, bool forcequeue) {
 			if (Async::IsMainThread() && !forcequeue) {
 				func();
 				return;
@@ -113,24 +113,27 @@ namespace TomatoLib {
 				ThreadCallsLock.lock();
 				Async::CallsToDoOnMainThread.push_back(func);
 				ThreadCallsLock.unlock();
-			} else {
-				bool isdone = false;
 
-				ThreadCallsLock.lock();
-				Async::CallsToDoOnMainThread.push_back([&isdone, func]() {
-					func();
-					isdone = true;
-				});
-				ThreadCallsLock.unlock();
+				return;
+			}
 
-				while (!isdone) {
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
+			bool isdone = false;
+
+			ThreadCallsLock.lock();
+			Async::CallsToDoOnMainThread.push_back([&isdone, &func]() {
+				func();
+				isdone = true;
+			});
+
+			ThreadCallsLock.unlock();
+
+			while (!isdone) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 		}
 
 		std::mutex ThreadsSepCallsLock;
-		void RunOnThread(std::function<void()> func, unsigned long threadid, bool isblocking, bool forcequeue) {
+		void RunOnThread(const std::function<void()>& func, unsigned long threadid, bool isblocking, bool forcequeue) {
 			if (Async::GetThreadID() == threadid && !forcequeue) {
 				func();
 				return;
@@ -213,7 +216,7 @@ namespace TomatoLib {
 			ThreadasyncCallsLock.unlock();
 		}
 		
-		void RunOnAsyncThread(std::function<void()> func, bool isblocking, bool forcequeue) {
+		void RunOnAsyncThread(const std::function<void()>& func, bool isblocking, bool forcequeue) {
 			if (Async::IsAsyncThread() && !forcequeue) {
 				func();
 				return;
