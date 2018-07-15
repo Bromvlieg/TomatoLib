@@ -321,7 +321,7 @@ namespace TomatoLib {
 	}
 
 	std::string Packet::ReadUntil(const std::string& seq) {
-		size_t startpos = (size_t)this->InPos;
+		size_t startpos = static_cast<size_t>(this->InPos);
 		size_t seqsize = seq.size();
 
 		while (this->CanRead(1)) {
@@ -345,13 +345,8 @@ namespace TomatoLib {
 
 		if (startpos == this->InPos) return "";
 
-		char oldchar = this->InBuffer[this->InPos];
-		this->InBuffer[this->InPos] = 0;
-
-		std::string ret((char*)this->InBuffer + startpos);
-
-		this->InBuffer[this->InPos] = oldchar;
-		return ret;
+		const char* charbuf = reinterpret_cast<const char*>(this->InBuffer);
+		return std::string(charbuf, charbuf + (this->InPos - startpos));
 	}
 
 	int Packet::DataLeft() {
@@ -367,6 +362,7 @@ namespace TomatoLib {
 
 		if (res == false && this->Sock != nullptr) {
 			unsigned char* tmp = new unsigned char[numofbytes];
+			
 			int recamount = 0;
 			while (recamount != numofbytes) {
 				int currec = recv(this->Sock->sock, (char*)tmp + recamount, numofbytes - recamount, 0);
