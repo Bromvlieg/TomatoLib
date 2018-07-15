@@ -93,7 +93,7 @@ namespace TomatoLib {
 			url = url.substr(7);
 		}
 
-		new std::thread([url, method, callback, body, bodytype, reqheaders]() {
+		Async::RunOnAsyncThread([url, method, callback, body, bodytype, reqheaders]() {
 			TomatoLib::Async::SetThreadName("TL:http_request");
 
 			Dictonary<std::string, std::string > headers;
