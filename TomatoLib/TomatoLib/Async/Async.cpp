@@ -11,6 +11,7 @@
 
 namespace TomatoLib {
 	namespace Async {
+
 #ifdef _MSC_VER
 		unsigned long MainThreadID;
 		unsigned long AsyncThreadID;
@@ -23,25 +24,14 @@ namespace TomatoLib {
 
 		unsigned int CallsToDoOnAsyncThreadIndex = 0;
 
-		List<std::function<void()>> CallsToDoOnMainThread;
+		ringbuffer CallsToDoOnMainThread{32};
 		List<std::function<void()>> CallsToDoOnAsyncThread;
 		Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
 
 		std::mutex ThreadCallsLock;
 		void RunMainThreadCalls() {
-			unsigned int i = 0;
-			while (true) {
-				ThreadCallsLock.lock();
-				if (i >= Async::CallsToDoOnMainThread.size()) {
-					Async::CallsToDoOnMainThread.clear();
-					ThreadCallsLock.unlock();
-					break;
-				}
-
-				std::function<void()>& func = Async::CallsToDoOnMainThread[i++];
-				ThreadCallsLock.unlock();
-
-				func();
+			while(CallsToDoOnMainThread.available()) {
+				CallsToDoOnMainThread.pop()();
 			}
 		}
 
@@ -111,7 +101,7 @@ namespace TomatoLib {
 
 			if (!isblocking) {
 				ThreadCallsLock.lock();
-				Async::CallsToDoOnMainThread.push_back(func);
+				Async::CallsToDoOnMainThread.push(func);
 				ThreadCallsLock.unlock();
 
 				return;
@@ -120,7 +110,7 @@ namespace TomatoLib {
 			bool isdone = false;
 
 			ThreadCallsLock.lock();
-			Async::CallsToDoOnMainThread.push_back([&isdone, &func]() {
+			Async::CallsToDoOnMainThread.push([&isdone, &func]() {
 				func();
 				isdone = true;
 			});
