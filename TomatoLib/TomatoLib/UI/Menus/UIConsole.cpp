@@ -268,7 +268,10 @@ namespace TomatoLib {
 		if (this->RegisteredFunctions.ContainsKey(cmd)) {
 			output = this->RegisteredFunctions[cmd](args);
 			if (output.size() > 0) {
-				this->Print("<< " + output);
+				auto lines = Utilities::Split(output, '\n');
+				for (auto l : lines) {
+					this->Print("<< " + l);
+				}
 			}
 		} else if (this->RegisteredVariables.ContainsKey(cmd)) {
 			if (args.size() > 0) {
