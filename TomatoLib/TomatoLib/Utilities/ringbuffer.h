@@ -47,6 +47,7 @@ namespace TomatoLib {
 
 			// store new index
 			size_t writepos = this->m_writepos + 1;
+			writepos %= this->m_size;
 			this->m_buffer[writepos] = func;
 
 			// save it
@@ -61,10 +62,11 @@ namespace TomatoLib {
 
 			// store read index
 			size_t readpos = this->m_readpos + 1;
-			// set it thread safe
-			this->m_readpos = readpos % this->m_size;
+			readpos %= this->m_size;
+			auto& obj = this->m_buffer[readpos];
 
-			return this->m_buffer[readpos];
+			this->m_readpos = readpos;
+			return obj;
 		}
 
 		bool available() {
