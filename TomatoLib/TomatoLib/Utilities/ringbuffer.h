@@ -15,14 +15,15 @@ namespace TomatoLib {
 
 	public:
 		ringbuffer() = default;
-
-		ringbuffer(size_t size) : m_size(size), m_buffer() {
-			m_buffer.reserve(m_size);
+		ringbuffer(size_t size) : m_size(size) {
+			this->m_buffer.resize(m_size);
 		}
 
 		void reserve(size_t size) {
+			std::lock_guard<std::mutex> lockread {this->m_read_mutex};
+			std::lock_guard<std::mutex> lockwrite {this->m_write_mutex};
 			this->m_size = size;
-			m_buffer.reserve(size);
+			this->m_buffer.resize(size);
 		}
 
 		size_t size() {
@@ -30,40 +31,48 @@ namespace TomatoLib {
 		}
 
 		void clear() {
-			m_buffer.clear();
+			std::lock_guard<std::mutex> lock {this->m_read_mutex};
+			std::lock_guard<std::mutex> lock {this->m_write_mutex};
+			this->m_buffer.clear();
 
 			this->m_readpos = 0;
 			this->m_writepos = 0;
 		}
 
 		void push(const T& func) {
-			std::lock_guard<std::mutex> lock {m_write_mutex};
-			while ((m_writepos + 1) % m_size == m_readpos) {
+			std::lock_guard<std::mutex> lock {this->m_write_mutex};
+			while ((this->m_writepos + 1) % this->m_size == this->m_readpos) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 
-			m_buffer[m_writepos++] = func;
-			m_writepos = m_writepos % m_size;
+			// store new index
+			size_t writepos = this->m_writepos + 1;
+			this->m_buffer[writepos] = func;
+
+			// save it
+			this->m_writepos = writepos % this->m_size;
 		}
 
 		T pop() {
-			std::lock_guard<std::mutex> lock {m_read_mutex};
-			while (m_readpos == m_writepos) {
+			std::lock_guard<std::mutex> lock {this->m_read_mutex};
+			while (this->m_readpos == this->m_writepos) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 
-			size_t readpos = m_readpos++;
-			m_readpos = m_readpos % m_size;
+			// store read index
+			size_t readpos = this->m_readpos + 1;
+			// set it thread safe
+			this->m_readpos = readpos % this->m_size;
 
-			return m_buffer[readpos];
+			return this->m_buffer[readpos];
 		}
 
 		bool available() {
-			return m_readpos != m_writepos;
+			return this->m_readpos != this->m_writepos;
 		}
 
 		size_t available_count() {
-			return ((m_writepos + m_size) - m_readpos) % m_size;
+			return ((this->m_writepos + this->m_size) - this->m_readpos) % this->m_size;
 		}
 	};
 }
