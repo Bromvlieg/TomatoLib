@@ -21,14 +21,14 @@ namespace TomatoLib {
 #ifndef TL_OPENGL_OLD
 		if (this->ProgramHandle == -1) return;
 
-		for (int i = 0; i < this->Attached.Count; i++) {
-			glDeleteShader(this->Attached[i]);
+		for (size_t i = 0; i < this->Attached.size(); i++) {
+			glDeleteShader(this->Attached[i].m_handle);
 		}
 
 		glDeleteProgram(this->ProgramHandle);
 
 		this->ProgramHandle = -1;
-		this->Attached.Clear();
+		this->Attached.clear();
 #endif
 	}
 
@@ -92,7 +92,7 @@ namespace TomatoLib {
 
 		glAttachShader(this->ProgramHandle, handle);
 
-		this->Attached.Add(handle);
+		this->Attached.emplace_back(file, handle);
 #endif
 		return true;
 	}
@@ -130,7 +130,7 @@ namespace TomatoLib {
 
 		glAttachShader(this->ProgramHandle, handle);
 
-		this->Attached.Add(handle);
+		this->Attached.emplace_back("raw", handle);
 		return true;
 #endif
 
@@ -139,6 +139,9 @@ namespace TomatoLib {
 
 	void Shader::Use() {
 #ifndef TL_OPENGL_OLD
+		if (!glIsProgram(this->ProgramHandle)) {
+			printf("what\n");
+		}
 		glUseProgram(this->ProgramHandle);
 #endif
 	}
@@ -146,6 +149,22 @@ namespace TomatoLib {
 	void Shader::Link() {
 #ifndef TL_OPENGL_OLD
 		glLinkProgram(this->ProgramHandle);
+
+		GLint isLinked = 0;
+		glGetProgramiv(this->ProgramHandle, GL_LINK_STATUS, &isLinked);
+		if (isLinked == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(this->ProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetProgramInfoLog(this->ProgramHandle, maxLength, &maxLength, &infoLog.front());
+			printf("Error linking program: \n%s\n", &infoLog.front());
+
+			glDeleteProgram(this->ProgramHandle);
+
+			throw std::runtime_error("Error linking gl program");
+		}
 #endif
 	}// Setting floats
 
