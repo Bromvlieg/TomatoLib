@@ -87,7 +87,7 @@ namespace TomatoLib {
 			std::string log = buff;
 			delete[] buff;
 
-			throw log;
+			throw std::runtime_error(log);
 		}
 
 		glAttachShader(this->ProgramHandle, handle);
