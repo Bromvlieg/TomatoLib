@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __SAHDER_H__
-#define __SAHDER_H__
+#ifndef SHADER_H
+#define SHADER_H
 
 #include "../Utilities/List.h"
 
@@ -29,6 +29,15 @@ namespace TomatoLib {
 		}
 	};
 
+	class ShaderAttached {
+	public:
+		std::string m_filename;
+		GLint m_handle;
+
+		ShaderAttached() = default;
+		ShaderAttached(const std::string& file, GLint handle) : m_filename(file), m_handle(handle) {}
+	};
+
 	class Shader {
 	public:
 		template<typename T>
@@ -37,14 +46,14 @@ namespace TomatoLib {
 		}
 
 		GLint ProgramHandle;
-		List<GLint> Attached;
+		std::vector<ShaderAttached> Attached;
 
 		Shader();
 		~Shader();
 
 		void Use();
 		void Link();
-		void AttachRaw(std::string text, GLint mode);
+		bool AttachRaw(std::string text, GLint mode);
 		bool Attach(std::string file, GLint mode);
 		void Cleanup();
 

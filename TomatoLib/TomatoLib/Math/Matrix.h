@@ -14,6 +14,7 @@ namespace TomatoLib {
 		static Matrix CreateRotationZ(float rotation);
 		static Matrix CreateScale(float scale);
 		static Matrix CreateScale(float scaleX, float scaleY, float scaleZ);
+		static Matrix CreateScale(const Vector3& scale);
 		static Matrix CreateTranslation(float x, float y, float z);
 		static Matrix CreateTranslation(const Vector3& pos);
 		static Matrix CreateLookAt(float eyex, float eyey, float eyez, float targetx, float targety, float targetz, float upx, float upy, float upz);

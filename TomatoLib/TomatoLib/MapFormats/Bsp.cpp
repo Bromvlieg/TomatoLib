@@ -79,22 +79,22 @@ namespace TomatoLib {
 		}
 
 		if (!mfile.IsLoaded()) return;
-		texname = null;
+		texname = nullptr;
 		VTFLib::Nodes::CVMTStringNode* basetex = (VTFLib::Nodes::CVMTStringNode*)mfile.GetRoot()->GetNode("$baseTexture");
-		if (basetex != null) {
+		if (basetex != nullptr) {
 			texname = (char*)basetex->GetValue();
 		} else {
 			VTFLib::Nodes::CVMTGroupNode* g_rep = (VTFLib::Nodes::CVMTGroupNode*)mfile.GetRoot()->GetNode("replace");
 
-			if (g_rep != null) {
+			if (g_rep != nullptr) {
 				VTFLib::Nodes::CVMTStringNode* envmap = (VTFLib::Nodes::CVMTStringNode*)g_rep->GetNode("$envmap");
-				if (envmap != null) {
+				if (envmap != nullptr) {
 					texname = (char*)envmap->GetValue();
 				}
 			}
 		}
 
-		if (texname == null) {
+		if (texname == nullptr) {
 			return;
 		}
 

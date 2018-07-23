@@ -1,4 +1,5 @@
 #include "Vector3.h"
+#include "Vector2.h"
 #include "Matrix.h"
 #include <math.h>
 #include <float.h>
@@ -30,7 +31,7 @@ namespace TomatoLib {
 	}
 
 	float Vector3::Length() const {
-		return sqrtf(pow(X, 2) + pow(Y, 2) + pow(Z, 2));
+		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
 	}
 
 	Vector3 Vector3::Normalized() const {

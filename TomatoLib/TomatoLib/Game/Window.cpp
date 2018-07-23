@@ -1,4 +1,4 @@
-#include "Window.h"
+﻿#include "Window.h"
 
 #include "../UI/UIManager.h"
 #include "../Defines.h"
@@ -32,7 +32,7 @@ namespace TomatoLib {
 		if (key < 0 || key > GLFW_KEY_LAST) return; // filter out hardware that wants to be special and has special keys.
 		if (CurrentWindow == nullptr) return;
 
-		bool ret = CurrentWindow->UIMan != nullptr && CurrentWindow->UIMan->HandleKeyboardInteraction(key, action, mods);
+		bool ret = CurrentWindow->UIMan != nullptr && CurrentWindow->UIMan->HandleKeyboardInteraction(key, action > 0, mods);
 		if (CurrentWindow == nullptr) return;
 
 		if (action == GLFW_REPEAT) return;
@@ -119,6 +119,19 @@ namespace TomatoLib {
 #endif
 	}
 
+	bool Window::Destroy() {
+#ifdef TL_ENABLE_GLFW
+		if (this->Handle == nullptr) return true;
+
+		glfwDestroyWindow(this->Handle);
+		this->Handle = nullptr;
+
+		glGetError();
+#endif
+
+		return true;
+	}
+
 	void Window::SetTitle(std::string title) {
 #ifdef TL_ENABLE_GLFW
 		glfwSetWindowTitle(this->Handle, title.c_str());
@@ -189,8 +202,7 @@ namespace TomatoLib {
 		checkGL;
 
 #ifdef TL_ENABLE_GLFW
-		glfwDestroyWindow(this->Handle);
-		glGetError();
+		this->Destroy();
 
 		glfwTerminate();
 		glGetError();
@@ -251,6 +263,16 @@ namespace TomatoLib {
 		glfwSetWindowSizeCallback(this->Handle, this->OnResize);
 #endif
 	}
+
+#ifdef WINDOWS
+	void __stdcall OpenglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam​) {
+		if (severity != GL_DEBUG_SEVERITY_HIGH) return;
+
+		printf("OPENGL DEBUG OUTPUT: source 0x%x, type 0x%x, id %d, severity 0x%x, message %s\n", source, type, id, severity, message);
+	}
+#else
+#error fix linux version
+#endif
 
 	bool Window::Create(unsigned int w, unsigned int h, bool fullscreen, bool resizable, int monitorid) {
 #ifdef TL_ENABLE_GLFW
@@ -351,6 +373,10 @@ namespace TomatoLib {
 			printf("something's wrong with glew...%x\n", currentError);
 			return false;
 		}
+
+		glDebugMessageCallback(OpenglDebugCallback, 0);
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glDisable(GL_DEPTH_TEST);

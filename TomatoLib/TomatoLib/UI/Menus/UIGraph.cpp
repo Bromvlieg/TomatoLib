@@ -23,8 +23,8 @@ namespace TomatoLib {
 			p.Text(this->CatNames[i], 5, 20 + i * 16, this->CatColors[i]);
 		}
 
-		p.Text(std::string("Main calls: ") + Utilities::GetNumberPadded((int)Async::CallsToDoOnMainThread.size(), 4, '0'), 75, -2, Color(150, 150, 150, 255));
-		p.Text(std::string("Async calls: ") + Utilities::GetNumberPadded((int)Async::CallsToDoOnAsyncThread.size() - (int)Async::CallsToDoOnAsyncThreadIndex, 4, '0'), 240, -2, Color(150, 150, 150, 255));
+		p.Text(std::string("Main calls: ") + Utilities::GetNumberPadded((int)Async::CallsToDoOnMainThread.available_count(), 4, '0'), 75, -2, Color(150, 150, 150, 255));
+		p.Text(std::string("Async calls: ") + Utilities::GetNumberPadded((int)Async::CallsToDoOnAsyncThread.available_count(), 4, '0'), 240, -2, Color(150, 150, 150, 255));
 
 		p.Text(">15 ms", this->W - 60, 20, Color::White);
 		p.Text("8 ms", this->W - 60, 75, Color::White);

@@ -2,6 +2,7 @@
 
 #include "../Networking/Packet.h"
 #include "../Networking/EzSock.h"
+#include "../Async/Async.h"
 
 #include <thread>
 #include <vector>
@@ -92,7 +93,9 @@ namespace TomatoLib {
 			url = url.substr(7);
 		}
 
-		new std::thread([url, method, callback, body, bodytype, reqheaders]() {
+		Async::RunOnAsyncThread([url, method, callback, body, bodytype, reqheaders]() {
+			TomatoLib::Async::SetThreadName("TL:http_request");
+
 			Dictonary<std::string, std::string > headers;
 			std::string host;
 			std::string path;
@@ -181,7 +184,7 @@ namespace TomatoLib {
 				while (true) {
 					std::string chunklendata = p.ReadUntil("\r\n");
 					chunklendata[chunklendata.size() - 2] = 0;
-					int toreceive = (int)strtol(chunklendata.c_str(), NULL, 16);
+					int toreceive = (int)strtol(chunklendata.c_str(), nullptr, 16);
 
 					if (toreceive == 0) break;
 					unsigned char* chunkdata = p.ReadBytes(toreceive + 2);
@@ -477,7 +480,7 @@ namespace TomatoLib {
 																 NAMED_ENTITIES, sizeof NAMED_ENTITIES / sizeof *NAMED_ENTITIES,
 																 sizeof *NAMED_ENTITIES, cmp);
 
-		return entity ? entity[1] : NULL;
+		return entity ? entity[1] : nullptr;
 	}
 
 	static size_t putc_utf8(unsigned long cp, char *buffer) {
@@ -518,7 +521,7 @@ namespace TomatoLib {
 		if (!end) return 0;
 
 		if (current[1] == '#') {
-			char *tail = NULL;
+			char *tail = nullptr;
 			int errno_save = errno;
 			bool hex = current[2] == 'x' || current[2] == 'X';
 

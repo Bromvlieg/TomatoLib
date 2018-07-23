@@ -28,10 +28,16 @@ namespace TomatoLib {
 	class UIManager {
 	public:
 		// return true to prevent UI interactions
-		std::function<bool(int x, int y, int button, bool pressed, int mods)> OnBeforeMouseInteracton;
-		std::function<bool(int key, unsigned char pressed, int mods)> OnBeforeKeyboardInteracton;
-		std::function<bool(int x, int y)> OnBeforeScrollInteracton;
-		std::function<bool(int ch)> OnBeforeCharInteraction;
+		std::function<bool(int x, int y, int button, bool pressed, int mods)> OnBeforeMouseInteracton = [](int x, int y, int button, bool pressed, int mods) { return false; };
+		std::function<bool(int key, bool, int mods)> OnBeforeKeyboardInteracton = [](int key, bool, int mods) { return false; };
+		std::function<bool(int x, int y)> OnBeforeScrollInteracton = [](int x, int y) { return false; };
+		std::function<bool(int ch)> OnBeforeCharInteraction = [](int ch) { return false; };
+		
+		// called when UI didn't handle interactions, return true to inform window that it even to the Ui didnt handle it, it was infact handled
+		std::function<bool(int x, int y, int button, bool pressed, int mods)> OnAfterMouseInteracton = [](int x, int y, int button, bool pressed, int mods) { return false; };
+		std::function<bool(int key, bool, int mods)> OnAfterKeyboardInteracton = [](int key, bool, int mods) { return false; };
+		std::function<bool(int x, int y)> OnAfterScrollInteracton = [](int x, int y) { return false; };
+		std::function<bool(int ch)> OnAfterCharInteraction = [](int ch) { return false; };
 
 		Render& Drawer;
 		std::vector<UIBase*> Children;
@@ -50,7 +56,7 @@ namespace TomatoLib {
 		void KillChildren();
 
 		bool HandleMouseInteraction(int x, int y, int button, bool pressed, int mods);
-		bool HandleKeyboardInteraction(int key, unsigned char pressed, int mods);
+		bool HandleKeyboardInteraction(int key, bool, int mods);
 		bool HandleScrollInteraction(int x, int y);
 		bool HandleCharInteraction(int ch);
 

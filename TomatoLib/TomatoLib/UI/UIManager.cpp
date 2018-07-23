@@ -69,7 +69,7 @@ namespace TomatoLib {
 
 		if (oldshape != this->CurrentCursorShape) {
 #ifdef TL_ENABLE_GLFW
-			if (this->CurrentCursor != null) glfwDestroyCursor(this->CurrentCursor);
+			if (this->CurrentCursor != nullptr) glfwDestroyCursor(this->CurrentCursor);
 			this->CurrentCursor = glfwCreateStandardCursor(this->CurrentCursorShape);
 #endif
 		}
@@ -77,7 +77,7 @@ namespace TomatoLib {
 
 	void UIManager::_CheckClick(UIBase* panel, int x, int y) {
 		for (int i = (int)panel->Children.size() - 1; i > -1; i--) {
-			if (this->HoldPanel != null) break;
+			if (this->HoldPanel != nullptr) break;
 
 			UIBase* child = panel->Children[i];
 
@@ -90,7 +90,7 @@ namespace TomatoLib {
 			}
 		}
 
-		if (this->HoldPanel == null && !panel->PassTroughSelfOnly) {
+		if (this->HoldPanel == nullptr && !panel->PassTroughSelfOnly) {
 			this->HoldPanel = panel;
 		}
 	}
@@ -100,11 +100,11 @@ namespace TomatoLib {
 
 		if (this->ShowCursor) {
 			if (pressed) {
-				this->HoldPanel = null;
+				this->HoldPanel = nullptr;
 				for (int i = (int)this->Children.size() - 1; i > -1; i--) {
 					UIBase* Pan = this->Children[i];
 
-					if (this->HoldPanel != null) break;
+					if (this->HoldPanel != nullptr) break;
 					if (Pan->ShouldRender == false) continue;
 					if (Pan->PassTrough) continue;
 
@@ -118,9 +118,9 @@ namespace TomatoLib {
 					}
 				}
 
-				if (this->HoldPanel != null) {
+				if (this->HoldPanel != nullptr) {
 					if (this->FocusPanel != this->HoldPanel) {
-						if (this->FocusPanel != null) {
+						if (this->FocusPanel != nullptr) {
 							UIBase* tmp = this->FocusPanel;
 							this->FocusPanel = this->HoldPanel; // override already so that it knows.
 							tmp->OnFocus(false);
@@ -131,16 +131,16 @@ namespace TomatoLib {
 					this->HoldPanel->OnPress(x - (int)apos.X, y - (int)apos.Y, button);
 					return true;
 				} else {
-					if (this->FocusPanel != null) {
+					if (this->FocusPanel != nullptr) {
 						UIBase* tmp = this->FocusPanel;
-						this->FocusPanel = null;
+						this->FocusPanel = nullptr;
 						tmp->OnFocus(false);
 					}
 				}
 			} else {
-				if (this->HoldPanel != null) {
+				if (this->HoldPanel != nullptr) {
 					UIBase* tmp = this->HoldPanel;
-					this->HoldPanel = null;
+					this->HoldPanel = nullptr;
 					Vector2 apos = tmp->GetAbsoluteLocation();
 					tmp->OnRelease(x - (int)apos.X, y - (int)apos.Y, button);
 
@@ -152,56 +152,58 @@ namespace TomatoLib {
 
 		}
 
-		return false;
+		return this->OnAfterMouseInteracton(x, y, button, pressed, mods);
 	}
 
-	bool UIManager::HandleKeyboardInteraction(int key, unsigned char pressed, int mods) {
+	bool UIManager::HandleKeyboardInteraction(int key, bool pressed, int mods) {
 		if (this->OnBeforeKeyboardInteracton(key, pressed, mods)) return true;
 
-		if (pressed) {
-			if (this->FocusPanel != null) {
-				if (!this->FocusPanel->OnCanPress(key)) return false;
+		if (this->ShowCursor) {
+			if (pressed) {
+				if (this->FocusPanel != nullptr) {
+					if (!this->FocusPanel->OnCanPress(key)) return false;
 
-				if (!this->FocusPanel->CanAcceptInput) {
-					if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null) {
+					if (!this->FocusPanel->CanAcceptInput) {
+						if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != nullptr) {
+							if (this->Console->ShouldRender == false) {
+								this->Console->Show();
+							} else {
+								this->Console->Hide();
+							}
+						}
+
+						return true;
+					}
+
+					if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != nullptr && this->Console->HasFocus()) {
+						this->Console->Hide();
+						return true;
+					}
+
+					this->FocusPanel->OnKeyDown(key);
+					if (this->FocusPanel != nullptr) this->FocusPanel->OnInput(key, mods);
+					return true;
+				}
+
+				if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1)) {
+					if (this->Console != nullptr) {
 						if (this->Console->ShouldRender == false) {
 							this->Console->Show();
 						} else {
 							this->Console->Hide();
 						}
+						return true;
 					}
-
+				}
+			} else {
+				if (this->FocusPanel != nullptr && this->FocusPanel->CanAcceptInput) {
+					this->FocusPanel->OnKeyUp(key);
 					return true;
 				}
-
-				if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1) && this->Console != null && this->Console->HasFocus()) {
-					this->Console->Hide();
-					return true;
-				}
-
-				this->FocusPanel->OnKeyDown(key);
-				if (this->FocusPanel != null) this->FocusPanel->OnInput(key, mods);
-				return true;
-			}
-
-			if ((key == GLFW_KEY_GRAVE_ACCENT || key == GLFW_KEY_F1)) {
-				if (this->Console != null) {
-					if (this->Console->ShouldRender == false) {
-						this->Console->Show();
-					} else {
-						this->Console->Hide();
-					}
-					return true;
-				}
-			}
-		} else {
-			if (this->FocusPanel != null && this->FocusPanel->CanAcceptInput) {
-				this->FocusPanel->OnKeyUp(key);
-				return true;
 			}
 		}
 
-		return false;
+		return this->OnAfterKeyboardInteracton(key, pressed, mods);
 	}
 
 	bool UIManager::HandleScrollInteraction(int scrollx, int scrolly) {
@@ -212,11 +214,11 @@ namespace TomatoLib {
 			int x = (int)mpos.X;
 			int y = (int)mpos.Y;
 
-			this->HoldPanel = null;
+			this->HoldPanel = nullptr;
 			for (int i = (int)this->Children.size() - 1; i > -1; i--) {
 				UIBase* Pan = this->Children[i];
 
-				if (this->HoldPanel != null) break;
+				if (this->HoldPanel != nullptr) break;
 				if (Pan->ShouldRender == false) continue;
 				if (Pan->PassTrough) continue;
 
@@ -229,9 +231,9 @@ namespace TomatoLib {
 				}
 			}
 
-			if (this->HoldPanel != null) {
+			if (this->HoldPanel != nullptr) {
 				UIBase* catcher = this->HoldPanel;
-				while (!catcher->CanCatchScroll && catcher->Parent != null) {
+				while (!catcher->CanCatchScroll && catcher->Parent != nullptr) {
 					catcher = catcher->Parent;
 				}
 
@@ -239,15 +241,16 @@ namespace TomatoLib {
 				return true;
 			}
 		}
-		return false;
+
+		return this->OnAfterScrollInteracton(scrollx, scrolly);
 	}
 
 	bool UIManager::HandleCharInteraction(int key) {
 		if (this->OnBeforeCharInteraction(key)) return true;
 
-		if (this->FocusPanel != null) {
+		if (this->FocusPanel != nullptr) {
 			if (!this->FocusPanel->CanAcceptInput) return true;
-			if (key == GLFW_KEY_GRAVE_ACCENT && this->Console != null && this->Console->HasFocus()) return true;
+			if (key == GLFW_KEY_GRAVE_ACCENT && this->Console != nullptr && this->Console->HasFocus()) return true;
 
 			if (!this->FocusPanel->OnCanPress(key)) return false;
 
@@ -255,25 +258,20 @@ namespace TomatoLib {
 			return true;
 		}
 
-		return false;
+		return this->OnAfterCharInteraction(key);
 	}
 
 	UIManager::UIManager(Render& drawer) : Drawer(drawer) {
-		this->FocusPanel = null;
-		this->HoldPanel = null;
-		this->Console = null;
+		this->FocusPanel = nullptr;
+		this->HoldPanel = nullptr;
+		this->Console = nullptr;
 		this->ShowCursor = true;
 		this->OverrideShowCursor = true;
-		this->CurrentCursor = null;
-
-		this->OnBeforeMouseInteracton = [](int x, int y, int button, bool pressed, int mods) { return false; };
-		this->OnBeforeKeyboardInteracton = [](int key, unsigned char pressed, int mods) { return false; };
-		this->OnBeforeScrollInteracton = [](int x, int y) { return false; };
-		this->OnBeforeCharInteraction = [](int ch) { return false; };
+		this->CurrentCursor = nullptr;
 
 		TomatoLib::UIBase::DefaultUImanager = this;
 
-		this->Console = new UIConsole(null);
+		this->Console = new UIConsole(nullptr);
 		this->Console->SetSize((int)drawer.ScreenSize.X, (int)drawer.ScreenSize.Y);
 		this->Console->TopMost = true;
 	}

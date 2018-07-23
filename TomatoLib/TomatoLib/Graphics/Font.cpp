@@ -6,7 +6,7 @@
 
 namespace TomatoLib {
 #ifdef TL_ENABLE_FTGL
-	texture_atlas_t* Font::Atlas = null;
+	texture_atlas_t* Font::Atlas = nullptr;
 #endif
 
 	Font::Font(const std::string &file, float size) {

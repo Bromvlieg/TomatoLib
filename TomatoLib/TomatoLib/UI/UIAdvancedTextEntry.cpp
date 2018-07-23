@@ -43,12 +43,12 @@ namespace TomatoLib {
 		this->CanAcceptInput = true;
 		this->AlwaysRedraw = false;
 
-		this->CurrentHoverPart = null;
+		this->CurrentHoverPart = 0;
 		this->LineNumbersOffset = 0;
 
 		this->LineNumbers = false;
 
-		this->HoverPanel = new UIPanel(null);
+		this->HoverPanel = new UIPanel(nullptr);
 		this->HoverPanel->TopMost = true;
 		this->HoverPanel->OnDraw = [this](Render& p) {
 			p.Box(0, 0, this->HoverPanel->W, this->HoverPanel->H, this->HoverPanel->BorderColor);
@@ -69,7 +69,7 @@ namespace TomatoLib {
 		this->ScrollPanel->SetPos(0, 0);
 		this->ScrollPanel->ScrollAmplifier = 4.8f;
 
-		this->MainPanel = new UIPanel(null);
+		this->MainPanel = new UIPanel(nullptr);
 		this->MainPanel->OnDraw = [this](Render& p) {
 			p.Box(0, 0, this->ScrollPanel->Back->W, this->ScrollPanel->Back->H, this->BorderColor);
 			p.Box(1, 1, this->ScrollPanel->Back->W - 2, this->ScrollPanel->Back->H - 2, this->BackColor);

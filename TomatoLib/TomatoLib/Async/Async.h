@@ -2,8 +2,13 @@
 #ifndef __TL__ASYNC_H_
 #define __TL__ASYNC_H_
 
+#include <mutex>
+#include <chrono>
 #include <vector>
+#include <thread>
 #include <functional>
+#include <map>
+#include "../Utilities/ringbuffer.h"
 
 #ifndef _MSC_VER
 #include <pthread.h>
@@ -23,13 +28,13 @@ namespace TomatoLib {
 
 		extern bool IsInited();
 		extern unsigned int CallsToDoOnAsyncThreadIndex;
-		extern List<std::function<void()>> CallsToDoOnMainThread;
-		extern List<std::function<void()>> CallsToDoOnAsyncThread;
-		extern Dictonary<unsigned long, std::function<void()>> CallsToDoOnThreads;
+		extern ringbuffer<std::function<void()>> CallsToDoOnMainThread;
+		extern ringbuffer<std::function<void()>> CallsToDoOnAsyncThread;
+		extern std::map<unsigned long, ringbuffer<std::function<void()>>> CallsToDoOnThreads;
 
-		void RunOnThread(std::function<void()> func, unsigned long threadid, bool isblocking = false, bool forcequeue = false);
-		void RunOnMainThread(std::function<void()> func, bool isblocking = false, bool forcequeue = false);
-		void RunOnAsyncThread(std::function<void()> func, bool isblocking = false, bool forcequeue = false);
+		void RunOnThread(const std::function<void()>& func, unsigned long threadid, bool isblocking = false, bool forcequeue = false);
+		void RunOnMainThread(const std::function<void()>& func, bool isblocking = false, bool forcequeue = false);
+		void RunOnAsyncThread(const std::function<void()>& func, bool isblocking = false, bool forcequeue = false);
 		void ClearAsyncThreadCalls();
 		void RunMainThreadCalls();
 		void RunAsyncThreadCalls();
@@ -38,6 +43,9 @@ namespace TomatoLib {
 		bool IsAsyncThread();
 		void Init(int workers = 1);
 		void Shutdown();
+
+		void SetThreadName(std::thread* thread, const std::string& threadName);
+		void SetThreadName(const std::string& threadName);
 	}
 }
 

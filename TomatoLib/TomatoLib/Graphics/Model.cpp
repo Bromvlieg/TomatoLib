@@ -35,12 +35,9 @@ namespace TomatoLib {
 
 	Model::Model() : m_IndiceCount(0) {
 #ifndef TL_OPENGL_OLD
-		checkGL;
-
 		if (s_Shader == nullptr) {
 			s_Shader = new Shader();
 			// init shader for first time use
-			checkGL;
 
 			s_Shader->AttachRaw("#version 150\
 							\n	\
@@ -75,12 +72,10 @@ namespace TomatoLib {
 			s_Shader->Use();
 
 			glBindFragDataLocation(s_Shader->ProgramHandle, 0, "outColor");
-			checkGL;
 
 			s_viewMatrixLocation = glGetUniformLocation(s_Shader->ProgramHandle, "view");
 			s_projMatrixLocation = glGetUniformLocation(s_Shader->ProgramHandle, "proj");
 			s_worldMatrixLocation = glGetUniformLocation(s_Shader->ProgramHandle, "world");
-			checkGL;
 		}
 
 		this->m_ShaderHandle = s_Shader->ProgramHandle;
@@ -89,34 +84,33 @@ namespace TomatoLib {
 		// Create Vertex Array Object
 		glGenVertexArrays(1, &this->vao);
 		glBindVertexArray(this->vao);
-		checkGL;
 
 		// Create a Vertex Buffer Object and copy the vertex data to it
 		glGenBuffers(1, &this->vbo);
 		glGenBuffers(1, &this->ebo);
-		checkGL;
 
 		glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-		checkGL;
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-		checkGL;
 
 		// Specify the layout of the vertex data
 		GLint posAttrib = glGetAttribLocation(s_Shader->ProgramHandle, "position");
-		glEnableVertexAttribArray(posAttrib);
-		glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, Pos));
-		checkGL;
+		if (posAttrib != -1) {
+			glEnableVertexAttribArray(posAttrib);
+			glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, Pos));
+		}
 
 		// Specify the layout of the vertex data
 		GLint texposAttrib = glGetAttribLocation(s_Shader->ProgramHandle, "texpos");
-		glEnableVertexAttribArray(texposAttrib);
-		glVertexAttribPointer(texposAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, UV));
-		checkGL;
+		if (texposAttrib != -1) {
+			glEnableVertexAttribArray(texposAttrib);
+			glVertexAttribPointer(texposAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, UV));
+		}
 
-		glUniformMatrix4fv(s_projMatrixLocation, 1, GL_TRUE, s_mProj.values);
-		glUniform1i(glGetUniformLocation(s_Shader->ProgramHandle, "tex"), 0);
-		checkGL;
+		if (s_projMatrixLocation != -1) {
+			glUniformMatrix4fv(s_projMatrixLocation, 1, GL_TRUE, s_mProj.values);
+			glUniform1i(glGetUniformLocation(s_Shader->ProgramHandle, "tex"), 0);
+		}
 #endif
 	}
 

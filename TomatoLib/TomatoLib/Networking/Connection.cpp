@@ -82,6 +82,7 @@ namespace TomatoLib {
 	
 	void Connection::ConnectThreaded(std::string ip, int port, std::function<void(bool)> callback) {
 		new std::thread([this, ip, port, callback]() {
+			TomatoLib::Async::SetThreadName("TL:connection_connect");
 			bool ret = this->Connect(ip, port);
 
 			Async::RunOnMainThread([ret, callback]() {
@@ -287,6 +288,8 @@ namespace TomatoLib {
 	}
 
 	void Connection::SendThreadFunc() {
+		TomatoLib::Async::SetThreadName("TL:connection_writer");
+
 		while (!this->HitTheBrakes) {
 			this->SendMutex.lock();
 			if (this->ToSend.Count == 0) {
@@ -316,6 +319,8 @@ namespace TomatoLib {
 	}
 
 	void Connection::RecvThreadFunc() {
+		TomatoLib::Async::SetThreadName("TL:connection_reader");
+
 		while (!this->HitTheBrakes) {
 			if (!this->IsConnected()) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));

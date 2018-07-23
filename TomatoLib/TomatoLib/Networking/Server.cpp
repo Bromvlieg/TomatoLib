@@ -2,6 +2,7 @@
 #include "Connection.h"
 #include "../Utilities/Utilities.h"
 #include "../Utilities/HTTP.h"
+#include "../Async/Async.h"
 
 namespace TomatoLib {
 	Server::Server() {
@@ -68,6 +69,8 @@ namespace TomatoLib {
 	}
 
 	void Server::ConAcceptorThreadFunc() {
+		TomatoLib::Async::SetThreadName("TL:server_listener");
+
 		Connection* mcon = nullptr;
 
 		while (!this->Sock.IsError()) {

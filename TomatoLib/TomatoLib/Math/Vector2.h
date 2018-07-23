@@ -3,6 +3,8 @@
 #define __VECTOR2_H__
 
 namespace TomatoLib {
+	class Vector3;
+
 	class Vector2 {
 	public:
 		float X, Y;
@@ -36,6 +38,9 @@ namespace TomatoLib {
 
 		bool operator== (const Vector2& other) const;
 		bool operator!= (const Vector2& other) const;
+
+		Vector2 YX() const;
+		Vector3 XYZ() const;
 
 		const static Vector2 Zero;
 		const static Vector2 One;

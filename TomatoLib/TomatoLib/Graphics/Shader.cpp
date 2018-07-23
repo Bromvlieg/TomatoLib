@@ -19,26 +19,21 @@ namespace TomatoLib {
 
 	void Shader::Cleanup() {
 #ifndef TL_OPENGL_OLD
-		checkGL;
 		if (this->ProgramHandle == -1) return;
 
-		for (int i = 0; i < this->Attached.Count; i++) {
-			glDeleteShader(this->Attached[i]);
-			checkGL;
+		for (size_t i = 0; i < this->Attached.size(); i++) {
+			glDeleteShader(this->Attached[i].m_handle);
 		}
 
 		glDeleteProgram(this->ProgramHandle);
-		checkGL;
 
 		this->ProgramHandle = -1;
-		this->Attached.Clear();
+		this->Attached.clear();
 #endif
 	}
 
 	bool Shader::Attach(std::string file, GLint mode) {
 #ifndef TL_OPENGL_OLD
-		checkGL;
-
 		std::ifstream infile;
 		infile.open( file, std::ifstream::binary );
 
@@ -92,27 +87,21 @@ namespace TomatoLib {
 			std::string log = buff;
 			delete[] buff;
 
-			throw log;
+			throw std::runtime_error(log);
 		}
 
 		glAttachShader(this->ProgramHandle, handle);
 
-		this->Attached.Add(handle);
-
-		checkGL;
+		this->Attached.emplace_back(file, handle);
 #endif
 		return true;
 	}
 	
-	void Shader::AttachRaw(std::string text, GLint mode) {
+	bool Shader::AttachRaw(std::string text, GLint mode) {
 #ifndef TL_OPENGL_OLD
-		checkGL;
-
 		if (this->ProgramHandle == -1) {
 			this->ProgramHandle = glCreateProgram();
 		}
-
-		checkGL;
 
 		//Create new shader, set the source, and compile it
 		GLuint handle = glCreateShader(mode);
@@ -136,19 +125,23 @@ namespace TomatoLib {
 			glDeleteShader(handle);
 
 			printf("Shader compile error: %s\n", log.c_str());
-			throw log.c_str();
+			return false;
 		}
 
 		glAttachShader(this->ProgramHandle, handle);
 
-		this->Attached.Add(handle);
-
-		checkGL;
+		this->Attached.emplace_back("raw", handle);
+		return true;
 #endif
+
+		return false;
 	}
 
 	void Shader::Use() {
 #ifndef TL_OPENGL_OLD
+		if (!glIsProgram(this->ProgramHandle)) {
+			printf("what\n");
+		}
 		glUseProgram(this->ProgramHandle);
 #endif
 	}
@@ -156,6 +149,22 @@ namespace TomatoLib {
 	void Shader::Link() {
 #ifndef TL_OPENGL_OLD
 		glLinkProgram(this->ProgramHandle);
+
+		GLint isLinked = 0;
+		glGetProgramiv(this->ProgramHandle, GL_LINK_STATUS, &isLinked);
+		if (isLinked == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(this->ProgramHandle, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetProgramInfoLog(this->ProgramHandle, maxLength, &maxLength, &infoLog.front());
+			printf("Error linking program: \n%s\n", &infoLog.front());
+
+			glDeleteProgram(this->ProgramHandle);
+
+			throw std::runtime_error("Error linking gl program");
+		}
 #endif
 	}// Setting floats
 

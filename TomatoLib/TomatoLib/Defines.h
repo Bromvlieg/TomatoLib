@@ -3,11 +3,6 @@
 
 #include "Utilities/Utilities.h"
 
-
-#ifndef null
-#define null 0
-#endif
-
 #ifndef __BYTE_DEF
 #define __BYTE_DEF
 typedef unsigned char byte;

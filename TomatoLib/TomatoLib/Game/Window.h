@@ -64,6 +64,7 @@ namespace TomatoLib {
 		virtual void PollEvents();
 		virtual void Close();
 		virtual bool IsClosing() const;
+		virtual bool Destroy();
 
 		virtual void UpdateKeyHolding();
 

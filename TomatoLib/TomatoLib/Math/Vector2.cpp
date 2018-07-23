@@ -1,4 +1,5 @@
 #include "Vector2.h"
+#include "Vector3.h"
 #include <math.h>
 
 namespace TomatoLib {
@@ -12,11 +13,11 @@ namespace TomatoLib {
 	Vector2::Vector2(double X, double Y) : X((float)X), Y((float)Y) {}
 
 	float Vector2::Distance(const Vector2& other) const {
-		return sqrt(((this->X - other.X) * (this->X - other.X)) + ((this->Y - other.Y) * (this->Y - other.Y)));
+		return sqrtf(((this->X - other.X) * (this->X - other.X)) + ((this->Y - other.Y) * (this->Y - other.Y)));
 	}
 
 	float Vector2::Length() const {
-		return sqrt(pow(X, 2) + pow(Y, 2));
+		return sqrtf(powf(X, 2) + powf(Y, 2));
 	}
 
 	Vector2 Vector2::Normalized() const {
@@ -26,6 +27,14 @@ namespace TomatoLib {
 
 	float Vector2::Dot(const Vector2& other) const {
 		return X * other.X + Y * other.Y;
+	}
+
+	Vector2 Vector2::YX() const {
+		return Vector2(this->Y, this->X);
+	}
+
+	Vector3 Vector2::XYZ() const {
+		return Vector3(this->X, this->Y, 0);
 	}
 
 	Vector2 Vector2::operator- (const Vector2& other) const {
