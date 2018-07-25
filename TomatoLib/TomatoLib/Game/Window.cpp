@@ -284,7 +284,7 @@ namespace TomatoLib {
 		glfwSetErrorCallback(error_callback);
 
 		GLFWmonitor* mon = nullptr;
-		bool isborderless = this->Hints.ContainsKey(GLFW_DECORATED) || this->Hints[GLFW_DECORATED];
+		bool isborderless = this->Hints.ContainsKey(GLFW_DECORATED) && this->Hints[GLFW_DECORATED];
 		
 		if (monitorid >= 0) {
 			int monitorscount = 0;

@@ -149,6 +149,8 @@ namespace TomatoLib {
 			} else if (ext == "png") {
 				Texture* t = new Texture(path.c_str());
 				Async::RunOnMainThread([internalname, t]() {
+					t->BindGL();
+					t->Upload();
 					TextureDatas.Add(internalname, t);
 				}, forcenow);
 
