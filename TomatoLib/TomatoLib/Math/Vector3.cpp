@@ -26,6 +26,22 @@ namespace TomatoLib {
 
 	}
 
+	//TODO: fix to use vector2 or update function to work in 3d space
+	float Vector3::DistanceToLine(const Vector3& point_a, const Vector3& point_b) {
+		TomatoLib::Vector3 ap = *this - point_a;
+		TomatoLib::Vector3 ab = point_b - point_a;
+		float ab2 = ab.X * ab.X + ab.Y * ab.Y;
+		float ap_ab = ap.X * ab.X + ap.Y * ab.Y;
+
+		float t = ap_ab / ab2;
+		if (t < 0.0f) t = 0.0f;
+		else if (t > 1.0f) t = 1.0f;
+
+		TomatoLib::Vector3 closest_point = point_a + ab * t;
+		return closest_point.Distance(*this);
+	}
+
+
 	float Vector3::Distance(const Vector3& other) const {
 		return sqrtf(((this->X - other.X) * (this->X - other.X)) + ((this->Y - other.Y) * (this->Y - other.Y)) + ((this->Z - other.Z) * (this->Z - other.Z)));
 	}
@@ -149,6 +165,12 @@ namespace TomatoLib {
 
 	bool Vector3::operator!= (const Vector3& other) const {
 		return !operator==(other);
+	}
+
+	std::ostream& operator<<(std::ostream& stream, const Vector3& rhs) {
+		stream << "{" << rhs.X << ", " << rhs.Y << ", " << rhs.Z << "}";
+
+		return stream;
 	}
 
 	const Vector3 operator*(const float& lhs, const Vector3& rhs) {

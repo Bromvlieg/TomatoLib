@@ -2,6 +2,8 @@
 #ifndef __VECTOR3_H__
 #define __VECTOR3_H__
 
+#include <iosfwd>
+
 namespace TomatoLib {
 	class Vector2;
 
@@ -22,6 +24,8 @@ namespace TomatoLib {
 		float Length() const;
 		Vector3 Normalized() const;
 		Vector3 GetRotated(const Vector3 &ang, const Vector3 &orgin) const;
+
+		float DistanceToLine(const Vector3& point_a, const Vector3& point_b);
 
 		float Distance(const Vector3& other) const;
 		Vector3 Cross(const Vector3& other) const;
@@ -56,6 +60,8 @@ namespace TomatoLib {
 		const static Vector3 Min;
 		const static Vector3 Max;
 	};
+
+	std::ostream& operator<<(std::ostream& stream, const Vector3& rhs);
 
 	const Vector3 operator*(const float& lhs, const Vector3& rhs);
 	const Vector3 operator+(const float &lhs, const Vector3& rhs);
