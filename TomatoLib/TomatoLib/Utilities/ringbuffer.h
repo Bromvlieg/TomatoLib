@@ -31,8 +31,8 @@ namespace TomatoLib {
 		}
 
 		void clear() {
-			std::lock_guard<std::mutex> lock {this->m_read_mutex};
-			std::lock_guard<std::mutex> lock {this->m_write_mutex};
+			std::lock_guard<std::mutex> lockread {this->m_read_mutex};
+			std::lock_guard<std::mutex> lockwrite {this->m_write_mutex};
 			this->m_buffer.clear();
 
 			this->m_readpos = 0;
