@@ -264,13 +264,6 @@ namespace TomatoLib {
 #endif
 	}
 
-	#ifndef WINDOWS
-	#ifndef __stdcall
-	#define __stdcall
-	#define __stdcall__FIX
-	#endif
-	#endif
-
 	#ifdef WINDOWS
     void __stdcall OpenglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
 	#else
@@ -281,11 +274,6 @@ namespace TomatoLib {
 
         printf("OPENGL DEBUG OUTPUT: source 0x%x, type 0x%x, id %d, severity 0x%x, message %s\n", source, type, id, severity, message);
     }
-
-	#ifdef __stdcall__FIX
-	#undef __stdcall__FIX
-	#undef __stdcall
-	#endif
 
 	bool Window::Create(unsigned int w, unsigned int h, bool fullscreen, bool resizable, int monitorid) {
 #ifdef TL_ENABLE_GLFW
