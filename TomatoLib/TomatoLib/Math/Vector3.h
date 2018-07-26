@@ -61,8 +61,6 @@ namespace TomatoLib {
 		const static Vector3 Max;
 	};
 
-	std::ostream& operator<<(std::ostream& stream, const Vector3& rhs);
-
 	const Vector3 operator*(const float& lhs, const Vector3& rhs);
 	const Vector3 operator+(const float &lhs, const Vector3& rhs);
 	const Vector3 operator-(const float &lhs, const Vector3& rhs);

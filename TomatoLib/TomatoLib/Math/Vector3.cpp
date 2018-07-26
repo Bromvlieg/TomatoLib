@@ -167,12 +167,6 @@ namespace TomatoLib {
 		return !operator==(other);
 	}
 
-	std::ostream& operator<<(std::ostream& stream, const Vector3& rhs) {
-		stream << "{" << rhs.X << ", " << rhs.Y << ", " << rhs.Z << "}";
-
-		return stream;
-	}
-
 	const Vector3 operator*(const float& lhs, const Vector3& rhs) {
 		return Vector3(lhs * rhs.X, lhs * rhs.Y, lhs * rhs.Z);
 	}
