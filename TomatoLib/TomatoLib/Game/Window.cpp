@@ -264,15 +264,16 @@ namespace TomatoLib {
 #endif
 	}
 
-#ifdef WINDOWS
-	void __stdcall OpenglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam​) {
-		if (severity != GL_DEBUG_SEVERITY_HIGH) return;
+	#ifdef WINDOWS
+    void __stdcall OpenglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
+	#else
+	void OpenglDebugCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam) {
+	#endif
 
-		printf("OPENGL DEBUG OUTPUT: source 0x%x, type 0x%x, id %d, severity 0x%x, message %s\n", source, type, id, severity, message);
-	}
-#else
-#error fix linux version
-#endif
+        if (severity != GL_DEBUG_SEVERITY_HIGH) return;
+
+        printf("OPENGL DEBUG OUTPUT: source 0x%x, type 0x%x, id %d, severity 0x%x, message %s\n", source, type, id, severity, message);
+    }
 
 	bool Window::Create(unsigned int w, unsigned int h, bool fullscreen, bool resizable, int monitorid) {
 #ifdef TL_ENABLE_GLFW
@@ -374,7 +375,7 @@ namespace TomatoLib {
 			return false;
 		}
 
-		glDebugMessageCallback(OpenglDebugCallback, 0);
+		glDebugMessageCallback(OpenglDebugCallback, nullptr);
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
