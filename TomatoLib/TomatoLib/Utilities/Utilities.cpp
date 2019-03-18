@@ -125,27 +125,26 @@ namespace TomatoLib {
 		float Lerp(float val, float val2, float time){ return val + time * (val2 - val); }
 
 		std::string GetFormattedImlp(const char* format, ...) {
-			static const int initial_buf_size = 128;
-
 			va_list arglist;
 			va_start(arglist, format);
-			char buf1[initial_buf_size];
-			const int len = vsnprintf(buf1, initial_buf_size, format, arglist) + 1;
-			va_end(arglist);
 
-			if (len < initial_buf_size) {
-				return buf1;
-			} else {
-				char* buf2 = new char[len];
+			size_t len = 1024;
+			std::vector<char> buff;
+			while (true) {
+				buff.resize(len);
 
-				va_start(arglist, format);
-				vsnprintf(buf2, len, format, arglist);
+				va_list arglist_copy;
+				va_copy(arglist_copy, arglist);
+				int retsize = vsnprintf(buff.data(), buff.size(), format, arglist_copy);
+				va_end(arglist_copy);
+
+				if (retsize == 0) {
+					len *= 2;
+					continue;
+				}
+
 				va_end(arglist);
-
-				std::string ret = buf2;
-				delete[] buf2;
-
-				return ret;
+				return std::string(buff.data(), retsize);
 			}
 		}
 
