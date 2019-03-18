@@ -80,7 +80,7 @@ namespace TomatoLib {
 
 			return rand() % (max - min) + min;
 		}
-		
+
 		time_t starttime = 0;
 		void ResetTime(){
 			struct timeval start;
@@ -93,7 +93,7 @@ namespace TomatoLib {
 			useconds = start.tv_usec;
 
 			mtime = (time_t)(((seconds)* 1000 + useconds / 1000.0) + 0.5);
-			
+
 			starttime = mtime;
 		}
 
@@ -268,7 +268,7 @@ namespace TomatoLib {
 
 		void PrintImpl(const char* format, ...) {
 			int buffsize = 512;
-			char* szBuffer = new char[buffsize];
+			char* szBuffer = new char[buffsize + 1];
 
 			// Get the args list and do a vsprintf to get the right format.
 			va_list vL;
@@ -276,8 +276,9 @@ namespace TomatoLib {
 
 			// Make sure we don't overflow the buffer by checking against result length
 			int iPrintSize = vsnprintf(szBuffer, buffsize, format, vL);
-			while (iPrintSize == -1 || buffsize <= iPrintSize) { //fail delete buffer and try again
+			while (iPrintSize == -1 || buffsize < iPrintSize) { //fail delete buffer and try again
 				if (iPrintSize == -1) buffsize *= 2;
+				else buffsize = iPrintSize;
 				delete[] szBuffer;
 
 				szBuffer = new char[buffsize + 1]; // +1 for \0
@@ -305,7 +306,7 @@ namespace TomatoLib {
 				if (log != nullptr) {
 					char timebuff[100];
 					time_t now = time(nullptr);
-					
+
 					int len = strftime(timebuff, 100, "[%Y-%m-%d %H:%M:%S] ", localtime(&now));
 
 					fwrite(timebuff, 1, len, log);

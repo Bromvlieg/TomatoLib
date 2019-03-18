@@ -181,15 +181,12 @@ namespace TomatoLib {
 
 						return;
 					}
-					checkGL;
 
 					if (ShaderCallbacks.ContainsKey(internalname)) {
 						ShaderReloadCallbackData& sd = ShaderCallbacks[internalname];
 						sd.Func(*sptr);
 						sd.ShouldCall = false;
 					}
-
-					checkGL;
 
 					ScannedFiles.Add(internalname, 0);
 					Utilities::Print("CONTENT: Loaded '%s' as shader", internalname.c_str());
