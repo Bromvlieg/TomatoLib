@@ -18,7 +18,13 @@ namespace TomatoLib {
 		virtual void RegisterConsoleStuff();
 		virtual void Quit();
 
+		// called as much as possible, free from FPS lock
+		virtual void Tick();
+
+		// called acordingly with the FPS lock
 		virtual void Update();
+
+		// called acordingly with the FPS lock
 		virtual void Draw(Render& r);
 
 		void EnterGameLoop();

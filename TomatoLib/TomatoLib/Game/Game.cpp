@@ -29,7 +29,8 @@ namespace TomatoLib {
 	}
 
 	void Game::Draw(Render& r) { }
-	void Game::Update() { }
+	void Game::Update() {}
+	void Game::Tick() { }
 
 	void Game::EnterGameLoop() {
 		// make buffer for smoothing fps
@@ -47,6 +48,7 @@ namespace TomatoLib {
 			float curtime = TL_GET_TIME_MS;
 			msperfps = 1000.0f / this->m_fTargetFPS;
 
+			this->Tick();
 			if (curtime - lasttick < msperfps) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				continue;
