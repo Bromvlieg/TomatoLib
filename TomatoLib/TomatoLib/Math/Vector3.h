@@ -16,7 +16,7 @@ namespace TomatoLib {
 
 #ifdef BULLET_COLLISION_COMMON_H
 		Vector3(const btVector3& o) { this->X = o.x(); this->Y = o.y(); this->Z = o.z(); }
-		btVector3 ToBulletVector(){ return btVector3(this->X, this->Y, this->Z); }
+		btVector3 ToBulletVector() const { return btVector3(this->X, this->Y, this->Z); }
 #endif
 
 		static Vector3 FromAngles(float pitch, float yaw);

@@ -1,8 +1,9 @@
-#ifndef __RECTANGLE_H__
+	#ifndef __RECTANGLE_H__
 #define __RECTANGLE_H__
 
 #include "Vector2.h"
 #include "list"
+#include <vector>
 
 namespace TomatoLib {
 	class Rectangle {
@@ -35,7 +36,7 @@ namespace TomatoLib {
 
 		bool Intersects(const Rectangle &other);
 
-		static bool PointInPolygon(const Vector2 &p, const Vector2* poly, int vertices);
+		static bool PointInPolygon(const Vector2 &p, const std::vector<Vector2>& poly);
 	};
 
 	/*
