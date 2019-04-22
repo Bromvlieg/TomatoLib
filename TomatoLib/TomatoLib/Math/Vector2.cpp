@@ -45,6 +45,10 @@ namespace TomatoLib {
 		return Vector2(X + other.X, Y + other.Y);
 	}
 
+	Vector2 Vector2::operator* (const Vector2& other) const {
+		return Vector2(X * other.X, Y * other.Y);
+	}
+
 	Vector2 Vector2::operator* (const float& scale) const {
 		return Vector2(X * scale, Y * scale);
 	}
@@ -59,6 +63,10 @@ namespace TomatoLib {
 
 	Vector2 Vector2::operator+ (const float& scale) const {
 		return Vector2(X + scale, Y + scale);
+	}
+
+	Vector2 Vector2::operator- (const float& scale) const {
+		return Vector2(X - scale, Y - scale);
 	}
 
 	Vector2 Vector2::Lerp(const Vector2& other, float timestep) {
@@ -81,7 +89,7 @@ namespace TomatoLib {
 		float a = atan2f(u.Y, u.X);
 		a += rads;
 
-		u = u.Length() * Vector2(cosf(a), sinf(a));
+		u = Vector2(cosf(a), sinf(a)) * u.Length();
 		u.X = u.X + origin.X;
 		u.Y = u.Y + origin.Y;
 
@@ -138,7 +146,48 @@ namespace TomatoLib {
 		return !operator==(other);
 	}
 
-	const Vector2 operator*(const Vector2& lhs, const Vector2& rhs) {
-		return Vector2(lhs.X * rhs.X, lhs.Y * rhs.Y);
+
+	///////////////////////////
+
+
+	Vector2 Vector2::operator- (const Vector3& other) const {
+		return Vector2(X - other.X, Y - other.Y);
 	}
+
+	Vector2 Vector2::operator+ (const Vector3& other) const {
+		return Vector2(X + other.X, Y + other.Y);
+	}
+
+	Vector2 Vector2::operator* (const Vector3& other) const {
+		return Vector2(X * other.X, Y * other.Y);
+	}
+
+	Vector2 Vector2::operator/ (const Vector3& other) const {
+		return Vector2(X / other.X, Y / other.Y);
+	}
+
+	Vector2& Vector2::operator/= (const Vector3& other) {
+		X = X / other.X;
+		Y = Y / other.Y;
+		return *this;
+	}
+
+	Vector2& Vector2::operator+= (const Vector3& other) {
+		X = X + other.X;
+		Y = Y + other.Y;
+		return *this;
+	}
+
+	Vector2& Vector2::operator-= (const Vector3& other) {
+		X = X - other.X;
+		Y = Y - other.Y;
+		return *this;
+	}
+
+	Vector2& Vector2::operator*= (const Vector3& other) {
+		X = X * other.X;
+		Y = Y * other.Y;
+		return *this;
+	}
+
 }

@@ -23,18 +23,29 @@ namespace TomatoLib {
 
 		Vector2 operator- (const Vector2& other) const;
 		Vector2 operator+ (const Vector2& other) const;
-		Vector2 operator+ (const float& other) const;
-		Vector2 operator* (const float& other) const;
+		Vector2 operator* (const Vector2& other) const;
 		Vector2 operator/ (const Vector2& other) const;
-		Vector2 operator/ (const float& other) const;
-
 		Vector2& operator-= (const Vector2& other);
-		Vector2& operator+= (const float& other);
 		Vector2& operator+= (const Vector2& other);
 		Vector2& operator*= (const Vector2& other);
-		Vector2& operator*= (const float& other);
 		Vector2& operator/= (const Vector2& other);
+
+		Vector2 operator- (const float& other) const;
+		Vector2 operator+ (const float& other) const;
+		Vector2 operator* (const float& other) const;
+		Vector2 operator/ (const float& other) const;
+		Vector2& operator+= (const float& other);
+		Vector2& operator*= (const float& other);
 		Vector2& operator/= (const float& other);
+
+		Vector2 operator- (const Vector3& other) const;
+		Vector2 operator+ (const Vector3& other) const;
+		Vector2 operator/ (const Vector3& other) const;
+		Vector2 operator* (const Vector3& other) const;
+		Vector2& operator-= (const Vector3& other);
+		Vector2& operator+= (const Vector3& other);
+		Vector2& operator*= (const Vector3& other);
+		Vector2& operator/= (const Vector3& other);
 
 		bool operator== (const Vector2& other) const;
 		bool operator!= (const Vector2& other) const;
@@ -45,7 +56,5 @@ namespace TomatoLib {
 		const static Vector2 Zero;
 		const static Vector2 One;
 	};
-
-	const Vector2 operator*(const Vector2& lhs, const Vector2& rhs);
 }
 #endif

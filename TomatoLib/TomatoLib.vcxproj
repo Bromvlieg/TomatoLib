@@ -18,6 +18,7 @@
     <ClCompile Include="TomatoLib\Graphics\Model.cpp" />
     <ClCompile Include="TomatoLib\Libaries\md5\md5.cpp" />
     <ClCompile Include="TomatoLib\MapFormats\Bsp.cpp" />
+    <ClCompile Include="TomatoLib\Math\Line.cpp" />
     <ClCompile Include="TomatoLib\Math\Rectangle.cpp" />
     <ClCompile Include="TomatoLib\Math\Vector4.cpp" />
     <ClCompile Include="TomatoLib\ModelFormats\Obj.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="TomatoLib\Graphics\Model.h" />
     <ClInclude Include="TomatoLib\Libaries\md5\md5.h" />
     <ClInclude Include="TomatoLib\MapFormats\Bsp.h" />
+    <ClInclude Include="TomatoLib\Math\Line.h" />
     <ClInclude Include="TomatoLib\Math\Rectangle.h" />
     <ClInclude Include="TomatoLib\Math\Vector4.h" />
     <ClInclude Include="TomatoLib\ModelFormats\Obj.h" />
@@ -119,7 +121,7 @@
     <ProjectGuid>{F7F38EB5-77D0-49C8-8298-77535554D4E8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TomatoLib</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -131,7 +133,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
