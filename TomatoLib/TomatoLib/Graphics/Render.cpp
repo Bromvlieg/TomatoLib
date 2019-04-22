@@ -155,7 +155,7 @@ namespace TomatoLib {
 
 		a.Location = Vector2(x1, y1 - width).RotateAroundOrigin(ang, center);
 		b.Location = Vector2(x1 + dist, y1 - width).RotateAroundOrigin(ang, center);
-		c.Location = Vector2(x1, y1 - width).RotateAroundOrigin(ang, center);
+		c.Location = Vector2(x1, y1 + width).RotateAroundOrigin(ang, center);
 		d.Location = Vector2(x1 + dist, y1 + width).RotateAroundOrigin(ang, center);
 
 		a.Color = color;
