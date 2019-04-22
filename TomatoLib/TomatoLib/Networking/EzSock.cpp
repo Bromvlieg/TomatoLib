@@ -184,11 +184,11 @@ namespace TomatoLib {
 		return recv(this->sock, reinterpret_cast<char*>(buffer) + spos, size, 0);
 	}
 
-	int EzSock::SendUDP(unsigned char* buffer, int size, sockaddr_in* to) {
-		return sendto(this->sock, reinterpret_cast<char*>(buffer), size, 0, reinterpret_cast<struct sockaddr*>(&to), sizeof(struct sockaddr_in));
+	int EzSock::SendUDP(const unsigned char* buffer, int size, sockaddr_in* to) {
+		return sendto(this->sock, reinterpret_cast<const char*>(buffer), size, 0, reinterpret_cast<struct sockaddr*>(&to), sizeof(struct sockaddr_in));
 	}
 
-	int EzSock::SendRaw(unsigned char* data, int dataSize) {
-		return send(this->sock, reinterpret_cast<char*>(data), dataSize, 0);
+	int EzSock::SendRaw(const unsigned char* data, int dataSize) {
+		return send(this->sock, reinterpret_cast<const char*>(data), dataSize, 0);
 	}
 }

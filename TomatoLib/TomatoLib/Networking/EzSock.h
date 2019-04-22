@@ -64,8 +64,8 @@ namespace TomatoLib {
 		bool CanRead();
 
 		int Receive(unsigned char* buffer, int size, int spos = 0);
-		int SendRaw(unsigned char* data, int dataSize);
-		int SendUDP(unsigned char* buffer, int size, sockaddr_in* to);
+		int SendRaw(const unsigned char* data, int dataSize);
+		int SendUDP(const unsigned char* buffer, int size, sockaddr_in* to);
 		int ReceiveUDP(unsigned char* buffer, int size, sockaddr_in* from);
 
 	private:
