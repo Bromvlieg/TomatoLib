@@ -13,6 +13,7 @@ namespace TomatoLib {
 		Line(const Vector2& a, const Vector2& b);
 
 		bool intersects(const Line& other) const;
+		bool intersects(const Line& other, Vector2& point) const;
 		float length() const;
 		Vector2 lerp(float timestep);
 

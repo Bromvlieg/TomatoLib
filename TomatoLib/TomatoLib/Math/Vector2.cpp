@@ -20,6 +20,10 @@ namespace TomatoLib {
 		return sqrtf(powf(X, 2) + powf(Y, 2));
 	}
 
+	float Vector2::Angle(const Vector2& target) const {
+		return -atan2f(this->X - target.X, this->Y - target.Y);
+	}
+
 	Vector2 Vector2::Normalized() const {
 		float l = Length();
 		return l == 0 ? Vector2::Zero : (*this) / l;
@@ -27,6 +31,10 @@ namespace TomatoLib {
 
 	float Vector2::Dot(const Vector2& other) const {
 		return X * other.X + Y * other.Y;
+	}
+
+	float Vector2::Cross(const Vector2& other) const {
+		return X * other.Y - Y * other.X;
 	}
 
 	Vector2 Vector2::YX() const {

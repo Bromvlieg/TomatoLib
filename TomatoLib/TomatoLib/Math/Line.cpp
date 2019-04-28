@@ -3,21 +3,32 @@
 namespace TomatoLib {
 	Line::Line(const Vector2& a, const Vector2& b) : A(a), B(b) {}
 
-	bool Line::intersects(const Line & other) const {
-		float s1_x, s1_y, s2_x, s2_y, sn, tn, sd, td, t;
-		s1_x = this->B.X - this->A.X;     s1_y = this->B.Y - this->A.Y;
-		s2_x = other.B.X - other.A.X;     s2_y = other.B.Y - other.A.Y;
+	bool Line::intersects(const Line& other) const {
+		// https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+		auto const& p = this->A;
+		auto const& q = other.A;
+		auto const r = this->B - p;
+		auto const s = other.B - q;
 
-		sn = -s1_y * (this->A.X - other.A.X) + s1_x * (this->A.Y - other.A.Y);
-		sd = -s2_x * s1_y + s1_x * s2_y;
-		tn = s2_x * (this->A.Y - other.A.Y) - s2_y * (this->A.X - other.A.X);
-		td = -s2_x * s1_y + s1_x * s2_y;
+		auto const t = (q - p).Cross(s) / (r.Cross(s));
+		auto const u = (q - p).Cross(r) / (r.Cross(s));
 
-		if (sn >= 0 && sn <= sd && tn >= 0 && tn <= td) {
-			return true;
-		}
+		return (t >= 0 && t <= 1 && u >= 0 && u <= 1);
+	}
 
-		return false;
+	bool Line::intersects(const Line& other, Vector2& point) const {
+		// https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+		auto const& p = this->A;
+		auto const& q = other.A;
+		auto const r = this->B - p;
+		auto const s = other.B - q;
+
+		auto const t = (q - p).Cross(s) / (r.Cross(s));
+		auto const u = (q - p).Cross(r) / (r.Cross(s));
+
+		point = { p + r * t };
+
+		return (t >= 0 && t <= 1 && u >= 0 && u <= 1);
 	}
 
 	float Line::length() const {

@@ -17,14 +17,13 @@ namespace TomatoLib {
 	}
 
 	Vector3::Vector3(float values)
-		: X(values), Y(values), Z(values) {
-
-	}
+		: X(values), Y(values), Z(values) {}
 
 	Vector3::Vector3(float x, float y, float z)
-		: X(x), Y(y), Z(z) {
+		: X(x), Y(y), Z(z) {}
 
-	}
+	Vector3::Vector3(const Vector2& xy, float z)
+		: X(xy.X), Y(xy.Y), Z(z) {}
 
 	//TODO: fix to use vector2 or update function to work in 3d space
 	float Vector3::DistanceToLine(const Vector3& point_a, const Vector3& point_b) {

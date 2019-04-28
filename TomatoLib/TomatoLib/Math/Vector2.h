@@ -16,8 +16,10 @@ namespace TomatoLib {
 
 		float Distance(const Vector2& other) const;
 		float Length() const;
+		float Angle(const Vector2& target) const;
 		Vector2 Normalized() const;
 		float Dot(const Vector2& other) const;
+		float Cross(const Vector2& other) const;
 		Vector2 RotateAroundOrigin(float rads, const Vector2& origin);
 		Vector2 Lerp(const Vector2& other, float timestep);
 

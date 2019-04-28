@@ -13,6 +13,7 @@ namespace TomatoLib {
 		Vector3();
 		Vector3(float values);
 		Vector3(float x, float y, float z);
+		Vector3(const Vector2& xy, float z);
 
 #ifdef BULLET_COLLISION_COMMON_H
 		Vector3(const btVector3& o) { this->X = o.x(); this->Y = o.y(); this->Z = o.z(); }
