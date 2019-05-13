@@ -180,6 +180,10 @@ namespace TomatoLib {
 		INDICE_PUSH(curVertices + 2);
 	}
 
+	void Render::Line(const Vector2& a, const Vector2& b, float width, const Color& color) {
+		this->Line(a.X, a.Y, b.X, b.Y, width, color);
+	}
+
 	void Render::BoxOutlined(int x, int y, int w, int h, int bordersize, const Color& color) {
 		if (color.A == 0) return;
 
