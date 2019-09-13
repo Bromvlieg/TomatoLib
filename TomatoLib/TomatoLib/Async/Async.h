@@ -41,6 +41,7 @@ namespace TomatoLib {
 		void RunThreadCalls();
 		bool IsMainThread();
 		bool IsAsyncThread();
+		unsigned long GetThreadID();
 		void Init(int workers = 1);
 		void Shutdown();
 

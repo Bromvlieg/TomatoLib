@@ -67,6 +67,7 @@ namespace TomatoLib {
 		int SendRaw(const unsigned char* data, int dataSize);
 		int SendUDP(const unsigned char* buffer, int size, sockaddr_in* to);
 		int ReceiveUDP(unsigned char* buffer, int size, sockaddr_in* from);
+		void setTimeout(int miliseconds);
 
 	private:
 #ifdef _MSC_VER

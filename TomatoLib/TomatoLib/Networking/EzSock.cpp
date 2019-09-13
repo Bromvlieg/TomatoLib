@@ -180,6 +180,18 @@ namespace TomatoLib {
 #endif
 	}
 
+	void EzSock::setTimeout(int miliseconds) {
+#ifdef _MSC_VER
+		DWORD timeout = miliseconds;
+		setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+#else
+		struct timeval timeout;
+		timeout.tv_sec = miliseconds / 1000;
+		timeout.tv_usec = (miliseconds - timeout.tv_sec * 1000) * 1000;
+		setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+#endif
+	}
+
 	int EzSock::Receive(unsigned char* buffer, int size, int spos) {
 		return recv(this->sock, reinterpret_cast<char*>(buffer) + spos, size, 0);
 	}
