@@ -1,3 +1,5 @@
+<span style="color:red;">**Deprecated, use [Mainframe](https://github.com/Goofy-Penguin/Mainframe) instead**</span>
+
 # TomatoLib
 
 XNA-inspired rendering engine built on OpenGL and SFML.
